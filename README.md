@@ -1,11 +1,11 @@
-# Atomes
+# atomes
 
 ![License][license]
 ![OpenSSF Best Practices][openssf]
 ![Development Status][dev_status]
 ![Hits Of Code][hoc]
 
-<!-- ![Download Atomes][down_status] -->
+<!-- ![Download atomes][down_status] -->
 
 [atomes][atomes] is a Free (Open Source) cross-platform software licensed under the terms 
 of the Affero GPL v3+ license. 
@@ -122,15 +122,15 @@ Tutorial are regrouped and hosted on [GitHub][github] here: [atomes tutorials][a
 [openssf]:https://www.bestpractices.dev/projects/9146/badge
 [dev_status]:https://www.repostatus.org/badges/latest/active.svg
 [down_status]:https://img.shields.io/sourceforge/dw/atomes.svg
-[hoc]:https://hitsofcode.com/github/Slookeur/Atomes-GNU?branch=main
+[hoc]:https://hitsofcode.com/github/Slookeur/atomes-GNU?branch=main
 [slr]:https://www.ipcms.fr/sebastien-le-roux/
 [cnrs]:https://www.cnrs.fr/
 [ipcms]:https://www.ipcms.fr/
 [github]:https://github.com/
 [jekyll]:https://jekyllrb.com/
 [atomes]:https://atomes.ipcms.fr/
-[atomes-doc]:https://slookeur.github.io/Atomes-doc/
-[atomes-tuto]:https://slookeur.github.io/Atomes-tuto/
+[atomes-doc]:https://slookeur.github.io/atomes-doc/
+[atomes-tuto]:https://slookeur.github.io/atomes-tuto/
 [dlpoly]:https://www.scd.stfc.ac.uk/Pages/DL_POLY.aspx
 [lammps]:https://lammps.sandia.gov/
 [cpmd]:http://www.cpmd.org

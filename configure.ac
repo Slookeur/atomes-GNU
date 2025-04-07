@@ -14,11 +14,11 @@ AC_INIT([atomes], [atomes_version], [atomes@ipcms.unistra.fr], [atomes_tar], [at
 
 AM_INIT_AUTOMAKE
 
-AC_DEFINE([ATOMES_MAJOR_VERSION], [atomes_major_version], [Atomes major version])
+AC_DEFINE([ATOMES_MAJOR_VERSION], [atomes_major_version], [atomes major version])
 AC_SUBST(ATOMES_MAJOR_VERSION, atomes_major_version)
-AC_DEFINE([ATOMES_MINOR_VERSION], [atomes_minor_version], [Atomes minor version])
+AC_DEFINE([ATOMES_MINOR_VERSION], [atomes_minor_version], [atomes minor version])
 AC_SUBST(ATOMES_MINOR_VERSION, atomes_minor_version)
-AC_DEFINE([ATOMES_PATCH_VERSION], [atomes_patch_version], [Atomes patch version])
+AC_DEFINE([ATOMES_PATCH_VERSION], [atomes_patch_version], [atomes patch version])
 AC_SUBST(ATOMES_PATCH_VERSION, atomes_patch_version)
 
 dnl ***************************************************************************

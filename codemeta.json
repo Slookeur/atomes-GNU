@@ -15,7 +15,7 @@
             "givenName": "Sébastien"
         }
     ],
-    "codeRepository": "https://github.com/Slookeur/Atomes-GNU.git",
+    "codeRepository": "https://github.com/Slookeur/atomes-GNU.git",
     "contributor": [
         {
             "id": "https://orcid.org/0000-0001-5318-3910",
@@ -99,5 +99,5 @@
     ],
     "version": "1.1.17",
     "developmentStatus": "active",
-    "issueTracker": "https://github.com/Slookeur/Atomes-GNU/issues"
+    "issueTracker": "https://github.com/Slookeur/atomes-GNU/issues"
 }
