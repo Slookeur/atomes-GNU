@@ -77,15 +77,16 @@ Here are some issues with GTK4 that cannot be sovled for the time being:
 By default ***atomes*** uses [OpenMP][openmp] to parallelize several calculations over the CPU cores. 
 It is possible to turn this off, and to build a serial version of ***atomes***, to do that:
 
+  1. Configure using the `--disable-openmp` flag:
+
 ```
 ./configure --disable-openmp
 ```
 
 
-  3. Build ***atomes***
+  2. Build ***atomes***
 
 ```
-./configure
 make
 ```
 
