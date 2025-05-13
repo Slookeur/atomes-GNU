@@ -1,6 +1,6 @@
 Name:           atomes
-%global upname Atomes-GNU
-Version:        1.1.17
+%global upname atomes-GNU
+Version:        1.1.18
 Release:        1%{?dist}
 Summary:        An atomistic toolbox
 License:        AGPL-3.0-or-later
@@ -38,12 +38,12 @@ Requires: mesa-libGLU
 Provides: %{name} = %{version}-%{release}
 
 %description
-Atomes: a toolbox to analyze, to visualize 
+atomes: a toolbox to analyze, to visualize 
 and to create/edit three-dimensional atomistic models.
 It offers a workspace that allows to have many projects opened simultaneously.
 The different projects in the workspace can exchange data: 
 analysis results, atomic coordinates...
-Atomes also provides an advanced input preparation system 
+atomes also provides an advanced input preparation system 
 for further calculations using well known molecular dynamics codes:
 
     Classical MD: DLPOLY and LAMMPS
@@ -52,7 +52,7 @@ for further calculations using well known molecular dynamics codes:
 
 To prepare the input files for these calculations is likely to be the key, 
 and most complicated step towards MD simulations.
-Atomes offers a user-friendly assistant to help and guide the scientist
+atomes offers a user-friendly assistant to help and guide the scientist
 step by step to achieve this crucial step.
 
 %prep
@@ -88,8 +88,11 @@ appstream-util validate-relax --nonet %{buildroot}%{_metainfodir}/fr.ipcms.%{nam
 %{_metainfodir}/fr.ipcms.%{name}.appdata.xml
 
 %changelog
+* Thu May 15 2025 Sébastien Le Roux <sebastien.leroux@ipcms.unistra.fr> - 1.1.18-1
+- Bug corrections (see: https://github.com/Slookeur/atomes-GNU/releases/tag/v1.1.18)
+
 * Thu Feb 20 2025 Sébastien Le Roux <sebastien.leroux@ipcms.unistra.fr> - 1.1.17-1
-- Bug corrections and improvements (see: https://github.com/Slookeur/Atomes-GNU/releases/tag/v1.1.17)
+- Bug corrections and improvements (see: https://github.com/Slookeur/atomes-GNU/releases/tag/v1.1.17)
 
 * Wed Dec 18 2024 Sébastien Le Roux <sebastien.leroux@ipcms.unistra.fr> - 1.1.16-1
 - Bug corrections
@@ -101,7 +104,7 @@ appstream-util validate-relax --nonet %{buildroot}%{_metainfodir}/fr.ipcms.%{nam
 - Package correction
 
 * Fri Oct 04 2024 Sébastien Le Roux <sebastien.leroux@ipcms.unistra.fr> - 1.1.15-1
-- Bug corrections and improvements (see: https://github.com/Slookeur/Atomes-GNU/releases/tag/v1.1.15)
+- Bug corrections and improvements (see: https://github.com/Slookeur/atomes-GNU/releases/tag/v1.1.15)
 
 * Mon Sep 23 2024 Fabio Valentini <decathorpe@gmail.com> - 1.1.14-4
 - Rebuild for ffmpeg 7
@@ -110,19 +113,19 @@ appstream-util validate-relax --nonet %{buildroot}%{_metainfodir}/fr.ipcms.%{nam
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_41_Mass_Rebuild
 
 * Wed Mar 20 2024 Sébastien Le Roux <sebastien.leroux@ipcms.unistra.fr> - 1.1.14-2
-- Bug corrections and improvements (see: https://github.com/Slookeur/Atomes-GNU/releases/tag/v1.1.14)
+- Bug corrections and improvements (see: https://github.com/Slookeur/atomes-GNU/releases/tag/v1.1.14)
 
 * Wed Mar 20 2024 Sébastien Le Roux <sebastien.leroux@ipcms.unistra.fr> - 1.1.14-1
-- Bug corrections and improvements (see: https://github.com/Slookeur/Atomes-GNU/releases/tag/v1.1.14)
+- Bug corrections and improvements (see: https://github.com/Slookeur/atomes-GNU/releases/tag/v1.1.14)
 
 * Wed Feb 28 2024 Sébastien Le Roux <sebastien.leroux@ipcms.unistra.fr> - 1.1.13-1
-- Bug corrections and improvements (see: https://github.com/Slookeur/Atomes-GNU/releases/tag/v1.1.13)
+- Bug corrections and improvements (see: https://github.com/Slookeur/atomes-GNU/releases/tag/v1.1.13)
 
 * Mon Sep 18 2023 Sébastien Le Roux <sebastien.leroux@ipcms.unistra.fr> - 1.1.12-2
 - Package metadata update
 
 * Mon Sep 11 2023 Sébastien Le Roux <sebastien.leroux@ipcms.unistra.fr> - 1.1.12-1
-- Several bug corrections and improvements (see: https://github.com/Slookeur/Atomes-GNU/releases/tag/v1.1.12)
+- Several bug corrections and improvements (see: https://github.com/Slookeur/atomes-GNU/releases/tag/v1.1.12)
 
 * Wed Jul 19 2023 Fedora Release Engineering <releng@fedoraproject.org> - 1.1.11-9
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_39_Mass_Rebuild

@@ -5,7 +5,7 @@ AC_PREREQ(2.59)
 
 m4_define(atomes_major_version, 1)
 m4_define(atomes_minor_version, 1)
-m4_define(atomes_patch_version, 17)
+m4_define(atomes_patch_version, 18)
 m4_define(atomes_version, atomes_major_version.atomes_minor_version.atomes_patch_version)
 m4_define(atomes_url, https://atomes.ipcms.fr)
 m4_define(atomes_tar, atomes)
@@ -14,11 +14,11 @@ AC_INIT([atomes], [atomes_version], [atomes@ipcms.unistra.fr], [atomes_tar], [at
 
 AM_INIT_AUTOMAKE
 
-AC_DEFINE([ATOMES_MAJOR_VERSION], [atomes_major_version], [Atomes major version])
+AC_DEFINE([ATOMES_MAJOR_VERSION], [atomes_major_version], [atomes major version])
 AC_SUBST(ATOMES_MAJOR_VERSION, atomes_major_version)
-AC_DEFINE([ATOMES_MINOR_VERSION], [atomes_minor_version], [Atomes minor version])
+AC_DEFINE([ATOMES_MINOR_VERSION], [atomes_minor_version], [atomes minor version])
 AC_SUBST(ATOMES_MINOR_VERSION, atomes_minor_version)
-AC_DEFINE([ATOMES_PATCH_VERSION], [atomes_patch_version], [Atomes patch version])
+AC_DEFINE([ATOMES_PATCH_VERSION], [atomes_patch_version], [atomes patch version])
 AC_SUBST(ATOMES_PATCH_VERSION, atomes_patch_version)
 
 dnl ***************************************************************************

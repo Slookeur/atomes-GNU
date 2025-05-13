@@ -1,12 +1,12 @@
 /* config.h.in.  Generated from configure.ac by autoheader.  */
 
-/* Atomes major version */
+/* atomes major version */
 #undef ATOMES_MAJOR_VERSION
 
-/* Atomes minor version */
+/* atomes minor version */
 #undef ATOMES_MINOR_VERSION
 
-/* Atomes patch version */
+/* atomes patch version */
 #undef ATOMES_PATCH_VERSION
 
 /* Define to dummy `main' function (if any) required to link to the Fortran
