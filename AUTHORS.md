@@ -1,9 +1,9 @@
-atomes program Author
+**atomes** program Author
 =========================================================
 
 For any support request please use:
 
-atomes AT ipcms.unistra.fr
+[atomes AT ipcms.unistra.fr](maitlo:atomes AT ipcms.unistra.fr)
 
 ---------------------------------------------------------
 
@@ -15,6 +15,6 @@ Département des Matériaux Organiques
 BP 43 F-67034 Strasbourg Cedex 2
 France
 
-Email: sebastien.leroux AT ipcms.unistra.fr
-Web page: https://www.ipcms.fr/sebastien-le-roux/
+Email: [sebastien.leroux AT ipcms.unistra.fr](mailto:sebastien.leroux AT ipcms.unistra.fr)
+Web page: [https://www.ipcms.fr/sebastien-le-roux/](https://www.ipcms.fr/sebastien-le-roux/)
 
