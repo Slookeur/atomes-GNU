@@ -3,7 +3,7 @@
 
 For any support request please use:
 
-[atomes@ipcms.unistra.fr](maitlo:atomes@ipcms.unistra.fr)
+[atomes@ipcms.unistra.fr](mailto:atomes@ipcms.unistra.fr)
 
 ---------------------------------------------------------
 
