@@ -89,6 +89,12 @@
   <content_rating type="oars-1.1"/>
   
   <releases>
+    <release version="1.1.18" date="2025-05-15">
+      <description>
+        <p>Release of version 1.1.18:</p>
+        <p>- Bug corrections, see: <url>https://github.com/Slookeur/atomes-GNU/releases/tag/v1.1.18</url></p>
+      </description>
+    </release>
     <release version="1.1.17" date="2025-02-20">
       <description>
         <p>Release of version 1.1.17:</p>
