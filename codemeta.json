@@ -1,0 +1,103 @@
+{
+    "@context": "https://doi.org/10.5063/schema/codemeta-2.0",
+    "type": "SoftwareSourceCode",
+    "applicationCategory": "Chemistry",
+    "author": [
+        {
+            "id": "https://orcid.org/0000-0002-1912-6960",
+            "type": "Person",
+            "affiliation": {
+                "type": "Organization",
+                "name": "Institut de Physique et Chimie des Matériaux de Strasbourg"
+            },
+            "email": "sebastien.leroux@ipcms.unistra.fr",
+            "familyName": "Le Roux",
+            "givenName": "Sébastien"
+        }
+    ],
+    "codeRepository": "https://github.com/Slookeur/atomes-GNU.git",
+    "contributor": [
+        {
+            "id": "https://orcid.org/0000-0001-5318-3910",
+            "type": "Person",
+            "affiliation": {
+                "type": "Organization",
+                "name": "Institut de Recherche de Chimie Paris"
+            },
+            "email": "fx.coudert@chimieparistech.psl.eu",
+            "familyName": "Coudert",
+            "givenName": "François-Xavier"
+        },
+        {
+            "id": "https://orcid.org/0000-0001-6913-7388",
+            "type": "Person",
+            "email": "alex.ploumistos@gmail.com",
+            "familyName": "Ploumistos",
+            "givenName": "Alexander"
+        },
+        {
+            "id": "https://orcid.org/0000-0002-5184-7557",
+            "type": "Person",
+            "affiliation": {
+                "type": "Organization",
+                "name": "EDF"
+            },
+            "email": "pgt@debian.org",
+            "familyName": "Gruet",
+            "givenName": "Pierre"
+        },
+        {
+            "id": "_:contributor_4",
+            "type": "Person",
+            "affiliation": {
+                "type": "Organization",
+                "name": "Red Hat"
+            },
+            "email": "yselkowi@redhat.com",
+            "familyName": "Selkowitz",
+            "givenName": "Yaakov"
+        }
+    ],
+    "dateCreated": "2012-01-01",
+    "dateModified": "2024-10-11",
+    "datePublished": "2022-09-01",
+    "description": "<b>atomes</b>: a toolbox to analyze, to visualize \nand to create/edit three-dimensional atomistic models.\nIt offers a workspace that allows to have many projects opened simultaneously.\nThe different projects in the workspace can exchange data: \nanalysis results, atomic coordinates...\n<b>atomes</b> also provides an advanced input preparation system \nfor further calculations using well known molecular dynamics codes:\n\n    Classical MD: DLPOLY and LAMMPS\n    ab-initio MD: CPMD and CP2K\n    QM-MM MD: CPMD and CP2K\n\nTo prepare the input files for these calculations is likely to be the key, \nand most complicated step towards MD simulations.\n<b>atomes</b> offers a user-friendly assistant to help and guide the scientist\nstep by step to achieve this crucial step.",
+    "downloadUrl": "https://atomes.ipcms.fr",
+    "funder": {
+        "type": "Organization",
+        "name": "CNRS"
+    },
+    "keywords": [
+        "Chemistry",
+        "Physics",
+        "Molecule",
+        "Crystal",
+        "Molecular Dynamics",
+        "Surface"
+    ],
+    "license": "https://spdx.org/licenses/AGPL-3.0-or-later",
+    "name": "atomes",
+    "operatingSystem": [
+        "Linux",
+        "macOS",
+        "Windows"
+    ],
+    "programmingLanguage": [
+        "C",
+        "GLSL",
+        "Fortran"
+    ],
+    "relatedLink": "https://atomes.ipcms.fr/",
+    "schema:releaseNotes": "Release of version 1.1.17\n\n  - Bug corrections \n  - Improvements"
+    "softwareRequirements": [
+        "libgtk+3.0 or ligtk4 : https://www.gtk.org/",
+        "libepoxy : https://github.com/anholt/libepoxy/",
+        "libglu (Linux only) : https://gitlab.freedesktop.org/mesa/glu/",
+        "libpangoft2 : https://docs.gtk.org/PangoFT2/",
+        "libxml-2 : https://github.com/GNOME/libxml2/",
+        "libavutil, libavformat, libavcodec, libswscale : https://www.ffmpeg.org/"
+    ],
+    "version": "1.1.17",
+    "developmentStatus": "active",
+    "issueTracker": "https://github.com/Slookeur/atomes-GNU/issues"
+}

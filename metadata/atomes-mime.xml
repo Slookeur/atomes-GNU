@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <mime-info xmlns="http://www.freedesktop.org/standards/shared-mime-info">
   <mime-type type="application/x-awf">
-    <comment>Atomes Workspace</comment>
+    <comment>atomes Workspace</comment>
     <glob pattern="*.awf"/>
     <generic-icon name="atomes-workspace"/>
     <sub-class-of type="application/octet-stream"/>
   </mime-type>
   <mime-type type="application/x-apf">
-    <comment>Atomes Project</comment>
+    <comment>atomes Project</comment>
     <glob pattern="*.apf"/>
     <generic-icon name="atomes-project"/>
     <sub-class-of type="application/octet-stream"/>
