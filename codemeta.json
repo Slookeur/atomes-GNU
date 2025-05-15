@@ -88,7 +88,7 @@
         "Fortran"
     ],
     "relatedLink": "https://atomes.ipcms.fr/",
-    "schema:releaseNotes": "Release of version 1.1.17\n\n  - Bug corrections \n  - Improvements"
+    "schema:releaseNotes": "Release of version 1.1.18\n\n  - Bug corrections"
     "softwareRequirements": [
         "libgtk+3.0 or ligtk4 : https://www.gtk.org/",
         "libepoxy : https://github.com/anholt/libepoxy/",
@@ -97,7 +97,7 @@
         "libxml-2 : https://github.com/GNOME/libxml2/",
         "libavutil, libavformat, libavcodec, libswscale : https://www.ffmpeg.org/"
     ],
-    "version": "1.1.17",
+    "version": "1.1.18",
     "developmentStatus": "active",
     "issueTracker": "https://github.com/Slookeur/atomes-GNU/issues"
 }
