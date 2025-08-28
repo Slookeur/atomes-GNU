@@ -1,6 +1,6 @@
 Name:           atomes
 %global upname atomes-GNU
-Version:        1.1.18
+Version:        1.2.0
 Release:        1%{?dist}
 Summary:        An atomistic toolbox
 License:        AGPL-3.0-or-later
@@ -88,6 +88,9 @@ appstream-util validate-relax --nonet %{buildroot}%{_metainfodir}/fr.ipcms.%{nam
 %{_metainfodir}/fr.ipcms.%{name}.appdata.xml
 
 %changelog
+* Fri Sep 05 2025 Sébastien Le Roux <sebastien.leroux@ipcms.unistra.fr> - 1.2.0-1
+- New features (see:  https://github.com/Slookeur/atomes-GNU/releases/tag/v1.2.0)
+
 * Thu May 15 2025 Sébastien Le Roux <sebastien.leroux@ipcms.unistra.fr> - 1.1.18-1
 - Bug corrections (see: https://github.com/Slookeur/atomes-GNU/releases/tag/v1.1.18)
 

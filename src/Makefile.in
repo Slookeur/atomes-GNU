@@ -127,11 +127,11 @@ am__objects_5 = $(gui)bdcall.$(OBJEXT) $(gui)calc_menu.$(OBJEXT) \
 	$(gui)callbacks.$(OBJEXT) $(gui)chainscall.$(OBJEXT) \
 	$(gui)edit_menu.$(OBJEXT) $(gui)grcall.$(OBJEXT) \
 	$(gui)gtk-misc.$(OBJEXT) $(gui)gui.$(OBJEXT) \
-	$(gui)initc.$(OBJEXT) $(gui)interface.$(OBJEXT) \
-	$(gui)main.$(OBJEXT) $(gui)msdcall.$(OBJEXT) \
-	$(gui)ringscall.$(OBJEXT) $(gui)spcall.$(OBJEXT) \
-	$(gui)sqcall.$(OBJEXT) $(gui)tools.$(OBJEXT) \
-	$(gui)work_menu.$(OBJEXT)
+	$(gui)initc.$(OBJEXT) $(gui)preferences.$(OBJEXT) \
+	$(gui)interface.$(OBJEXT) $(gui)main.$(OBJEXT) \
+	$(gui)msdcall.$(OBJEXT) $(gui)ringscall.$(OBJEXT) \
+	$(gui)spcall.$(OBJEXT) $(gui)sqcall.$(OBJEXT) \
+	$(gui)tools.$(OBJEXT) $(gui)work_menu.$(OBJEXT)
 am__objects_6 = $(work)modelinfo.$(OBJEXT) $(work)workinfo.$(OBJEXT) \
 	$(work)workspace.$(OBJEXT)
 am__objects_7 = $(read)read_c3d.$(OBJEXT) $(read)read_cif.$(OBJEXT) \
@@ -206,8 +206,9 @@ am__objects_16 = $(gldraw)d_atoms.$(OBJEXT) $(gldraw)d_axis.$(OBJEXT) \
 	$(gldraw)d_bonds.$(OBJEXT) $(gldraw)d_box.$(OBJEXT) \
 	$(gldraw)d_label.$(OBJEXT) $(gldraw)d_measures.$(OBJEXT) \
 	$(gldraw)d_poly.$(OBJEXT) $(gldraw)d_rings.$(OBJEXT) \
-	$(gldraw)d_selection.$(OBJEXT) $(gldraw)image.$(OBJEXT) \
-	$(gldraw)movie.$(OBJEXT) $(gldraw)ogl_text.$(OBJEXT)
+	$(gldraw)d_selection.$(OBJEXT) $(gldraw)d_background.$(OBJEXT) \
+	$(gldraw)image.$(OBJEXT) $(gldraw)movie.$(OBJEXT) \
+	$(gldraw)ogl_text.$(OBJEXT)
 am__objects_17 = $(gledit)atom_action.$(OBJEXT) \
 	$(gledit)atom_coord.$(OBJEXT) $(gledit)atom_edit.$(OBJEXT) \
 	$(gledit)atom_geo.$(OBJEXT) $(gledit)atom_insert.$(OBJEXT) \
@@ -286,6 +287,7 @@ am__depfiles_remade = ./$(DEPDIR)/$(calc)calc.Po \
 	./$(DEPDIR)/$(dlpoly)dlp_viz.Po \
 	./$(DEPDIR)/$(fields)force_fields.Po \
 	./$(DEPDIR)/$(gldraw)d_atoms.Po ./$(DEPDIR)/$(gldraw)d_axis.Po \
+	./$(DEPDIR)/$(gldraw)d_background.Po \
 	./$(DEPDIR)/$(gldraw)d_bonds.Po ./$(DEPDIR)/$(gldraw)d_box.Po \
 	./$(DEPDIR)/$(gldraw)d_label.Po \
 	./$(DEPDIR)/$(gldraw)d_measures.Po \
@@ -350,9 +352,10 @@ am__depfiles_remade = ./$(DEPDIR)/$(calc)calc.Po \
 	./$(DEPDIR)/$(gui)grcall.Po ./$(DEPDIR)/$(gui)gtk-misc.Po \
 	./$(DEPDIR)/$(gui)gui.Po ./$(DEPDIR)/$(gui)initc.Po \
 	./$(DEPDIR)/$(gui)interface.Po ./$(DEPDIR)/$(gui)main.Po \
-	./$(DEPDIR)/$(gui)msdcall.Po ./$(DEPDIR)/$(gui)ringscall.Po \
-	./$(DEPDIR)/$(gui)spcall.Po ./$(DEPDIR)/$(gui)sqcall.Po \
-	./$(DEPDIR)/$(gui)tools.Po ./$(DEPDIR)/$(gui)work_menu.Po \
+	./$(DEPDIR)/$(gui)msdcall.Po ./$(DEPDIR)/$(gui)preferences.Po \
+	./$(DEPDIR)/$(gui)ringscall.Po ./$(DEPDIR)/$(gui)spcall.Po \
+	./$(DEPDIR)/$(gui)sqcall.Po ./$(DEPDIR)/$(gui)tools.Po \
+	./$(DEPDIR)/$(gui)work_menu.Po \
 	./$(DEPDIR)/$(lammps)la_print.Po ./$(DEPDIR)/$(ogl)arcball.Po \
 	./$(DEPDIR)/$(ogl)glview.Po ./$(DEPDIR)/$(ogl)ogl_draw.Po \
 	./$(DEPDIR)/$(ogl)ogl_shaders.Po \
@@ -704,6 +707,7 @@ atomes_gui = $(gui)bdcall.c \
 	     $(gui)gtk-misc.c \
 	     $(gui)gui.c \
 	     $(gui)initc.c \
+	     $(gui)preferences.c \
 	     $(gui)interface.c \
 	     $(gui)main.c \
 	     $(gui)msdcall.c \
@@ -856,6 +860,7 @@ atomes_gldraw = $(gldraw)d_atoms.c \
 		$(gldraw)d_poly.c \
 		$(gldraw)d_rings.c \
 		$(gldraw)d_selection.c \
+		$(gldraw)d_background.c \
 		$(gldraw)image.c \
 		$(gldraw)movie.c \
 		$(gldraw)ogl_text.c
@@ -902,6 +907,7 @@ atomes_includes = config.h \
 		  $(gui)gui.h \
 		  $(gui)interface.h \
 		  $(gui)xmlrw.h \
+		  $(gui)preferences.h \
 		  $(work)workspace.h \
 		  $(proj)project.h \
 		  $(read)readers.h \
@@ -1075,6 +1081,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/$(fields)force_fields.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/$(gldraw)d_atoms.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/$(gldraw)d_axis.Po@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/$(gldraw)d_background.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/$(gldraw)d_bonds.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/$(gldraw)d_box.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/$(gldraw)d_label.Po@am__quote@ # am--include-marker
@@ -1163,6 +1170,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/$(gui)interface.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/$(gui)main.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/$(gui)msdcall.Po@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/$(gui)preferences.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/$(gui)ringscall.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/$(gui)spcall.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/$(gui)sqcall.Po@am__quote@ # am--include-marker
@@ -1483,6 +1491,7 @@ distclean: distclean-recursive
 	-rm -f ./$(DEPDIR)/$(fields)force_fields.Po
 	-rm -f ./$(DEPDIR)/$(gldraw)d_atoms.Po
 	-rm -f ./$(DEPDIR)/$(gldraw)d_axis.Po
+	-rm -f ./$(DEPDIR)/$(gldraw)d_background.Po
 	-rm -f ./$(DEPDIR)/$(gldraw)d_bonds.Po
 	-rm -f ./$(DEPDIR)/$(gldraw)d_box.Po
 	-rm -f ./$(DEPDIR)/$(gldraw)d_label.Po
@@ -1571,6 +1580,7 @@ distclean: distclean-recursive
 	-rm -f ./$(DEPDIR)/$(gui)interface.Po
 	-rm -f ./$(DEPDIR)/$(gui)main.Po
 	-rm -f ./$(DEPDIR)/$(gui)msdcall.Po
+	-rm -f ./$(DEPDIR)/$(gui)preferences.Po
 	-rm -f ./$(DEPDIR)/$(gui)ringscall.Po
 	-rm -f ./$(DEPDIR)/$(gui)spcall.Po
 	-rm -f ./$(DEPDIR)/$(gui)sqcall.Po
@@ -1712,6 +1722,7 @@ maintainer-clean: maintainer-clean-recursive
 	-rm -f ./$(DEPDIR)/$(fields)force_fields.Po
 	-rm -f ./$(DEPDIR)/$(gldraw)d_atoms.Po
 	-rm -f ./$(DEPDIR)/$(gldraw)d_axis.Po
+	-rm -f ./$(DEPDIR)/$(gldraw)d_background.Po
 	-rm -f ./$(DEPDIR)/$(gldraw)d_bonds.Po
 	-rm -f ./$(DEPDIR)/$(gldraw)d_box.Po
 	-rm -f ./$(DEPDIR)/$(gldraw)d_label.Po
@@ -1800,6 +1811,7 @@ maintainer-clean: maintainer-clean-recursive
 	-rm -f ./$(DEPDIR)/$(gui)interface.Po
 	-rm -f ./$(DEPDIR)/$(gui)main.Po
 	-rm -f ./$(DEPDIR)/$(gui)msdcall.Po
+	-rm -f ./$(DEPDIR)/$(gui)preferences.Po
 	-rm -f ./$(DEPDIR)/$(gui)ringscall.Po
 	-rm -f ./$(DEPDIR)/$(gui)spcall.Po
 	-rm -f ./$(DEPDIR)/$(gui)sqcall.Po
