@@ -125,6 +125,7 @@ atomes_gui = $(gui)bdcall.c \
 	     $(gui)gtk-misc.c \
 	     $(gui)gui.c \
 	     $(gui)initc.c \
+	     $(gui)preferences.c \
 	     $(gui)interface.c \
 	     $(gui)main.c \
 	     $(gui)msdcall.c \
@@ -279,6 +280,7 @@ atomes_gldraw = $(gldraw)d_atoms.c \
 		$(gldraw)d_poly.c \
 		$(gldraw)d_rings.c \
 		$(gldraw)d_selection.c \
+		$(gldraw)d_background.c \
 		$(gldraw)image.c \
 		$(gldraw)movie.c \
 		$(gldraw)ogl_text.c
@@ -325,6 +327,7 @@ atomes_includes = config.h \
 		  $(gui)gui.h \
 		  $(gui)interface.h \
 		  $(gui)xmlrw.h \
+		  $(gui)preferences.h \
 		  $(work)workspace.h \
 		  $(proj)project.h \
 		  $(read)readers.h \
