@@ -12,7 +12,7 @@ atomes_bashdir = $(atomes_datadir)/bash-completion/completions
 atomes_docdir = $(docdir)
 atomes_doc_DATA = \
 	README.md \
-	AUTHORS \
+	AUTHORS.md \
 	ChangeLog
 
 atomes_mandir = $(mandir)/man1/

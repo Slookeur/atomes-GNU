@@ -187,9 +187,9 @@ am__define_uniq_tagged_files = \
 DIST_SUBDIRS = $(SUBDIRS)
 am__DIST_COMMON = $(srcdir)/Makefile.in $(srcdir)/config.h.in \
 	$(top_srcdir)/misc/win/atomes.rc.in \
-	$(top_srcdir)/misc/win/startup.rc.in AUTHORS COPYING ChangeLog \
-	INSTALL NEWS README.md compile config.guess config.sub depcomp \
-	install-sh missing
+	$(top_srcdir)/misc/win/startup.rc.in AUTHORS.md COPYING \
+	ChangeLog INSTALL NEWS.md README.md compile config.guess \
+	config.sub depcomp install-sh missing
 DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
 distdir = $(PACKAGE)-$(VERSION)
 top_distdir = $(distdir)
@@ -373,7 +373,7 @@ atomes_bashdir = $(atomes_datadir)/bash-completion/completions
 atomes_docdir = $(docdir)
 atomes_doc_DATA = \
 	README.md \
-	AUTHORS \
+	AUTHORS.md \
 	ChangeLog
 
 atomes_mandir = $(mandir)/man1/
