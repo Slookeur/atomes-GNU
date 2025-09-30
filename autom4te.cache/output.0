@@ -2982,7 +2982,6 @@ fi
  PACKAGE='atomes'
  VERSION='1.2.1'
 
-
 printf "%s\n" "@%:@define PACKAGE \"$PACKAGE\"" >>confdefs.h
 
  
