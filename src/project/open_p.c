@@ -11,7 +11,7 @@ See the GNU General Public License for more details.
 You should have received a copy of the GNU Affero General Public License along with 'atomes'.
 If not, see <https://www.gnu.org/licenses/>
 
-Copyright (C) 2022-2025 by CNRS and University of Strasbourg */
+Copyright (C) 2022-2026 by CNRS and University of Strasbourg */
 
 /*!
 * @file open_p.c
@@ -30,13 +30,14 @@ Copyright (C) 2022-2025 by CNRS and University of Strasbourg */
 *
 * List of functions:
 
-  int open_project (FILE * fp, int npi);
+  int read_analysis (FILE * fp, project * this_proj, atomes_analysis * this_analysis, int wid);
+  int open_project (FILE * fp, int wid);
 
   char * read_string (int i, FILE * fp);
 
   gchar * read_this_string (FILE * fp);
 
-  void initcnames (int w, int s);
+  void initcnames (project * this_proj, int rid);
   void allocatoms (project * this_proj);
   void alloc_proj_data (project * this_proj, int cid);
 
@@ -51,21 +52,30 @@ Copyright (C) 2022-2025 by CNRS and University of Strasbourg */
 #include "project.h"
 #include "curve.h"
 #include "glview.h"
+#include "movie.h"
 #include "preferences.h"
 
-extern void alloc_curves (int c);
 extern void init_box_calc ();
 extern void set_color_map_sensitive (glwin * view);
-extern void initgr (int r);
-extern void initsq (int r);
-extern void initbd ();
-extern void initang ();
-extern void initrng ();
-extern void initchn ();
-extern void initmsd ();
-extern void initsh (int s);
+extern void init_gr (project * this_proj, int rdf);
+extern void init_sq (project * this_proj, int sqk);
+extern void init_bond (project * this_proj);
+extern void init_ang (project * this_proj);
+extern void init_ring (project * this_proj);
+extern void init_chain (project * this_proj);
+extern void init_msd (project * this_proj);
+extern void init_sph (project * this_proj, int opening);
+extern void init_skt (project * this_proj, int opening);
+extern void alloc_analysis_curves (int pid, atomes_analysis * this_analysis);
+extern void add_curve_widgets (project * this_proj, int rid);
 
-gboolean old_la_bo_ax_gr;
+extern G_MODULE_EXPORT void run_render_image (GtkDialog * info, gint response_id, gpointer data);
+
+gboolean version_2_5_and_bellow;
+gboolean version_2_6_and_above;
+gboolean version_2_7_and_above;
+gboolean version_2_8_and_above;
+gboolean version_2_9_and_above;
 
 /*!
   \fn char * read_string (int i, FILE * fp)
@@ -78,7 +88,7 @@ gboolean old_la_bo_ax_gr;
 char * read_string (int i, FILE * fp)
 {
   char * tmp = NULL;
-  tmp = g_malloc0 (i*sizeof*tmp);
+  tmp = g_malloc0(i*sizeof*tmp);
   int j;
   for (j=0; j<i; j++)
   {
@@ -109,46 +119,49 @@ gchar * read_this_string (FILE * fp)
 
 
 /*!
-  \fn void initcnames (int w, int s)
+  \fn void initcnames (project * this_proj, int rid)
 
-  \brief initialize curve namees
+  \brief initialize curve names
 
-  \param w calculation id
-  \param s initialize spherical harmonics or not
+  \param project the target project
+  \param rid calculation id
 */
-void initcnames (int w, int s)
+void initcnames (project * this_proj, int rid)
 {
-  switch (w)
+  switch (rid)
   {
-    case GR:
-      initgr (w);
+    case GDR:
+      init_gr (this_proj, rid);
       break;
-    case SQ:
-      initsq (w);
+    case SQD:
+      init_sq (this_proj, rid);
       break;
-    case SK:
-      initsq (w);
+    case SKD:
+      init_sq (this_proj, rid);
       break;
-    case GK:
-      initgr (w);
+    case GDK:
+      init_gr (this_proj, rid);
       break;
-    case BD:
-      initbd ();
+    case BND:
+      init_bond (this_proj);
       break;
-    case AN:
-      initang ();
+    case ANG:
+      init_ang (this_proj);
       break;
-    case RI:
-      initrng ();
+    case RIN:
+      init_ring (this_proj);
       break;
-    case CH:
-      initchn ();
+    case CHA:
+      init_chain (this_proj);
       break;
-    case SP:
-      initsh (0);
+    case SPH:
+      init_sph (this_proj, 1);
       break;
-    default:
-      initmsd ();
+    case MSD:
+      init_msd (this_proj);
+      break;
+    case SKT:
+      init_skt (this_proj, 1);
       break;
   }
 }
@@ -168,10 +181,10 @@ void allocatoms (project * this_proj)
     g_free (this_proj -> atoms);
     this_proj -> atoms = NULL;
   }
-  this_proj -> atoms = g_malloc0 (this_proj -> steps*sizeof*this_proj -> atoms);
+  this_proj -> atoms = g_malloc0(this_proj -> steps*sizeof*this_proj -> atoms);
   for (i=0; i < this_proj -> steps; i++)
   {
-    this_proj -> atoms[i] = g_malloc0 (this_proj -> natomes*sizeof*this_proj -> atoms[i]);
+    this_proj -> atoms[i] = g_malloc0(this_proj -> natomes*sizeof*this_proj -> atoms[i]);
     for (j=0; j<this_proj -> natomes; j++)
     {
       this_proj -> atoms[i][j].style = NONE;
@@ -188,9 +201,9 @@ void allocatoms (project * this_proj)
 */
 chemical_data * alloc_chem_data (int spec)
 {
-  chemical_data * chem = g_malloc0 (sizeof*chem);
-  chem -> label = g_malloc0 (spec*sizeof*chem -> label);
-  chem -> element = g_malloc0 (spec*sizeof*chem -> element);
+  chemical_data * chem = g_malloc0(sizeof*chem);
+  chem -> label = g_malloc0(spec*sizeof*chem -> label);
+  chem -> element = g_malloc0(spec*sizeof*chem -> element);
   chem -> nsps = allocint (spec);
   chem -> formula = allocint (spec);
   chem -> grtotcutoff = default_totcut;
@@ -214,46 +227,133 @@ void alloc_proj_data (project * this_proj, int cid)
 }
 
 /*!
-  \fn int open_project (FILE * fp, int npi)
+  \fn int read_analysis (FILE * fp, project * this_proj, atomes_analysis * this_analysis, int wid)
+
+  \brief saving analysis parameter(s) and result(s) to project file
+
+  \param fp the file pointer
+  \param this_proj the target project
+  \param this_analysis the target analysis
+  \param wid reading workspace (1/0)
+*/
+int read_analysis (FILE * fp, project * this_proj, atomes_analysis * this_analysis, int wid)
+{
+  int i, j;
+  if (fread (& i, sizeof(int), 1, fp) != 1) return ERROR_ANA;
+  if (i != this_analysis -> aid)
+  {
+    // This is not supposed to happen
+    return ERROR_ANA;
+  }
+  this_analysis -> name = read_this_string (fp);
+  if (! this_analysis -> name) return ERROR_ANA;
+  if (fread (& this_analysis -> avail_ok, sizeof(gboolean), 1, fp) != 1) return ERROR_ANA;
+  if (fread (& this_analysis -> init_ok, sizeof(gboolean), 1, fp) != 1) return ERROR_ANA;
+  if (fread (& this_analysis -> calc_ok, sizeof(gboolean), 1, fp) != 1) return ERROR_ANA;
+  if (fread (& this_analysis -> requires_md, sizeof(gboolean), 1, fp) != 1) return ERROR_ANA;
+  if (fread (& this_analysis -> num_delta, sizeof(int), 1, fp) != 1) return ERROR_ANA;
+  if (fread (& this_analysis -> delta, sizeof(double), 1, fp) != 1) return ERROR_ANA;
+  if (fread (& this_analysis -> min, sizeof(double), 1, fp) != 1) return ERROR_ANA;
+  if (fread (& this_analysis -> max, sizeof(double), 1, fp) != 1) return ERROR_ANA;
+  if (fread (& this_analysis -> fact, sizeof(double), 1, fp) != 1) return ERROR_ANA;
+  if (fread (& this_analysis -> graph_res, sizeof(gboolean), 1, fp) != 1) return ERROR_ANA;
+  if (this_analysis -> graph_res)
+  {
+    if (fread (& this_analysis -> numc, sizeof(int), 1, fp) != 1) return ERROR_ANA;
+    if (fread (& i, sizeof(int), 1, fp) != 1) return ERROR_ANA;
+    if (i != this_analysis -> c_sets)
+    {
+      // This is not supposed to happen
+      return ERROR_ANA;
+    }
+    if (fread (this_analysis -> compat_id, sizeof(int), this_analysis -> c_sets, fp) != this_analysis -> c_sets) return ERROR_ANA;
+    if (fread (& i, sizeof(int), 1, fp) != 1) return ERROR_ANA;
+    if (i)
+    {
+      this_analysis -> x_title = read_this_string (fp);
+      if (! this_analysis -> x_title) return ERROR_ANA;
+    }
+    if (fread (& i, sizeof(int), 1, fp) != 1) return ERROR_ANA;
+    if (i)
+    {
+      initcnames (this_proj, this_analysis -> aid);
+      for (j=0; j<i; j++)
+      {
+        // g_debug ("Reading :: analysis= %s, aid= %d, j= %d", this_analysis -> name, this_analysis -> aid, j);
+        if (read_project_curve (fp, wid, this_proj -> id) != OK)
+        {
+          // error
+          // g_debug ("Error :: analysis= %s, aid= %d, j= %d", this_analysis -> name, this_analysis -> aid, j);
+          return ERROR_CURVE;
+        }
+        if (this_analysis -> aid == SPH)
+        {
+          init_curve_title (this_proj, SPH, j);
+        }
+      }
+    }
+  }
+  return OK;
+}
+
+/*!
+  \fn int open_project (FILE * fp, int wid)
 
   \brief open atomes project file
 
   \param fp the file pointer
-  \param npi the total number of projects in the workspace
+  \param wid reading workspace (1/0)
 */
-int open_project (FILE * fp, int npi)
+int open_project (FILE * fp, int wid)
 {
   int i, j, k;
-  gchar * ver;
-  // First 2 lines for compatibility issues
-  if (fread (& i, sizeof(int), 1, fp) != 1) return ERROR_PROJECT;
-  ver = g_malloc0 (i*sizeof*ver);
-  if (fread (ver, sizeof(char), i, fp) != i) return ERROR_PROJECT;
+  gchar * version;
 
-  gboolean labels_in_file = FALSE;
-  gboolean correct_x = TRUE;
-  old_la_bo_ax_gr = TRUE;
-  // test on ver for version
-  if (g_strcmp0(ver, "%\n% project file v-2.6\n%\n") == 0)
+  version = read_this_string (fp);
+  if (! version) return ERROR_PROJECT;
+
+  version_2_6_and_above = FALSE;
+  version_2_7_and_above = FALSE;
+  version_2_8_and_above = FALSE;
+  version_2_9_and_above = FALSE;
+
+  int calcs_to_read;
+  // Start version related tests
+  if (g_strcmp0(version, "%\n% project file v-2.6\n%\n") == 0)
   {
-    labels_in_file = TRUE;
+    version_2_6_and_above = TRUE;
   }
-  else if (g_strcmp0(ver, "%\n% project file v-2.7\n%\n") == 0)
+  else if (g_strcmp0(version, "%\n% project file v-2.7\n%\n") == 0)
   {
-    labels_in_file = TRUE;
-    correct_x = FALSE;
+    version_2_6_and_above = TRUE;
+    version_2_7_and_above = TRUE;
   }
-  else if (g_strcmp0(ver, "%\n% project file v-2.8\n%\n") == 0)
+  else if (g_strcmp0(version, "%\n% project file v-2.8\n%\n") == 0)
   {
-    old_la_bo_ax_gr = FALSE;
-    labels_in_file = TRUE;
-    correct_x = FALSE;
+    version_2_6_and_above = TRUE;
+    version_2_7_and_above = TRUE;
+    version_2_8_and_above = TRUE;
   }
+  else if (g_strcmp0(version, "%\n% project file v-2.9\n%\n") == 0)
+  {
+    version_2_6_and_above = TRUE;
+    version_2_7_and_above = TRUE;
+    version_2_8_and_above = TRUE;
+    version_2_9_and_above = TRUE;
+  }
+  // End version related tests
+
+  // Temporary buffers for version compatibility < 2.9
+  gboolean * tmp_avail, * tmp_init, * tmp_calc;
+  int * tmp_num_delta;
+  double * tmp_delta;
+  double * tmp_min;
+  double * tmp_max;
 
  #ifdef DEBUG
-  g_debug ("%s", ver);
+  g_debug ("%s", version);
  #endif // DEBUG
-  g_free (ver);
+  g_free (version);
 
   // After that we read the data
   active_project -> name = read_this_string (fp);
@@ -273,9 +373,22 @@ int open_project (FILE * fp, int npi)
     active_project -> bondfile = read_this_string (fp);
     if (active_project -> bondfile == NULL) return ERROR_PROJECT;
   }
-  if (fread (active_project -> runok, sizeof(gboolean), NGRAPHS, fp) != NGRAPHS) return ERROR_PROJECT;
-  if (fread (active_project -> initok, sizeof(gboolean), NGRAPHS, fp) != NGRAPHS) return ERROR_PROJECT;
-  if (fread (active_project -> visok, sizeof(gboolean), NGRAPHS, fp) != NGRAPHS) return ERROR_PROJECT;
+  if (version_2_9_and_above)
+  {
+    if (fread (& calcs_to_read, sizeof(int), 1, fp) != 1) return ERROR_PROJECT;
+  }
+  else
+  {
+    // NCALCS was first set to 10
+    calcs_to_read = 10;
+    // We need temporary buffers to read this data
+    tmp_avail = allocbool (calcs_to_read);
+    tmp_init = allocbool (calcs_to_read);
+    tmp_calc = allocbool (calcs_to_read);
+    if (fread (tmp_avail, sizeof(gboolean), calcs_to_read, fp) != calcs_to_read) return ERROR_PROJECT;
+    if (fread (tmp_init, sizeof(gboolean), calcs_to_read, fp) != calcs_to_read) return ERROR_PROJECT;
+    if (fread (tmp_calc, sizeof(gboolean), calcs_to_read, fp) != calcs_to_read) return ERROR_PROJECT;
+  }
   if (fread (& active_project -> nspec, sizeof(int), 1, fp) != 1) return ERROR_PROJECT;
   if (fread (& active_project -> natomes, sizeof(int), 1, fp) != 1) return ERROR_PROJECT;
   if (fread (& active_project -> steps, sizeof(int), 1, fp) != 1) return ERROR_PROJECT;
@@ -285,7 +398,7 @@ int open_project (FILE * fp, int npi)
   if (fread (& i,  sizeof(int), 1, fp) != 1) return ERROR_PROJECT;
   if (i > 1 && i != active_project -> steps) return ERROR_PROJECT;
   if (i > 1) active_cell -> npt = TRUE;
-  active_cell -> box = g_malloc0 (i*sizeof*active_cell -> box);
+  active_cell -> box = g_malloc0(i*sizeof*active_cell -> box);
   active_box = & active_cell -> box[0];
   for (j=0; j<i; j++)
   {
@@ -312,8 +425,23 @@ int open_project (FILE * fp, int npi)
   if (fread (& active_project -> run, sizeof(int), 1, fp) != 1) return ERROR_PROJECT;
   if (fread (& active_project -> initgl, sizeof(gboolean), 1, fp) != 1) return ERROR_PROJECT;
   if (fread (active_project -> tmp_pixels, sizeof(int), 2, fp) != 2) return ERROR_PROJECT;
-  if (fread (active_project -> num_delta, sizeof(int), NGRAPHS, fp) != NGRAPHS) return ERROR_PROJECT;
-  if (fread (active_project -> delta, sizeof(double), NGRAPHS, fp) != NGRAPHS) return ERROR_PROJECT;
+  if (atomes_render_image  && ! atomes_image_pixels) atomes_image_pixels = duplicate_int (2, active_project -> tmp_pixels);
+  if (! version_2_9_and_above)
+  {
+    // Temporary buffers again
+    tmp_num_delta = allocint (calcs_to_read);
+    tmp_delta = allocdouble (calcs_to_read);
+    if (fread (tmp_num_delta, sizeof(int), calcs_to_read, fp) != calcs_to_read) return ERROR_PROJECT;
+    if (fread (tmp_delta, sizeof(double), calcs_to_read, fp) != calcs_to_read) return ERROR_PROJECT;
+  }
+  else
+  {
+    // Analysis data for k-points sampling
+    for (i=0; i<2; i++)
+    {
+      if (fread (active_project -> sk_advanced[i], sizeof(double), 2, fp) != 2) return ERROR_PROJECT;
+    }
+  }
   if (fread (active_project -> rsearch, sizeof(int), 2, fp) != 2) return ERROR_PROJECT;
   for (i=0; i<5; i++)
   {
@@ -323,19 +451,51 @@ int open_project (FILE * fp, int npi)
   if (fread (& active_project -> csearch, sizeof(int), 1, fp) != 1) return ERROR_PROJECT;
   if (fread (active_project -> csparam, sizeof(int), 7, fp) != 7) return ERROR_PROJECT;
   if (fread (active_project -> csdata, sizeof(double), 2, fp) != 2) return ERROR_PROJECT;
-  if (fread (active_project -> min, sizeof(double), NGRAPHS, fp) != NGRAPHS) return ERROR_PROJECT;
-  if (fread (active_project -> max, sizeof(double), NGRAPHS, fp) != NGRAPHS) return ERROR_PROJECT;
+  if (! version_2_9_and_above)
+  {
+    // Temporary buffers again
+    tmp_min = allocdouble (calcs_to_read);
+    tmp_max = allocdouble (calcs_to_read);
+    if (fread (tmp_min, sizeof(double), calcs_to_read, fp) != calcs_to_read) return ERROR_PROJECT;
+    if (fread (tmp_max, sizeof(double), calcs_to_read, fp) != calcs_to_read) return ERROR_PROJECT;
+  }
   if (fread (& active_project -> tunit, sizeof(int), 1, fp) != 1) return ERROR_PROJECT;
+  if (version_2_9_and_above)
+  {
+    if (active_project -> steps)
+    {
+      if (fread (& active_project -> skt_corr_threshold, sizeof(int), 1, fp) != 1) return ERROR_PROJECT;
+      if (fread (& active_project -> skt_all_sets, sizeof(gboolean), 1, fp) != 1) return ERROR_PROJECT;
+      if (! active_project -> skt_all_sets)
+      {
+        if (fread (& active_project -> skt_n_data_sets, sizeof(int), 1, fp) != 1) return ERROR_PROJECT;
+        if (active_project -> skt_n_data_sets)
+        {
+          active_project -> skt_step_id = allocint (active_project -> skt_n_data_sets);
+          if (fread (active_project -> skt_step_id, sizeof(int), active_project -> skt_n_data_sets, fp) != active_project -> skt_n_data_sets) return ERROR_PROJECT;
+        }
+      }
+      if (fread (& active_project -> sqw_n_data_sets, sizeof(int), 1, fp) != 1) return ERROR_PROJECT;
+      if (active_project -> sqw_n_data_sets)
+      {
+        active_project -> sqw_q_id = allocdouble (active_project -> sqw_n_data_sets);
+        if (fread (active_project -> sqw_q_id, sizeof(double), active_project -> sqw_n_data_sets, fp) != active_project -> sqw_n_data_sets) return ERROR_PROJECT;
+      }
+      if (fread (& active_project -> sqw_freq, sizeof(int), 1, fp) != 1) return ERROR_PROJECT;
+    }
+  }
   if (active_project -> natomes != 0 && active_project -> nspec != 0)
   {
     alloc_proj_data (active_project, 1);
     active_chem = active_project -> chemistry;
-    if (labels_in_file)
+    if (version_2_6_and_above)
     {
       for (i=0; i<active_project -> nspec; i++)
       {
         active_chem -> label[i] = read_this_string (fp);
+        if (! active_chem -> label[i]) return ERROR_PROJECT;
         active_chem -> element[i] = read_this_string (fp);
+        if (! active_chem -> element[i]) return ERROR_PROJECT;
       }
     }
     if (fread (active_chem -> nsps, sizeof(int), active_project -> nspec, fp) != active_project -> nspec) return ERROR_PROJECT;
@@ -347,7 +507,7 @@ int open_project (FILE * fp, int npi)
     {
       if (fread (active_chem -> chem_prop[i], sizeof(double), active_project -> nspec, fp) != active_project -> nspec) return ERROR_PROJECT;
     }
-    if (correct_x)
+    if (! version_2_7_and_above)
     {
       for (i=0; i<active_project -> nspec; i++)
       {
@@ -378,45 +538,84 @@ int open_project (FILE * fp, int npi)
                        & active_project -> steps);
       if (i == 1)
       {
-        if (! labels_in_file)
+        if (! version_2_6_and_above)
         {
           j = 1;
           prep_spec_ (active_chem -> chem_prop[CHEM_Z], active_chem -> nsps, & j);
         }
-        initcwidgets ();
         // Read curves
-        for (i=0; i<NGRAPHS; i++) if (active_project -> initok[i]) initcnames (i, 0);
-        if (fread (& i, sizeof(int), 1, fp) != 1) return ERROR_PROJECT;
-#ifdef DEBUG
-        g_debug ("\n**********************************************\n curves to read= %d\n**********************************************\n", i);
-#endif
-        if (i != 0)
+        init_atomes_analysis (active_project, FALSE);
+        if (version_2_9_and_above)
         {
-          j = 0;
-          if (fread (& j, sizeof(int), 1, fp) != 1) return ERROR_PROJECT;
-          if (j)
+          for (i=0; i<calcs_to_read; i++)
           {
-            active_project -> numc[SP] = j;
-            active_project -> numwid += j;
-            alloc_curves (SP);
-            addcurwidgets (activep, SP, 0);
-            active_project -> initok[SP] = TRUE;
-            for (k=0; k<j; k++)
+            if (active_project -> analysis[i])
             {
-              active_project -> curves[SP][k] -> name = read_this_string (fp);
-              if (active_project -> curves[SP][k] -> name == NULL) return ERROR_PROJECT;
-            }
-          }
-          for (j=0; j<i; j++)
-          {
-            if (read_project_curve (fp, npi, activep) != OK)
-            {
-              // error
-              return ERROR_CURVE;
+              j = read_analysis (fp, active_project, active_project -> analysis[i], wid);
+              if (j != OK)
+              {
+                return j;
+              }
             }
           }
         }
-        fill_tool_model();
+        else
+        {
+          for (i=0; i<calcs_to_read; i++)
+          {
+            if (active_project -> analysis[i])
+            {
+              active_project -> analysis[i] -> avail_ok = tmp_avail[i];
+              active_project -> analysis[i] -> init_ok = tmp_init[i];
+              active_project -> analysis[i] -> calc_ok = tmp_calc[i];
+              active_project -> analysis[i] -> delta = tmp_delta[i];
+              active_project -> analysis[i] -> num_delta = tmp_num_delta[i];
+              active_project -> analysis[i] -> min = tmp_min[i];
+              active_project -> analysis[i] -> max = tmp_max[i];
+              if (active_project -> analysis[i] -> init_ok)
+              {
+                initcnames (active_project, i);
+              }
+            }
+          }
+          g_free (tmp_avail);
+          g_free (tmp_init);
+          g_free (tmp_calc);
+          g_free (tmp_delta);
+          g_free (tmp_num_delta);
+          g_free (tmp_min);
+          g_free (tmp_max);
+          if (fread (& i, sizeof(int), 1, fp) != 1) return ERROR_PROJECT;
+#ifdef DEBUG
+          g_debug ("\n**********************************************\n curves to read= %d\n**********************************************\n", i);
+#endif
+          if (i != 0)
+          {
+            j = 0;
+            if (fread (& j, sizeof(int), 1, fp) != 1) return ERROR_PROJECT;
+            if (j)
+            {
+              active_project -> analysis[SPH] -> numc = j;
+              alloc_analysis_curves (active_project -> id, active_project -> analysis[SPH]);
+              add_curve_widgets (active_project, SPH);
+              active_project -> analysis[SPH] -> avail_ok = TRUE;
+              for (k=0; k<j; k++)
+              {
+                active_project -> analysis[SPH] -> curves[k] -> name = read_this_string (fp);
+                if (active_project -> analysis[SPH] -> curves[k] -> name == NULL) return ERROR_PROJECT;
+              }
+            }
+            for (j=0; j<i; j++)
+            {
+              if (read_project_curve (fp, wid, activep) != OK)
+              {
+                // error
+                return ERROR_CURVE;
+              }
+            }
+          }
+        }
+        if (! atomes_render_image) fill_tool_model();
       }
       else
       {
@@ -429,9 +628,9 @@ int open_project (FILE * fp, int npi)
     // error
     return ERROR_NO_WAY;
   }
-/* #ifdef DEBUG
-  debugioproj (active_project, "READ INIT");
-#endif */
+#ifdef DEBUG
+  // debugioproj (active_project, "READ INIT");
+#endif
   if (update_project() == 1)
   {
     if (active_project -> initgl)
@@ -440,7 +639,7 @@ int open_project (FILE * fp, int npi)
       if (fread (& tmp_bonding, sizeof(gboolean), 1, fp) != 1) return ERROR_PROJECT;
       if (fread (tmp_adv_bonding, sizeof(gboolean), 2, fp) != 2) return ERROR_PROJECT;
       apply_project (TRUE);
-      fill_tool_model ();
+      if (! atomes_render_image) fill_tool_model ();
       int tmpcoord[10];
       if (fread (tmpcoord, sizeof(int), 10, fp) != 10) return ERROR_PROJECT;
       if (active_glwin -> bonding)

@@ -11,7 +11,7 @@ See the GNU General Public License for more details.
 You should have received a copy of the GNU Affero General Public License along with 'atomes'.
 If not, see <https://www.gnu.org/licenses/>
 
-Copyright (C) 2022-2025 by CNRS and University of Strasbourg */
+Copyright (C) 2022-2026 by CNRS and University of Strasbourg */
 
 /*!
 * @file d_measures.c
@@ -535,7 +535,7 @@ void bonds_loop (glwin * view, int id, int pi, GtkTreeStore * store)
   image * img = view -> anim -> last -> img;
   int n_dist = num_bonds (img -> selected[pi] -> selected);
 
-  if (id == 1) shift = allocint(2);
+  if (id == 1) shift = allocint (2);
   did_it = allocdint (n_dist, 2);
   bid = -1;
   tmp_a = img -> selected[pi] -> first;
@@ -612,7 +612,7 @@ void prepare_measure_shaders (int mode)
     if (plot -> mpattern[mode] > -1)
     {
       // First the bond distances
-      measure = g_malloc0 (sizeof*measure);
+      measure = g_malloc0(sizeof*measure);
       measure -> vert_buffer_size = LINE_BUFF_SIZE;
       measure -> num_vertices = 2 * num_bonds (plot -> selected[mode] -> selected) * (plot -> abc -> extra_cell[0]+1)*(plot -> abc -> extra_cell[1]+1)*(plot -> abc -> extra_cell[2]+1);
       measure -> vertices = allocfloat (measure -> vert_buffer_size*measure -> num_vertices);
@@ -634,7 +634,7 @@ void prepare_measure_shaders (int mode)
       // The angles
       if (plot -> selected[mode] -> selected > 2)
       {
-        measure = g_malloc0 (sizeof*measure);
+        measure = g_malloc0(sizeof*measure);
         measure -> vert_buffer_size = LINE_BUFF_SIZE;
         measure -> num_vertices = 3 * num_angles (plot -> selected[mode] -> selected) * (plot -> abc -> extra_cell[0]+1)*(plot -> abc -> extra_cell[1]+1)*(plot -> abc -> extra_cell[2]+1);
         measure -> vertices = allocfloat (measure -> vert_buffer_size*measure -> num_vertices);
@@ -713,7 +713,7 @@ void create_measures_lists ()
     measures_drawing = 0;
     for (k=i; k<2; k++)
     {
-      wingl -> ogl_glsl[MEASU][k] = g_malloc0 (wingl -> n_shaders[MEASU][k]*sizeof*wingl -> ogl_glsl[MEASU][k]);
+      wingl -> ogl_glsl[MEASU][k] = g_malloc0(wingl -> n_shaders[MEASU][k]*sizeof*wingl -> ogl_glsl[MEASU][k]);
       prepare_measure_shaders (k);
     }
   }

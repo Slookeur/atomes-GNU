@@ -11,7 +11,7 @@ See the GNU General Public License for more details.
 You should have received a copy of the GNU Affero General Public License along with 'atomes'.
 If not, see <https://www.gnu.org/licenses/>
 
-Copyright (C) 2022-2025 by CNRS and University of Strasbourg */
+Copyright (C) 2022-2026 by CNRS and University of Strasbourg */
 
 /*!
 * @file save_p.c
@@ -31,7 +31,8 @@ Copyright (C) 2022-2025 by CNRS and University of Strasbourg */
 * List of functions:
 
   int save_this_string (FILE * fp, gchar * string);
-  int save_project (FILE * fp, project * this_proj, int npi);
+  int save_analysis (FILE * fp, project * this_proj, atomes_analysis * this_analysis, int wid);
+  int save_project (FILE * fp, project * this_proj, int wid);
 
 */
 
@@ -73,22 +74,86 @@ int save_this_string (FILE * fp, gchar * string)
 }
 
 /*!
-  \fn int save_project (FILE * fp, project * this_proj, int npi)
+  \fn int save_analysis (FILE * fp, project * this_proj, atomes_analysis * this_analysis, int wid)
+
+  \brief saving analysis parameter(s) and result(s) to project file
+
+  \param fp the file pointer
+  \param this_proj the target project
+  \param this_analysis the target analysis
+  \param wid saving workspace (1/0)
+*/
+int save_analysis (FILE * fp, project * this_proj, atomes_analysis * this_analysis, int wid)
+{
+  int i, j;
+  if (fwrite (& this_analysis -> aid, sizeof(int), 1, fp) != 1) return ERROR_ANA;
+  if (save_this_string (fp, this_analysis -> name) != OK) return ERROR_ANA;
+  if (fwrite (& this_analysis -> avail_ok, sizeof(gboolean), 1, fp) != 1) return ERROR_ANA;
+  if (fwrite (& this_analysis -> init_ok, sizeof(gboolean), 1, fp) != 1) return ERROR_ANA;
+  if (fwrite (& this_analysis -> calc_ok, sizeof(gboolean), 1, fp) != 1) return ERROR_ANA;
+  if (fwrite (& this_analysis -> requires_md, sizeof(gboolean), 1, fp) != 1) return ERROR_ANA;
+  if (fwrite (& this_analysis -> num_delta, sizeof(int), 1, fp) != 1) return ERROR_ANA;
+  if (fwrite (& this_analysis -> delta, sizeof(double), 1, fp) != 1) return ERROR_ANA;
+  if (fwrite (& this_analysis -> min, sizeof(double), 1, fp) != 1) return ERROR_ANA;
+  if (fwrite (& this_analysis -> max, sizeof(double), 1, fp) != 1) return ERROR_ANA;
+  if (fwrite (& this_analysis -> fact, sizeof(double), 1, fp) != 1) return ERROR_ANA;
+  if (fwrite (& this_analysis -> graph_res, sizeof(gboolean), 1, fp) != 1) return ERROR_ANA;
+  if (this_analysis -> graph_res)
+  {
+    if (fwrite (& this_analysis -> numc, sizeof(int), 1, fp) != 1) return ERROR_ANA;
+    if (fwrite (& this_analysis -> c_sets, sizeof(int), 1, fp) != 1) return ERROR_ANA;
+    if (fwrite (this_analysis -> compat_id, sizeof(int), this_analysis -> c_sets, fp) != this_analysis -> c_sets) return ERROR_ANA;
+    i = (this_analysis -> x_title) ? 1 : 0;
+    if (fwrite (& i, sizeof(int), 1, fp) != 1) return ERROR_ANA;
+    if (this_analysis -> x_title)
+    {
+      if (save_this_string (fp, this_analysis -> x_title) != OK) return ERROR_ANA;
+    }
+    if (this_analysis -> curves)
+    {
+      i = 0;
+      for (j=0; j<this_analysis -> numc; j++)
+      {
+        if (this_analysis -> curves[j] -> ndata) i ++;
+      }
+      if (fwrite (& i, sizeof(int), 1, fp) != 1) return ERROR_ANA;
+      if (i)
+      {
+        for (j=0; j<this_analysis -> numc; j++)
+        {
+          if (this_analysis -> curves[j] -> ndata)
+          {
+            if (save_project_curve (fp, this_proj, wid, this_analysis -> aid, j) != OK) return ERROR_CURVE;
+          }
+        }
+      }
+    }
+    else
+    {
+      i = 0;
+      if (fwrite (& i, sizeof(int), 1, fp) != 1) return ERROR_ANA;
+    }
+  }
+  return OK;
+}
+
+/*!
+  \fn int save_project (FILE * fp, project * this_proj, int wid)
 
   \brief save project to file
 
   \param fp the file pointer
   \param this_proj the target project
-  \param npi the total number of projects in the workspace
+  \param wid saving workspace (1/0)
 */
-int save_project (FILE * fp, project * this_proj, int npi)
+int save_project (FILE * fp, project * this_proj, int wid)
 {
   int i, j, k;
   gchar * ver;
 
   // First 2 lines for compatibility issues
   i = 2;
-  j = 8;
+  j = 9;
   ver = g_strdup_printf ("%%\n%% project file v-%1d.%1d\n%%\n", i, j);
   if (save_this_string (fp, ver) != OK)
   {
@@ -111,9 +176,9 @@ int save_project (FILE * fp, project * this_proj, int npi)
     i = -1;
     if (fwrite (& i, sizeof(int), 1, fp) != 1) return ERROR_PROJECT;
   }
-  if (fwrite (this_proj -> runok, sizeof(gboolean), NGRAPHS, fp) != NGRAPHS) return ERROR_PROJECT;
-  if (fwrite (this_proj -> initok, sizeof(gboolean), NGRAPHS, fp) != NGRAPHS) return ERROR_PROJECT;
-  if (fwrite (this_proj -> visok, sizeof(gboolean), NGRAPHS, fp) != NGRAPHS) return ERROR_PROJECT;
+  //Note: we now save the number of analysis available at this version of the project file
+  i = NCALCS;
+  if (fwrite (& i, sizeof(int), 1, fp) != 1) return ERROR_PROJECT;
   if (fwrite (& this_proj -> nspec, sizeof(int), 1, fp) != 1) return ERROR_PROJECT;
   if (fwrite (& this_proj -> natomes, sizeof(int), 1, fp) != 1) return ERROR_PROJECT;
   if (fwrite (& this_proj -> steps, sizeof(int), 1, fp) != 1) return ERROR_PROJECT;
@@ -148,8 +213,12 @@ int save_project (FILE * fp, project * this_proj, int npi)
   if (fwrite (& this_proj -> run, sizeof(int), 1, fp) != 1) return ERROR_PROJECT;
   if (fwrite (& this_proj -> initgl, sizeof(gboolean), 1, fp) != 1) return ERROR_PROJECT;
   if (fwrite (this_proj -> modelgl -> pixels, sizeof(int), 2, fp) != 2) return ERROR_PROJECT;
-  if (fwrite (this_proj -> num_delta, sizeof(int), NGRAPHS, fp) != NGRAPHS) return ERROR_PROJECT;
-  if (fwrite (this_proj -> delta, sizeof(double), NGRAPHS, fp) != NGRAPHS) return ERROR_PROJECT;
+  // Analysis data for k-points sampling
+  for (i=0; i<2; i++)
+  {
+    if (fwrite (this_proj -> sk_advanced[i], sizeof(double), 2, fp) != 2) return ERROR_PROJECT;
+  }
+  // Next lines are calculation data related to rings and chains statistics
   if (fwrite (this_proj -> rsearch, sizeof(int), 2, fp) != 2) return ERROR_PROJECT;
   for (i=0; i<5; i++)
   {
@@ -159,9 +228,29 @@ int save_project (FILE * fp, project * this_proj, int npi)
   if (fwrite (& this_proj -> csearch, sizeof(int), 1, fp) != 1) return ERROR_PROJECT;
   if (fwrite (this_proj -> csparam, sizeof(int), 7, fp) != 7) return ERROR_PROJECT;
   if (fwrite (this_proj -> csdata, sizeof(double), 2, fp) != 2) return ERROR_PROJECT;
-  if (fwrite (this_proj -> min, sizeof(double), NGRAPHS, fp) != NGRAPHS) return ERROR_PROJECT;
-  if (fwrite (this_proj -> max, sizeof(double), NGRAPHS, fp) != NGRAPHS) return ERROR_PROJECT;
+  // Time unit for dynamical calculations, delta t and steps are stored in MSD analysis
   if (fwrite (& this_proj -> tunit, sizeof(int), 1, fp) != 1) return ERROR_PROJECT;
+  if (this_proj -> steps)
+  {
+    if (fwrite (& this_proj -> skt_corr_threshold, sizeof(int), 1, fp) != 1) return ERROR_PROJECT;
+    if (fwrite (& this_proj -> skt_all_sets, sizeof(gboolean), 1, fp) != 1) return ERROR_PROJECT;
+    if (! this_proj -> skt_all_sets)
+    {
+      i = (this_proj -> skt_step_id) ? this_proj -> skt_n_data_sets : 0;
+      if (fwrite (& i, sizeof(int), 1, fp) != 1) return ERROR_PROJECT;
+      if (i)
+      {
+        if (fwrite (this_proj -> skt_step_id, sizeof(int), this_proj -> skt_n_data_sets, fp) != this_proj -> skt_n_data_sets) return ERROR_PROJECT;
+      }
+    }
+    i = (this_proj -> sqw_q_id) ? this_proj -> sqw_n_data_sets : 0;
+    if (fwrite (& i, sizeof(int), 1, fp) != 1) return ERROR_PROJECT;
+    if (i)
+    {
+      if (fwrite (this_proj -> sqw_q_id, sizeof(double), this_proj -> sqw_n_data_sets, fp) != this_proj -> sqw_n_data_sets) return ERROR_PROJECT;
+    }
+    if (fwrite (& this_proj -> sqw_freq, sizeof(int), 1, fp) != 1) return ERROR_PROJECT;
+  }
   if (this_proj -> natomes != 0 && this_proj -> nspec != 0)
   {
     for (i=0; i<this_proj -> nspec; i++)
@@ -189,36 +278,14 @@ int save_project (FILE * fp, project * this_proj, int npi)
     }
     if (this_proj -> run)
     {
-      k = 0;
-      for (i=0; i<NGRAPHS; i++)
+      if (this_proj -> analysis)
       {
-        for (j=0; j<this_proj -> numc[i]; j++)
+        for (i=0; i<NCALCS; i++)
         {
-          if (this_proj -> curves[i][j] -> ndata != 0)
+          if (this_proj -> analysis[i])
           {
-            k ++;
-          }
-        }
-      }
-      if (fwrite (& k, sizeof(int), 1, fp) != 1) return ERROR_PROJECT;
-      if (k)
-      {
-        if (fwrite (& this_proj -> numc[SP], sizeof(int), 1, fp) != 1) return ERROR_PROJECT;
-        if (this_proj -> numc[SP])
-        {
-          for (i=0; i<this_proj -> numc[SP]; i++)
-          {
-            if (save_this_string (fp, this_proj -> curves[SP][i] -> name) != OK) return ERROR_PROJECT;
-          }
-        }
-        for (i=0; i< NGRAPHS; i++)
-        {
-          for (j=0; j<this_proj -> numc[i]; j++)
-          {
-            if (this_proj -> curves[i][j] -> ndata != 0)
-            {
-              if (save_project_curve (fp, npi, this_proj, i, j) != OK) return ERROR_CURVE;
-            }
+            j = save_analysis (fp, this_proj, this_proj -> analysis[i], wid);
+            if (j != OK) return j;
           }
         }
       }

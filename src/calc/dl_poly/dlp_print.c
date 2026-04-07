@@ -11,7 +11,7 @@ See the GNU General Public License for more details.
 You should have received a copy of the GNU Affero General Public License along with 'atomes'.
 If not, see <https://www.gnu.org/licenses/>
 
-Copyright (C) 2022-2025 by CNRS and University of Strasbourg */
+Copyright (C) 2022-2026 by CNRS and University of Strasbourg */
 
 /*!
 * @file dlp_print.c
@@ -303,7 +303,7 @@ void print_dlp_improper_inversion (int di, GtkTextBuffer * buf, field_struct * d
   gchar * stra, * strb, * strc, * strd, * stre, * strf, * strg;
   float w;
   GtkTreeIter di_level;
-  int * ids = allocint(4);
+  int * ids = allocint (4);
   imp_inv * first_imp_inv = NULL;
   imp_inv * this_ii = NULL;
 
@@ -341,12 +341,12 @@ void print_dlp_improper_inversion (int di, GtkTextBuffer * buf, field_struct * d
                         {
                           if (! first_imp_inv)
                           {
-                            first_imp_inv = g_malloc0 (sizeof*first_imp_inv);
+                            first_imp_inv = g_malloc0(sizeof*first_imp_inv);
                             this_ii = first_imp_inv;
                           }
                           else
                           {
-                            this_ii -> next = g_malloc0 (sizeof*this_ii);
+                            this_ii -> next = g_malloc0(sizeof*this_ii);
                             this_ii -> next -> prev = this_ii;
                             this_ii = this_ii -> next;
                           }
@@ -510,7 +510,7 @@ void print_dlp_dihedral (int dih, GtkTextBuffer * buf, field_struct * dh, int fi
     same_atom = TRUE;
     already_done = allocbool (tmp_fmol -> mol -> natoms);
   }
-  int * ids = allocint(4);
+  int * ids = allocint (4);
   for (i=0; i<tmp_fat -> num; i++)
   {
     j = tmp_fat -> list[i];
@@ -653,7 +653,7 @@ void print_dlp_angle (int ai, GtkTextBuffer * buf, field_struct * an, int fi, Gt
   gchar * stra, * strb, * strc, * strd, * stre, * strf;
   float v;
   GtkTreeIter an_level;
-  int * ids = allocint(3);
+  int * ids = allocint (3);
   gboolean same_atom = FALSE;
   gboolean * already_done;
   if (tmp_fat -> id == tmp_fct -> id)
@@ -777,7 +777,7 @@ void print_dlp_bond (int bi, GtkTextBuffer * buf,  field_struct * bd, int fi, Gt
   gboolean show;
   gchar * stra, * strb, * strc, * strd, * stre;
   float v;
-  int * ids = allocint(2);
+  int * ids = allocint (2);
   GtkTreeIter bd_level;
   gboolean same_atom = FALSE;
   gboolean * already_done;

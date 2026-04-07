@@ -11,7 +11,7 @@ See the GNU General Public License for more details.
 You should have received a copy of the GNU Affero General Public License along with 'atomes'.
 If not, see <https://www.gnu.org/licenses/>
 
-Copyright (C) 2022-2025 by CNRS and University of Strasbourg */
+Copyright (C) 2022-2026 by CNRS and University of Strasbourg */
 
 /*!
 * @file cpmd_nose.c
@@ -471,7 +471,7 @@ void remove_nose_thermostat (int num_to_remove)
 
   GtkTreeIter thermo_level, atom_level;
   n_therm = 0;
-  old_thermo = allocint(get_num_thermo());
+  old_thermo = allocint (get_num_thermo());
   GtkTreeStore * remove_model = gtk_tree_store_newv (6, col_type);
   GtkWidget * remove_tree = gtk_tree_view_new_with_model(GTK_TREE_MODEL(remove_model));
   for (i=0; i<6; i++)
@@ -531,7 +531,7 @@ void remove_nose_thermostat (int num_to_remove)
 */
 thermostat * init_thermo (int id, int type, int sys)
 {
-  thermostat * thermo = g_malloc0 (sizeof*thermo);
+  thermostat * thermo = g_malloc0(sizeof*thermo);
   thermo -> id = id;
   thermo -> type = type;
   thermo -> sys = sys;
@@ -725,10 +725,7 @@ void atom_set_color (GtkTreeViewColumn * col, GtkCellRenderer * renderer, GtkTre
   k = GPOINTER_TO_INT(data);
   if (k == 2)
   {
-    gchar * str;
-    gtk_tree_model_get (mod, iter, 2, & str, -1);
-    g_object_set (renderer, "markup", str, NULL, NULL);
-    g_free (str);
+    set_renderer_markup (mod, iter, renderer, 2);
   }
 }
 

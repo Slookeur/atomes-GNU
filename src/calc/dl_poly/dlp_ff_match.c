@@ -11,7 +11,7 @@ See the GNU General Public License for more details.
 You should have received a copy of the GNU Affero General Public License along with 'atomes'.
 If not, see <https://www.gnu.org/licenses/>
 
-Copyright (C) 2022-2025 by CNRS and University of Strasbourg */
+Copyright (C) 2022-2026 by CNRS and University of Strasbourg */
 
 /*!
 * @file dlp_ff_match.c
@@ -373,7 +373,7 @@ gchar * get_this_prop_string (int sid, int oid, int type, int calc)
 */
 field_object_match * duplicate_match (field_object_match * old_m)
 {
-  field_object_match * new_m = g_malloc0 (sizeof*new_m);
+  field_object_match * new_m = g_malloc0(sizeof*new_m);
   new_m -> id = old_m -> id;
   new_m -> obj = old_m -> obj;
   new_m -> oid = old_m -> oid;
@@ -910,10 +910,7 @@ void field_set_markup_and_visible (GtkTreeViewColumn * col, GtkCellRenderer * re
   gtk_cell_renderer_set_visible (renderer,  (i == 2) ? ! k : k);
   if ((j < 0 && i == 2) || (j>-1 && i != 7))
   {
-    gchar * str = NULL;
-    gtk_tree_model_get (mod, iter, i, & str, -1);
-    g_object_set (renderer, "markup", str, NULL, NULL);
-    g_free (str);
+    set_renderer_markup (mod, iter, renderer, i);
   }
 }
 
@@ -1076,12 +1073,12 @@ void look_up_this_field_object (int fsid, int fpid, int ssid, int nat, int * fsp
       {
         if (up_match[fsid] == NULL)
         {
-          up_match[fsid] = g_malloc0 (sizeof*up_match[fsid]);
+          up_match[fsid] = g_malloc0(sizeof*up_match[fsid]);
           tmp_match = up_match[fsid];
         }
         else
         {
-          tmp_match -> next = g_malloc0 (sizeof*tmp_match);
+          tmp_match -> next = g_malloc0(sizeof*tmp_match);
           tmp_match = tmp_match -> next;
         }
         tmp_match -> id = ssid;
@@ -1132,8 +1129,8 @@ void check_this_fprop (int fsid, int fpid, int ssid, int * fat, int * fsp)
   {
     // Is there any field data available ?
     // Check the field data for available parameters
-    ffat = allocint(i);
-    ffsp = allocint(i);
+    ffat = allocint (i);
+    ffsp = allocint (i);
     for (j=0; j<i; j++)
     {
       ffat[j] = get_active_atom (tmp_fmol -> id, fat[j]) -> afid;
@@ -1321,7 +1318,7 @@ void check_atom_for_updates ()
       if (get_ff_data(i, 0) && tmp_field -> afp[i+15])
       {
         k = struct_id(i+7);
-        fsp = allocint(k);
+        fsp = allocint (k);
         tmp_fstr = tmp_fmol -> first_struct[i];
         while (tmp_fstr != NULL)
         {
@@ -1367,12 +1364,12 @@ void check_atom_for_updates ()
           {
             if (up_match[8] == NULL)
             {
-              up_match[8] = g_malloc0 (sizeof*up_match[8]);
+              up_match[8] = g_malloc0(sizeof*up_match[8]);
               tmp_match = up_match[8];
             }
             else
             {
-              tmp_match -> next = g_malloc0 (sizeof*tmp_match);
+              tmp_match -> next = g_malloc0(sizeof*tmp_match);
               tmp_match = tmp_match -> next;
             }
             tmp_match -> id = 8;
@@ -1537,7 +1534,7 @@ GtkWidget * create_field_prop_combo (int f, int is_moy)
   gchar * str;
   h = (f == 15) ? 2 : struct_id(f);
   i = (f == 15) ? 2 : 1;
-  for (j=0; j<i; j++) up_match[j] = g_malloc0 (sizeof*up_match[j]);
+  for (j=0; j<i; j++) up_match[j] = g_malloc0(sizeof*up_match[j]);
   int * spec_z = allocint (h);
   vbox = create_vbox (BSEP);
   if (f == 15)
@@ -1637,12 +1634,12 @@ GtkWidget * create_field_prop_combo (int f, int is_moy)
           g_free (str);
           if (up_match[j] == NULL)
           {
-            up_match[j] = g_malloc0 (sizeof*up_match[j]);
+            up_match[j] = g_malloc0(sizeof*up_match[j]);
             tmp_match = up_match[j];
           }
           else
           {
-            tmp_match -> next = g_malloc0 (sizeof*tmp_match -> next);
+            tmp_match -> next = g_malloc0(sizeof*tmp_match -> next);
             tmp_match -> next -> id = tmp_match -> id + 1;
             tmp_match = tmp_match -> next;
           }

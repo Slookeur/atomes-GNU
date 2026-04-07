@@ -11,7 +11,7 @@ See the GNU General Public License for more details.
 You should have received a copy of the GNU Affero General Public License along with 'atomes'.
 If not, see <https://www.gnu.org/licenses/>
 
-Copyright (C) 2022-2025 by CNRS and University of Strasbourg */
+Copyright (C) 2022-2026 by CNRS and University of Strasbourg */
 
 /*!
 * @file cpmd_atoms.c
@@ -221,7 +221,7 @@ G_MODULE_EXPORT void changed_dummy_id_box (GtkComboBox * box, gpointer data)
 */
 dummy_atom * init_dummy (int type, int id)
 {
-  dummy_atom * dumm = g_malloc0 (sizeof*dumm);
+  dummy_atom * dumm = g_malloc0(sizeof*dumm);
   dumm -> id = id;
   dumm -> type = type;
   dumm -> show = FALSE;
@@ -450,7 +450,7 @@ void remove_dummy (int num_to_remove)
 
   GtkTreeIter dummy_level, atom_level;
   n_dummy = 0;
-  old_dummy = allocint(tmp_cpmd -> dummies);
+  old_dummy = allocint (tmp_cpmd -> dummies);
   GtkTreeStore * remove_model = gtk_tree_store_newv (5, col_type);
   GtkWidget * remove_tree = gtk_tree_view_new_with_model(GTK_TREE_MODEL(remove_model));
   for (i=0; i<5; i++)

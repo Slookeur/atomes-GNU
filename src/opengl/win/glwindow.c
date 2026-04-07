@@ -11,7 +11,7 @@ See the GNU General Public License for more details.
 You should have received a copy of the GNU Affero General Public License along with 'atomes'.
 If not, see <https://www.gnu.org/licenses/>
 
-Copyright (C) 2022-2025 by CNRS and University of Strasbourg */
+Copyright (C) 2022-2026 by CNRS and University of Strasbourg */
 
 /*!
 * @file glwindow.c
@@ -72,7 +72,7 @@ Copyright (C) 2022-2025 by CNRS and University of Strasbourg */
 extern G_MODULE_EXPORT void opengl_advanced (GtkWidget * widg, gpointer data);
 extern G_MODULE_EXPORT void coord_properties (GtkWidget * widg, gpointer data);
 extern G_MODULE_EXPORT void set_style (GtkWidget * widg, gpointer data);
-extern G_MODULE_EXPORT void set_render (GtkWidget * widg, gpointer data);
+extern void set_render (gpointer data);
 extern G_MODULE_EXPORT void set_mode (GtkWidget * widg, gpointer data);
 extern void set_sensitive_coord_menu (glwin * view, gboolean status);
 extern void set_color_map_sensitive (glwin * view);
@@ -82,6 +82,7 @@ extern gboolean spin (gpointer data);
 extern G_MODULE_EXPORT void spin_stop (GtkButton * but, gpointer data);
 extern G_MODULE_EXPORT void spin_go (GtkWidget * widg, gpointer data);
 extern void update_menus (glwin * view);
+extern void set_this_style (glwin * view, int style);
 extern G_MODULE_EXPORT void set_box_axis_style (GtkWidget * widg, gpointer data);
 extern G_MODULE_EXPORT void window_measures (GtkWidget * widg, gpointer data);
 extern G_MODULE_EXPORT void window_recorder (GtkWidget * widg, gpointer data);
@@ -98,7 +99,6 @@ extern G_MODULE_EXPORT void edit_in_new_project (GSimpleAction * action, GVarian
 extern G_MODULE_EXPORT void remove_the_atoms (GSimpleAction * action, GVariant * parameter, gpointer data);
 extern G_MODULE_EXPORT void copy_the_atoms (GSimpleAction * action, GVariant * parameter, gpointer data);
 #else
-extern void prep_all_coord_menus (glwin * view);
 extern G_MODULE_EXPORT void set_full_screen (GtkWidget * widg, gpointer data);
 extern G_MODULE_EXPORT void to_reset_view (GtkWidget * widg, gpointer data);
 extern G_MODULE_EXPORT void add_object (GtkWidget * widg, gpointer data);
@@ -138,7 +138,7 @@ shortcuts opengl_shortcuts[] = {
   { "Atom(s) color map", "change atom(s) color map", GDK_KEY_a, "a" },
   { "Polyhedra color map", "change polyhedra color map", GDK_KEY_p, "p" },
   { "Ball and stick", "change global style to ball and stick", GDK_KEY_b, "b" },
-  { "Cylinders", "change global style to cylinders", GDK_KEY_w, "w" },
+  { "Cylinders", "change global style to cylinders", GDK_KEY_c, "c" },
   { "Spheres", "change global style to spheres", GDK_KEY_s, "s" },
   { "Covalent radius", "change global style to cylinders", GDK_KEY_o, "o" },
   { "Ionic radius", "change global style to cylinders", GDK_KEY_i, "i" },
@@ -339,7 +339,7 @@ void update_all_menus (glwin * view, int nats)
 #ifdef GTK3
   int i, j, k, l;
   i = view -> anim -> last -> img -> style;
-  j = (nats <= 1000) ? BALL_AND_STICK : DEFAULT_STYLE;
+  j = (nats <= 10000) ? BALL_AND_STICK : DEFAULT_STYLE;
   if (i != j)
   {
     gtk_check_menu_item_set_active ((GtkCheckMenuItem *)view -> ogl_styles[j], FALSE);
@@ -359,9 +359,7 @@ void update_all_menus (glwin * view, int nats)
   j = FILL;
   if (i != j)
   {
-    gtk_check_menu_item_set_active ((GtkCheckMenuItem *)view -> ogl_render[j], FALSE);
-    gtk_check_menu_item_set_active ((GtkCheckMenuItem *)view -> ogl_render[i], TRUE);
-    set_render (view -> ogl_render[i], & view -> colorp[i][0]);
+    set_render (& view -> colorp[i][0]);
   }
 
   update_menus (view);
@@ -427,7 +425,6 @@ void update_all_menus (glwin * view, int nats)
   }
   restore_color_map (view, cmap);
   g_free (cmap);
-  gtk_range_set_value (GTK_RANGE(view -> ogl_quality), view -> anim -> last -> img -> quality);
 #else
   update_menu_bar (view);
 #endif
@@ -492,8 +489,6 @@ void menu_items_opengl (GtkWidget * menu, glwin * view, int pop)
   GtkWidget * style = gtk3_menu_item (menu, "Style", IMG_FILE, (gpointer)PACKAGE_MOL, NULL, NULL, FALSE, 0, 0, FALSE, FALSE, get_project_by_id(view -> proj) -> nspec);
   gtk_menu_item_set_submenu ((GtkMenuItem *)style, menu_style(view, pop));
   gtk_menu_shell_append ((GtkMenuShell *)menu, menu_item_new_with_submenu ("Color Scheme(s)", get_project_by_id(view -> proj) -> nspec, menu_map(view, pop)));
-  gtk_menu_shell_append ((GtkMenuShell *)menu, menu_item_new_with_submenu ("Render", get_project_by_id(view -> proj) -> nspec, menu_render(view, pop)));
-  gtk_menu_shell_append ((GtkMenuShell *)menu, menu_item_new_with_submenu ("Quality", get_project_by_id(view -> proj) -> nspec, menu_quality(view, pop)));
   gtk3_menu_item (menu, "Material And Light(s)", IMG_NONE, NULL, G_CALLBACK(opengl_advanced), (gpointer)view, FALSE, 0, 0, FALSE, FALSE, FALSE);
   gtk3_menu_item (menu, "Render Image", IMG_FILE, (gpointer)PACKAGE_IMG, G_CALLBACK(render_gl_image), (gpointer)view, FALSE, 0, 0, FALSE, FALSE, FALSE);
 }
@@ -615,6 +610,7 @@ GtkWidget * menu_help (glwin * view, int popm)
 void prepare_opengl_menu_bar (glwin * view)
 {
 #ifdef GTK3
+  // clean_all_menu_bar_widgets (view);
   view -> ogl_coord[0] = destroy_this_widget (view -> ogl_coord[0]);
 #endif
   view -> menu_bar = destroy_this_widget (view -> menu_bar);
@@ -958,17 +954,7 @@ void glwin_key_pressed (guint keyval, GdkModifierType state, gpointer data)
       }
       break;
     case GDK_KEY_b:
-      if (get_project_by_id(view -> proj) -> natomes)
-      {
-#ifdef GTK4
-        activate_glwin_action ("set-style.0.0", "set-style", view);
-#else
-        // GTK3 Menu Action To Check
-        gtk_check_menu_item_set_active ((GtkCheckMenuItem *)view -> ogl_styles[BALL_AND_STICK], TRUE);
-        set_style (view -> ogl_styles[BALL_AND_STICK], & view -> colorp[BALL_AND_STICK][0]);
-#endif
-
-      }
+      set_this_style (view, BALL_AND_STICK);
       break;
     case GDK_KEY_c:
       if (get_project_by_id(view -> proj) -> natomes)
@@ -1000,13 +986,7 @@ void glwin_key_pressed (guint keyval, GdkModifierType state, gpointer data)
         }
         else
         {
-#ifdef GTK4
-          activate_glwin_action ("set-style.8.0", "set-style", view);
-#else
-          // GTK3 Menu Action To Check
-          gtk_check_menu_item_set_active ((GtkCheckMenuItem *)view -> ogl_styles[CYLINDERS], TRUE);
-          set_style (view -> ogl_styles[CYLINDERS], & view -> colorp[CYLINDERS][0]);
-#endif
+          set_this_style (view, CYLINDERS);
         }
       }
       break;
@@ -1024,16 +1004,7 @@ void glwin_key_pressed (guint keyval, GdkModifierType state, gpointer data)
       }
       break;
     case GDK_KEY_d:
-      if (get_project_by_id(view -> proj) -> natomes)
-      {
-#ifdef GTK4
-        activate_glwin_action ("set-style.9.0", "set-style", view);
-#else
-        // GTK3 Menu Action To Check
-        gtk_check_menu_item_set_active ((GtkCheckMenuItem *)view -> ogl_styles[PUNT], TRUE);
-        set_style (view -> ogl_styles[PUNT], & view -> colorp[PUNT][0]);
-#endif
-      }
+      set_this_style (view, PUNT);
       break;
     case GDK_KEY_e:
       if (get_project_by_id(view -> proj) -> natomes)
@@ -1086,16 +1057,7 @@ void glwin_key_pressed (guint keyval, GdkModifierType state, gpointer data)
       }
       break;
     case GDK_KEY_i:
-      if (get_project_by_id(view -> proj) -> natomes)
-      {
-#ifdef GTK4
-        activate_glwin_action ("set-style.3.0", "set-style", view);
-#else
-        // GTK3 Menu Action To Check
-        gtk_check_menu_item_set_active ((GtkCheckMenuItem *)view -> filled_styles[1], TRUE);
-        set_style (view -> filled_styles[1], & view -> colorp[OGL_STYLES+1][0]);
-#endif
-      }
+      set_this_style (view, OGL_STYLES+1);
       break;
     case GDK_KEY_l:
       if ((state & GDK_CONTROL_MASK) && get_project_by_id(view -> proj) -> natomes)
@@ -1154,19 +1116,10 @@ void glwin_key_pressed (guint keyval, GdkModifierType state, gpointer data)
       }
       break;
     case GDK_KEY_n:
-      if (state & GDK_CONTROL_MASK) on_create_new_project (NULL, NULL);
+      if (state & GDK_CONTROL_MASK && ! atomes_from_libreoffice) on_create_new_project (NULL, NULL);
       break;
     case GDK_KEY_o:
-      if (get_project_by_id(view -> proj) -> natomes)
-      {
-#ifdef GTK4
-          activate_glwin_action ("set-style.2.0", "set-style", view);
-#else
-          // GTK3 Menu Action To Check
-          gtk_check_menu_item_set_active ((GtkCheckMenuItem *)view -> filled_styles[0], TRUE);
-          set_style (view -> filled_styles[0], & view -> colorp[OGL_STYLES][0]);
-#endif
-      }
+      set_this_style (view, OGL_STYLES);
       break;
     case GDK_KEY_p:
       if (get_project_by_id(view -> proj) -> natomes) change_color_map (view, 1);
@@ -1180,13 +1133,7 @@ void glwin_key_pressed (guint keyval, GdkModifierType state, gpointer data)
         }
         else
         {
-#ifdef GTK4
-          activate_glwin_action ("set-style.5.0", "set-style", view);
-#else
-        // GTK3 Menu Action To Check
-          gtk_check_menu_item_set_active ((GtkCheckMenuItem *)view -> filled_styles[3], TRUE);
-          set_style (view -> filled_styles[3], & view -> colorp[OGL_STYLES+3][0]);
-#endif
+          set_this_style (view, OGL_STYLES+3);
         }
       }
       break;
@@ -1201,13 +1148,7 @@ void glwin_key_pressed (guint keyval, GdkModifierType state, gpointer data)
         }
         else
         {
-#ifdef GTK4
-          activate_glwin_action ("set-style.7.0", "set-style", view);
-#else
-          // GTK3 Menu Action To Check
-          gtk_check_menu_item_set_active ((GtkCheckMenuItem *)view -> ogl_styles[SPHERES], TRUE);
-          set_style (view -> ogl_styles[SPHERES], & view -> colorp[SPHERES][0]);
-#endif
+          set_this_style (view, SPHERES);
         }
       }
       break;
@@ -1236,28 +1177,13 @@ void glwin_key_pressed (guint keyval, GdkModifierType state, gpointer data)
           }*/
         }
       }
-      else if (get_project_by_id(view -> proj) -> natomes)
+      else
       {
-#ifdef GTK4
-        activate_glwin_action ("set-style.4.0", "set-style", view);
-#else
-        // GTK3 Menu Action To Check
-        gtk_check_menu_item_set_active ((GtkCheckMenuItem *)view -> filled_styles[2], TRUE);
-        set_style (view -> filled_styles[2], & view -> colorp[OGL_STYLES+2][0]);
-#endif
+        set_this_style (view, OGL_STYLES+2);
       }
       break;
     case GDK_KEY_w:
-      if (get_project_by_id(view -> proj) -> natomes)
-      {
-#ifdef GTK4
-        activate_glwin_action ("set-style.1.0", "set-style", view);
-#else
-        // GTK3 Menu Action To Check
-        gtk_check_menu_item_set_active ((GtkCheckMenuItem *)view -> ogl_styles[WIREFRAME], TRUE);
-        set_style (view -> ogl_styles[WIREFRAME], & view -> colorp[WIREFRAME][0]);
-#endif
-      }
+      set_this_style (view, WIREFRAME);
       break;
     case GDK_KEY_x:
       if ((state & GDK_CONTROL_MASK) && get_project_by_id(view -> proj) -> natomes)
@@ -1396,6 +1322,33 @@ void gtk_window_change_gdk_visual (GtkWidget * win)
 #endif
 #endif
 
+
+#ifdef GTK4
+/*!
+  \fn G_MODULE_EXPORT gboolean do_not_hide (GtkWindow * win, gpointer data)
+
+  \brief prevent to hide the OpenGL window in LibreOffice mode
+
+  \param win the GtkWindow sending the signal
+  \param data the associated data pointer
+*/
+G_MODULE_EXPORT gboolean do_not_hide (GtkWindow * win, gpointer data)
+#else
+/*!
+  \fn G_MODULE_EXPORT gboolean do_not_hide (GtkWidget * win, GdkEvent * event, gpointer data)
+
+  \brief revent to hide the OpenGL window in LibreOffice mode
+
+  \param win the GtkWindow sending the signal
+  \param event the GdkEvent triggering the signal
+  \param data the associated data pointer
+*/
+G_MODULE_EXPORT gboolean do_not_hide (GtkWidget * win, GdkEvent * event, gpointer data)
+#endif
+{
+  return TRUE;
+}
+
 gboolean create_3d_model (int p, gboolean load)
 {
   project * this_proj = get_project_by_id (p);
@@ -1413,7 +1366,7 @@ gboolean create_3d_model (int p, gboolean load)
       g_free (this_proj -> modelgl);
       this_proj -> modelgl = NULL;
     }
-    this_proj -> modelgl = g_malloc0 (sizeof*this_proj -> modelgl);
+    this_proj -> modelgl = g_malloc0(sizeof*this_proj -> modelgl);
     this_proj -> modelgl -> init = FALSE;
     this_proj -> modelgl -> proj = this_proj -> id;
     GtkWidget * gl_vbox;
@@ -1511,7 +1464,18 @@ gboolean create_3d_model (int p, gboolean load)
       g_signal_connect (G_OBJECT (this_proj -> modelgl -> win), "key-press-event", G_CALLBACK(on_key_pressed), this_proj -> modelgl);
 #endif
       g_signal_connect (G_OBJECT (this_proj -> modelgl -> win), "realize", G_CALLBACK(on_win_realize), this_proj -> modelgl);
-      add_gtk_close_event (this_proj -> modelgl -> win, G_CALLBACK(hide_this_window), NULL);
+      if (atomes_from_libreoffice)
+      {
+#ifdef GTK4
+        g_signal_connect (G_OBJECT (this_proj -> modelgl -> win), "close-request", G_CALLBACK(do_not_hide), NULL);
+#else
+        g_signal_connect (G_OBJECT (this_proj -> modelgl -> win), "delete-event", G_CALLBACK(do_not_hide), NULL);
+#endif
+      }
+      else
+      {
+        add_gtk_close_event (this_proj -> modelgl -> win, G_CALLBACK(hide_this_window), NULL);
+      }
     }
     g_signal_connect (G_OBJECT (this_proj -> modelgl -> plot), "realize", G_CALLBACK(on_realize), this_proj -> modelgl);
 #ifdef GTKGLAREA
@@ -1549,8 +1513,8 @@ void prep_model (int p)
       active_project_changed (p);
 #ifdef GTK3
       // GTK3 Menu Action To Check
-      active_glwin -> ogl_box_axis[0] = g_malloc0 (OGL_BOX*sizeof*active_glwin -> ogl_box_axis[0]);
-      active_glwin -> ogl_box_axis[1] = g_malloc0 (OGL_AXIS*sizeof*active_glwin -> ogl_box_axis[1]);
+      active_glwin -> ogl_box_axis[0] = g_malloc0(OGL_BOX*sizeof*active_glwin -> ogl_box_axis[0]);
+      active_glwin -> ogl_box_axis[1] = g_malloc0(OGL_AXIS*sizeof*active_glwin -> ogl_box_axis[1]);
 #endif
       prepare_opengl_menu_bar (active_glwin);
 #ifdef GTK3

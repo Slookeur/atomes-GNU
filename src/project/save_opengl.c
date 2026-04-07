@@ -11,7 +11,7 @@ See the GNU General Public License for more details.
 You should have received a copy of the GNU Affero General Public License along with 'atomes'.
 If not, see <https://www.gnu.org/licenses/>
 
-Copyright (C) 2022-2025 by CNRS and University of Strasbourg */
+Copyright (C) 2022-2026 by CNRS and University of Strasbourg */
 
 /*!
 * @file save_opengl.c
@@ -179,7 +179,7 @@ int write_this_axis (FILE * fp, axis * xyz)
   if (fwrite (& xyz -> axis, sizeof(int), 1, fp) != 1) return ERROR_RW;
   if (fwrite (& xyz -> rad, sizeof(double), 1, fp) != 1) return ERROR_RW;
   if (fwrite (& xyz -> line, sizeof(double), 1, fp) != 1) return ERROR_RW;
-  if (fwrite (& xyz  -> color, sizeof(ColRGBA), 1, fp) != 1) return ERROR_RW;
+  // if (fwrite (& xyz  -> color, sizeof(ColRGBA), 1, fp) != 1) return ERROR_RW;
   if (fwrite (& xyz -> t_pos, sizeof(int), 1, fp) != 1) return ERROR_RW;
   if (fwrite (& xyz -> length, sizeof(double), 1, fp) != 1) return ERROR_RW;
   if (fwrite (xyz -> c_pos, sizeof(double), 3, fp) != 3) return ERROR_RW;
@@ -296,6 +296,7 @@ int save_opengl_image (FILE * fp, project * this_proj, image * img, int sid)
   if (fwrite (img -> c_shift, sizeof(GLdouble), 2, fp) != 2) return ERROR_RW;
   if (fwrite (& img -> style, sizeof(int), 1, fp) != 1) return ERROR_RW;
   if (fwrite (& img -> quality, sizeof(GLint), 1, fp) != 1) return ERROR_RW;
+  if (fwrite (& img -> ray_tracing, sizeof(gboolean), 1, fp) != 1) return ERROR_RW;
   if (fwrite (& img -> render, sizeof(GLint), 1, fp) != 1) return ERROR_RW;
   if (fwrite (& img -> l_ghtning.lights, sizeof(int), 1, fp) != 1) return ERROR_RW;
   for (i=0; i<img -> l_ghtning.lights; i++)

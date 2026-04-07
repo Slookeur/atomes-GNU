@@ -11,7 +11,7 @@ See the GNU General Public License for more details.
 You should have received a copy of the GNU Affero General Public License along with 'atomes'.
 If not, see <https://www.gnu.org/licenses/>
 
-Copyright (C) 2022-2025 by CNRS and University of Strasbourg */
+Copyright (C) 2022-2026 by CNRS and University of Strasbourg */
 
 /*!
 * @file w_library.c
@@ -271,6 +271,7 @@ gchar * family_dir[FAMILY]={"Misc",
 extern void gtk_window_change_gdk_visual (GtkWidget * win);
 #endif // G_OS_WIN32
 #endif // GTK3
+
 extern gboolean create_3d_model (int p, gboolean load);
 extern G_MODULE_EXPORT void on_realize (GtkGLArea * area, gpointer data);
 extern xmlNodePtr findnode (xmlNodePtr startnode, char * nname);
@@ -703,8 +704,8 @@ int get_sml_files ()
 #endif
   if (val > 0)
   {
-    sml_file_name = g_malloc0 (val*sizeof*sml_file_name);
-    mol_name = g_malloc0 (val*sizeof*mol_name);
+    sml_file_name = g_malloc0(val*sizeof*sml_file_name);
+    mol_name = g_malloc0(val*sizeof*mol_name);
     val = 0;
 #ifdef G_OS_WIN32
     hFind = FindFirstFile (libwin32, & ffd);
@@ -830,7 +831,7 @@ void insert_preview ()
 {
   gchar * str;
   lib_preview_plot = gtk_fixed_new ();
-  add_box_child_start (GTK_ORIENTATION_HORIZONTAL, lib_preview_box, lib_preview_plot, FALSE, FALSE, 10);
+  add_box_child_start (GTK_ORIENTATION_HORIZONTAL, lib_preview_box, lib_preview_plot, FALSE, FALSE, 0);
   GtkWidget * grid = gtk_grid_new ();
   gtk_fixed_put (GTK_FIXED(lib_preview_plot), grid, 0, 10);
   gtk_widget_set_size_request (grid, -1, 200);
@@ -932,6 +933,7 @@ void prepare_preview (int active, int id, gboolean visible)
       active_glwin -> init = FALSE;
       active_image = active_glwin -> anim -> last -> img;
       lib_proj  -> runc[0] = TRUE;
+      init_atomes_analysis (lib_proj, TRUE);
       on_calc_bonds_released (NULL, NULL);
       lib_proj -> modelgl -> anim -> last -> img -> quality = 30;
       lib_proj -> modelgl -> anim -> last -> img -> rep = ORTHOGRAPHIC;
@@ -997,10 +999,7 @@ G_MODULE_EXPORT void select_library_data (GtkTreeView * tree_view, GtkTreePath *
 */
 G_MODULE_EXPORT void set_library_markup (GtkTreeViewColumn * col, GtkCellRenderer * renderer, GtkTreeModel * mod, GtkTreeIter * iter, gpointer data)
 {
-  gchar * str = NULL;
-  gtk_tree_model_get (mod, iter, 1, & str, -1);
-  g_object_set (renderer, "markup", str, NULL, NULL);
-  g_free (str);
+  set_renderer_markup (mod, iter, renderer, 1);
 }
 
 /*!
@@ -1104,6 +1103,7 @@ G_MODULE_EXPORT void run_select_from_library (GtkDialog * lib, gint response_id,
 int select_from_library (gboolean visible, project * this_proj, atom_search * asearch)
 {
   int active = activep;
+  int nats = this_proj -> natomes;
   lib_visible = visible;
   GtkWidget * lib = dialogmodal ("Library", GTK_WINDOW((this_proj -> modelgl) ? this_proj -> modelgl -> win : MainWindow));
 #ifdef GTK3
@@ -1126,7 +1126,7 @@ int select_from_library (gboolean visible, project * this_proj, atom_search * as
   molecule_store = gtk_list_store_new (2, G_TYPE_INT, G_TYPE_STRING);
   add_box_child_start (GTK_ORIENTATION_HORIZONTAL, hbox, library_tree (molecule_store, 1, "Molecule"), FALSE, FALSE, 0);
   lib_preview_box = create_hbox(0);
-  add_box_child_start (GTK_ORIENTATION_HORIZONTAL, hbox, lib_preview_box, FALSE, FALSE, 0);
+  add_box_child_start (GTK_ORIENTATION_HORIZONTAL, hbox, lib_preview_box, FALSE, FALSE, 10);
   lib_preview_plot = NULL;
   the_family = 0;
   gtk_tree_selection_select_iter (libselect[0], & first_family_iter);
@@ -1139,6 +1139,21 @@ int select_from_library (gboolean visible, project * this_proj, atom_search * as
   inserted_from_lib = 0;
   run_this_gtk_dialog (lib, G_CALLBACK(run_select_from_library), asearch);
   active_project_changed (active);
+  if (! nats && active_project -> natomes)
+  {
+    int i;
+    if (active_image -> style == SPACEFILL)
+    {
+      i = OGL_STYLES + active_image -> filled_type;
+      set_this_style (active_glwin, WIREFRAME);
+    }
+    else
+    {
+      i = active_image -> style;
+      set_this_style (active_glwin, OGL_STYLES);
+    }
+    set_this_style (active_glwin, i);
+  }
   if (sml_file_name != NULL) g_free (sml_file_name);
   if (mol_name != NULL) g_free (mol_name);
   if (lib_proj != NULL) close_project (lib_proj);
@@ -1163,6 +1178,7 @@ int insert_this_project_from_lib (int id, gboolean visible, project * this_proj,
   int family[6] = {0, 3, 9, 9, 15, 17};
   int molec[6] = {0, 8, 36, 21, 11, 0};
   int active = activep;
+  int nats = this_proj -> natomes;
   the_family = family[id];
   if (get_sml_files ())
   {
@@ -1175,6 +1191,21 @@ int insert_this_project_from_lib (int id, gboolean visible, project * this_proj,
     }
   }
   active_project_changed (active);
+  if (! nats && active_project -> natomes)
+  {
+    int i;
+    if (active_image -> style == SPACEFILL)
+    {
+      i = OGL_STYLES + active_image -> filled_type;
+      set_this_style (active_glwin, WIREFRAME);
+    }
+    else
+    {
+      i = active_image -> style;
+      set_this_style (active_glwin, OGL_STYLES);
+    }
+    set_this_style (active_glwin, i);
+  }
   if (sml_file_name != NULL) g_free (sml_file_name);
   if (mol_name != NULL) g_free (mol_name);
   if (lib_proj != NULL) close_project (lib_proj);

@@ -11,7 +11,7 @@ See the GNU General Public License for more details.
 You should have received a copy of the GNU Affero General Public License along with 'atomes'.
 If not, see <https://www.gnu.org/licenses/>
 
-Copyright (C) 2022-2025 by CNRS and University of Strasbourg */
+Copyright (C) 2022-2026 by CNRS and University of Strasbourg */
 
 /*!
 * @file calc.c
@@ -120,7 +120,7 @@ atom_selection * duplicate_ogl_selection (atom_selection * old_sel)
 {
   int i, j;
   atom_in_selection * at, * bt;
-  atom_selection * new_sel = g_malloc0 (sizeof*new_sel);
+  atom_selection * new_sel = g_malloc0(sizeof*new_sel);
   if (! old_sel -> selected) return new_sel;
   new_sel -> selected = old_sel -> selected;
   at = old_sel -> first;
@@ -274,7 +274,7 @@ void preserve_ogl_selection (glwin * view)
     {
       if (j && k)
       {
-        view -> stored_labels[i] = allocint(k+1);
+        view -> stored_labels[i] = allocint (k+1);
         view -> stored_labels[i][0] = k+1;
       }
       k = j;

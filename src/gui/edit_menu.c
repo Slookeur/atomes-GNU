@@ -11,7 +11,7 @@ See the GNU General Public License for more details.
 You should have received a copy of the GNU Affero General Public License along with 'atomes'.
 If not, see <https://www.gnu.org/licenses/>
 
-Copyright (C) 2022-2025 by CNRS and University of Strasbourg */
+Copyright (C) 2022-2026 by CNRS and University of Strasbourg */
 
 /*!
 * @file edit_menu.c
@@ -453,7 +453,7 @@ void edit_chem (GtkWidget * vbox)
           g_signal_connect(G_OBJECT(rad_box), "changed", G_CALLBACK(on_rad_changed), NULL);
           gtk_grid_attach (GTK_GRID (table), rad_box, 1, i+1, 1, 1);
         }
-        tmp_chem[i-3] = g_malloc (active_project -> nspec*sizeof*tmp_chem[i-3]);
+        tmp_chem[i-3] = g_malloc0(active_project -> nspec*sizeof*tmp_chem[i-3]);
         for (j=0; j<active_project -> nspec; j++)
         {
           tmp_chem[i-3][j] =  active_chem -> chem_prop[i-2][j];
@@ -539,18 +539,26 @@ gboolean test_pbc (int pbc, int frac, double box[2][3], double vect[3][3])
 */
 void init_box_calc ()
 {
-  int i;
   active_cell -> has_a_box = test_vol (active_box -> param, active_box -> vect);
   if (! active_cell -> has_a_box)
   {
-    for (i=0; i<4; i++) active_project -> runok[i] = FALSE;
+
+    if (active_project -> analysis)
+    {
+      active_project -> analysis[GDR] -> avail_ok = FALSE;
+      active_project -> analysis[SQD] -> avail_ok = FALSE;
+      active_project -> analysis[SKD] -> avail_ok = FALSE;
+      active_project -> analysis[GDK] -> avail_ok = FALSE;
+    }
   }
   else
   {
-    for (i=0; i<3; i=i+2)
+    if (active_project -> analysis)
     {
-      active_project -> runok[i] = TRUE;
-      active_project -> runok[i+1] = active_project -> visok[i];
+      active_project -> analysis[GDR] -> avail_ok = TRUE;
+      active_project -> analysis[SQD] -> avail_ok = active_project -> analysis[GDR] -> calc_ok;
+      active_project -> analysis[SKD] -> avail_ok = TRUE;
+      active_project -> analysis[GDK] -> avail_ok = active_project -> analysis[SKD] -> calc_ok;
     }
   }
   prep_calc_actions ();
@@ -564,9 +572,11 @@ gboolean has_box_changed ()
   {
     for (j=0; j<3; j++)
     {
+      g_debug ("i= %d, j= %d, tmp_lattice[%d][%d]= %f, active_box -> param[%d][%d]= %f", i, j, i, j, tmp_lattice[i][j], i, j, active_box -> param[i][j]);
       if (tmp_lattice[i][j] != active_box -> param[i][j])
       {
         active_box -> param[i][j] = tmp_lattice[i][j];
+
         changed = TRUE;
       }
     }
@@ -608,12 +618,14 @@ void prep_box (int id)
   if (tmp_lat < 2 && tmp_lat != active_cell -> ltype) active_project -> run = 0;
   if (tmp_lat > 0)
   {
-    if (tmp_lat == 1 && has_box_changed())
+    if (has_box_changed())
     {
+      tmp_lat = 1;
       active_project -> run = 0;
     }
-    else if (tmp_lat == 2 && have_vectors_changed())
+    else if (have_vectors_changed())
     {
+      tmp_lat = 2;
       active_project -> run = 0;
     }
   }
@@ -676,16 +688,16 @@ gboolean test_cutoffs ()
   k = 0;
   for (i=0; i<active_project -> nspec; i++, k++)
   {
-    if (tmpcut[k] == 0.0 || (active_project -> run && tmpcut[k] > active_project -> max[GR])) return FALSE;
+    if (tmpcut[k] == 0.0 || (active_project -> run && tmpcut[k] > active_project -> analysis[GDR] -> max)) return FALSE;
   }
   for (i=0; i<active_project -> nspec-1; i++)
   {
     for (j=i+1; j<active_project -> nspec; j++, k++)
     {
-      if (tmpcut[k] == 0.0 || (active_project -> run && tmpcut[k] > active_project -> max[GR])) return FALSE;
+      if (tmpcut[k] == 0.0 || (active_project -> run && tmpcut[k] > active_project -> analysis[GDR] -> max)) return FALSE;
     }
   }
-  if (tmpcut[k] == 0.0 || (active_project -> run && tmpcut[k] > active_project -> max[GR])) return FALSE;
+  if (tmpcut[k] == 0.0 || (active_project -> run && tmpcut[k] > active_project -> analysis[GDR] -> max)) return FALSE;
   return TRUE;
 }
 
@@ -707,10 +719,17 @@ void edit_bonds (GtkWidget * vbox)
   gchar * str;
   if (! preferences)
   {
-    if (active_project -> max[0] != 0.0)
+    if (active_project -> analysis)
     {
-      str = g_strdup_printf ("%s\twith\tD<sub>max</sub> = %f  &#xC5;",
-                             m_end, active_project -> max[0]);
+      if (active_project -> analysis[GDR] -> max != 0.0)
+      {
+        str = g_strdup_printf ("%s\twith\tD<sub>max</sub> = %f  &#xC5;",
+                               m_end, active_project -> analysis[GDR] -> max);
+      }
+      else
+      {
+        str = g_strdup_printf ("With %s", m_end);
+      }
     }
     else
     {

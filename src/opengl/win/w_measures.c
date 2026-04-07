@@ -11,7 +11,7 @@ See the GNU General Public License for more details.
 You should have received a copy of the GNU Affero General Public License along with 'atomes'.
 If not, see <https://www.gnu.org/licenses/>
 
-Copyright (C) 2022-2025 by CNRS and University of Strasbourg */
+Copyright (C) 2022-2026 by CNRS and University of Strasbourg */
 
 /*!
 * @file w_measures.c
@@ -340,16 +340,14 @@ void dihedral_set_color_and_markup (GtkTreeViewColumn * col, GtkCellRenderer * r
   tint * dat = (tint *)data;
   dat -> c = 2;
   measure_set_color (col, renderer, mod, iter, data);
-  gchar * str = NULL;
-  gtk_tree_model_get (mod, iter, dat -> b, & str, -1);
-  g_object_set (renderer, "markup", str, NULL, NULL);
-  g_free (str);
+
+  set_renderer_markup (mod, iter, renderer, dat -> b);
 }
 
 /*!
   \fn void measure_set_color_and_markup (GtkTreeViewColumn * col, GtkCellRenderer * renderer, GtkTreeModel * mod, GtkTreeIter * iter, gpointer data)
 
-  \brief
+  \brief Measure window set color and Pango markup in tree view
 
   \param col the tree view column
   \param renderer the column renderer
@@ -361,10 +359,7 @@ void measure_set_color_and_markup (GtkTreeViewColumn * col, GtkCellRenderer * re
 {
   tint * dat = (tint *)data;
   measure_set_color (col, renderer, mod, iter, dat);
-  gchar * str = NULL;
-  gtk_tree_model_get (mod, iter, dat -> b, & str, -1);
-  g_object_set (renderer, "markup", str, NULL, NULL);
-  g_free (str);
+  set_renderer_markup (mod, iter, renderer, dat -> b);
 }
 
 GtkWidget * create_selection_tree (glwin * view, int sid, int mid);
@@ -529,7 +524,7 @@ GtkWidget * create_selection_tree (glwin * view, int sid, int mid)
       sel_col[i] = gtk_tree_view_column_new_with_attributes (ctitle[mid][i], sel_cell[i], ctype[mid][i], i, NULL);
     }
     gtk_tree_view_column_set_alignment (sel_col[i], 0.5);
-    gtk_tree_view_append_column(GTK_TREE_VIEW(selection_tree), sel_col[i]);
+    gtk_tree_view_append_column (GTK_TREE_VIEW(selection_tree), sel_col[i]);
     if (i > 0 && i < 4+mid)
     {
       if (mid < 2)
@@ -741,7 +736,7 @@ G_MODULE_EXPORT void window_measures (GtkWidget * widg, gpointer data)
   glwin * view = (glwin *) data;
   if (view -> measure_win == NULL)
   {
-    view -> measure_win = g_malloc0 (sizeof*view -> measure_win);
+    view -> measure_win = g_malloc0(sizeof*view -> measure_win);
     gchar * str = g_strdup_printf ("%s - measures", get_project_by_id(view -> proj) -> name);
     int pi = get_selection_type (view);
     view -> measure_win -> win = create_win (str, view -> win, FALSE, FALSE);

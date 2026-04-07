@@ -11,7 +11,7 @@ See the GNU General Public License for more details.
 You should have received a copy of the GNU Affero General Public License along with 'atomes'.
 If not, see <https://www.gnu.org/licenses/>
 
-Copyright (C) 2022-2025 by CNRS and University of Strasbourg */
+Copyright (C) 2022-2026 by CNRS and University of Strasbourg */
 
 /*!
 * @file d_atoms.c
@@ -203,7 +203,7 @@ object_3d * draw_sphere (int quality)
   int stack, slice;
   int x, y, z;
 
-  object_3d * new_sphere = g_malloc0 (sizeof*new_sphere);
+  object_3d * new_sphere = g_malloc0(sizeof*new_sphere);
   new_sphere -> quality = quality;
   new_sphere -> num_vertices = sphere_vertices (quality);
   new_sphere -> vert_buffer_size = 3;
@@ -258,6 +258,41 @@ object_3d * draw_sphere (int quality)
 }
 
 /*!
+  \fn object_3d * draw_billboard_quad ()
+
+  \brief create a camera-aligned billboard quad proxy for perfect impostors.
+
+  The quad has 4 vertices at unit corners (±1, ±1, 0).  Each vertex shader
+  for perfect impostors uses the sign of vert.x / vert.y to select the
+  corresponding edge of the tight axis-aligned bounding box in view space.
+
+  Draw primitive: GL_TRIANGLE_STRIP with indices [0,1,2,3].
+    tri 0 → vertices 0,1,2
+    tri 1 → vertices 1,2,3
+*/
+object_3d * draw_billboard_quad ()
+{
+  object_3d * quad = g_malloc0(sizeof*quad);
+  quad -> quality       = 1;
+  quad -> num_vertices  = 4;
+  quad -> vert_buffer_size = 3;
+  quad -> vertices = allocfloat (3 * 4);
+  /* corners: (-1,-1,0), (-1,+1,0), (+1,-1,0), (+1,+1,0) */
+  quad -> vertices[0] = -1.0f;  quad -> vertices[1] = -1.0f;  quad -> vertices[2] = 0.0f;
+  quad -> vertices[3] = -1.0f;  quad -> vertices[4] =  1.0f;  quad -> vertices[5] = 0.0f;
+  quad -> vertices[6] =  1.0f;  quad -> vertices[7] = -1.0f;  quad -> vertices[8] = 0.0f;
+  quad -> vertices[9] =  1.0f;  quad -> vertices[10] = 1.0f;  quad -> vertices[11] = 0.0f;
+  quad -> num_indices  = 4;
+  quad -> ind_buffer_size = 1;
+  quad -> indices = allocint (4);
+  quad -> indices[0] = 0;
+  quad -> indices[1] = 1;
+  quad -> indices[2] = 2;
+  quad -> indices[3] = 3;
+  return quad;
+}
+
+/*!
   \fn float get_sphere_radius (int style, int sp, int ac, int sel)
 
   \brief get an atom sphere radius
@@ -269,7 +304,15 @@ object_3d * draw_sphere (int quality)
 */
 float get_sphere_radius (int style, int sp, int ac, int sel)
 {
-  if (style == WIREFRAME || style == PUNT)
+  if (style >= OGL_STYLES)
+  {
+    int fid = get_filled_id(style);
+    int k = (fid) ? 9 + fid : 2;
+    int l = (fid) ? 12 + fid : 7;
+    int m = (int)proj_gl -> chemistry -> chem_prop[CHEM_Z][sp];
+    return (default_o_at_rs[2+5*ac]) ? default_at_rs[2+5*ac] + sel*0.05 : get_radius (2+5*ac, fid, m, default_atomic_rad[(ac) ? l : k]) + sel*0.05;
+  }
+  else if (style == WIREFRAME || style == PUNT)
   {
     return plot -> pointrad[sp + ac*proj_sp] + sel*4.0;
   }
@@ -279,7 +322,7 @@ float get_sphere_radius (int style, int sp, int ac, int sel)
   }
   else if (style == CYLINDERS)
   {
-    return plot -> radall[ac] + sel*0.1;
+    return plot -> radall[ac] + sel*0.05;
   }
   else
   {
@@ -622,7 +665,7 @@ void create_atom_lists (gboolean to_pick)
     {
       wingl -> n_shaders[ATOMS][step] = 0;
       for (i=0; i<NUM_STYLES; i++) if (all_styles[i]) wingl -> n_shaders[ATOMS][step] ++;
-      wingl -> ogl_glsl[ATOMS][step] = g_malloc0 (wingl -> n_shaders[ATOMS][step]*sizeof*wingl -> ogl_glsl[ATOMS][step]);
+      wingl -> ogl_glsl[ATOMS][step] = g_malloc0(wingl -> n_shaders[ATOMS][step]*sizeof*wingl -> ogl_glsl[ATOMS][step]);
     }
     k = 0;
     for (i=0; i<NUM_STYLES; i++)
@@ -640,11 +683,12 @@ void create_atom_lists (gboolean to_pick)
         }
         if (sphere)
         {
-          atos = draw_sphere (plot -> quality);
+          /* Ray: billboard quad proxy; classic: tessellated sphere */
+          atos = plot -> ray_tracing ? draw_billboard_quad () : draw_sphere (plot -> quality);
         }
         else
         {
-          atos = g_malloc0 (sizeof*atos);
+          atos = g_malloc0(sizeof*atos);
           atos -> vert_buffer_size = 3;
           atos -> num_vertices = 1;
           atos -> vertices = allocfloat (3);
@@ -652,14 +696,16 @@ void create_atom_lists (gboolean to_pick)
         }
         atos -> num_instances = j*all_styles[i];
         atos -> inst_buffer_size = ATOM_BUFF_SIZE;
-        atos -> instances = allocfloat (j*all_styles[i]*ATOM_BUFF_SIZE);
+        allocate_instances (atos);
         nbl = 0;
         atom_positions_colors_and_sizes (i-1, to_pick, atos -> instances);
         if (! to_pick)
         {
           if (sphere)
           {
-            wingl -> ogl_glsl[ATOMS][step][k] = init_shader_program (ATOMS, GLSL_SPHERES, sphere_vertex, NULL, full_color, GL_TRIANGLE_STRIP, 4, 1, TRUE, atos);
+            const GLchar * vs_atom = (plot -> ray_tracing) ? sphere_vertex_ray : sphere_vertex;
+            const GLchar * fs_atom = (plot -> ray_tracing) ? full_color_ray : full_color;
+            wingl -> ogl_glsl[ATOMS][step][k] = init_shader_program (ATOMS, GLSL_SPHERES, vs_atom, NULL, fs_atom, GL_TRIANGLE_STRIP, 4, 1, TRUE, atos);
           }
           else
           {

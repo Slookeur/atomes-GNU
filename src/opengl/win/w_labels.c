@@ -11,7 +11,7 @@ See the GNU General Public License for more details.
 You should have received a copy of the GNU Affero General Public License along with 'atomes'.
 If not, see <https://www.gnu.org/licenses/>
 
-Copyright (C) 2022-2025 by CNRS and University of Strasbourg */
+Copyright (C) 2022-2026 by CNRS and University of Strasbourg */
 
 /*!
 * @file w_labels.c
@@ -68,9 +68,9 @@ Copyright (C) 2022-2025 by CNRS and University of Strasbourg */
 #include "glwindow.h"
 #include "preferences.h"
 
-#define LABEL_FORMATS 4
+#define LABEL_FORMATS 5
 
-gchar * lab_formats[LABEL_FORMATS] = {"Element name", "Atomic symbol", "Atomic symbol + ID number", "ID number"};
+gchar * lab_formats[LABEL_FORMATS] = {"Element name", "Atomic symbol", "Atomic symbol + ID number", "Sym. + ID num. subscript", "ID number"};
 
 GtkWidget * atom_color_box;
 GtkWidget ** color_title;
@@ -230,7 +230,7 @@ G_MODULE_EXPORT void use_atom_default_colors (GtkToggleButton * but, gpointer da
   }
   else
   {
-    this_proj -> modelgl -> anim -> last -> img -> labels[b].color = g_malloc (2*this_proj -> nspec*sizeof*this_proj -> modelgl -> anim -> last -> img -> labels[b].color);
+    this_proj -> modelgl -> anim -> last -> img -> labels[b].color = g_malloc0(2*this_proj -> nspec*sizeof*this_proj -> modelgl -> anim -> last -> img -> labels[b].color);
     init_labels_colors (this_proj -> modelgl -> anim -> last -> img, this_proj -> nspec, b);
     this_proj -> modelgl -> anim -> last -> img -> labels[b].n_colors = 2*this_proj -> nspec;
   }
@@ -784,7 +784,7 @@ GtkWidget * labels_tab (glwin * view, int lid)
     atom_color_box = create_vbox (5);
     add_box_child_start (GTK_ORIENTATION_VERTICAL, col_box, atom_color_box, FALSE, FALSE, 0);
     add_box_child_start (GTK_ORIENTATION_VERTICAL, atom_color_box, markup_label ("Please select atom label colors:", -1, -1, 0.25, 0.5), FALSE, FALSE, 5);
-    color_title = g_malloc (this_proj -> nspec*sizeof*color_title);
+    color_title = g_malloc0(this_proj -> nspec*sizeof*color_title);
     for (i=0; i< this_proj -> nspec; i++)
     {
       chbox = create_hbox (0);

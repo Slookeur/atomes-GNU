@@ -11,7 +11,7 @@ See the GNU General Public License for more details.
 You should have received a copy of the GNU Affero General Public License along with 'atomes'.
 If not, see <https://www.gnu.org/licenses/>
 
-Copyright (C) 2022-2025 by CNRS and University of Strasbourg */
+Copyright (C) 2022-2026 by CNRS and University of Strasbourg */
 
 /*!
 * @file w_encode.c
@@ -427,16 +427,19 @@ void window_encode (glwin * view, gboolean video)
   hbox = create_hbox (0);
   add_box_child_start (GTK_ORIENTATION_VERTICAL, vbox, hbox, FALSE, FALSE, 0);
   gtk_widget_set_size_request (hbox, 300, -1);
-  if (video)
+  if (! view -> anim -> last -> img -> ray_tracing)
   {
-    add_box_child_start (GTK_ORIENTATION_HORIZONTAL, hbox, markup_label("OpenGL quality [0-1000] (0= recorded quality):", -1, -1, 0.0, 0.5), FALSE, FALSE, 0);
-  }
-  else
-  {
-    add_box_child_start (GTK_ORIENTATION_HORIZONTAL, hbox, markup_label("OpenGL quality [0-1000] (0= on-screen quality):", -1, -1, 0.0, 0.5), FALSE, FALSE, 0);
+    if (video)
+    {
+      add_box_child_start (GTK_ORIENTATION_HORIZONTAL, hbox, markup_label("OpenGL quality [0-1000] (0= recorded quality):", -1, -1, 0.0, 0.5), FALSE, FALSE, 0);
+    }
+    else
+    {
+      add_box_child_start (GTK_ORIENTATION_HORIZONTAL, hbox, markup_label("OpenGL quality [0-1000] (0= on-screen quality):", -1, -1, 0.0, 0.5), FALSE, FALSE, 0);
+    }
+    add_box_child_start (GTK_ORIENTATION_HORIZONTAL, hbox, spin_button (G_CALLBACK(set_video_opengl_spin), 0, 0, 1000, 1, 0, 100, NULL), FALSE, FALSE, 20);
   }
   oglquality = 0;
-  add_box_child_start (GTK_ORIENTATION_HORIZONTAL, hbox, spin_button (G_CALLBACK(set_video_opengl_spin), 0, 0, 1000, 1, 0, 100, NULL), FALSE, FALSE, 20);
   if (video)
   {
     add_box_child_start (GTK_ORIENTATION_VERTICAL, vbox, markup_label("Progress: ", -1, -1, 0.0, 0.5), FALSE, FALSE, 10);

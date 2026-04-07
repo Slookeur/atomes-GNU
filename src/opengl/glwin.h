@@ -11,7 +11,7 @@ See the GNU General Public License for more details.
 You should have received a copy of the GNU Affero General Public License along with 'atomes'.
 If not, see <https://www.gnu.org/licenses/>
 
-Copyright (C) 2022-2025 by CNRS and University of Strasbourg */
+Copyright (C) 2022-2026 by CNRS and University of Strasbourg */
 
 /*!
 * @file glwin.h
@@ -213,14 +213,14 @@ struct Material
   // 0 = lightning model
   // 2 = metallic
   // 3 = roughness
-  // 4 = back lightning
+  // 4 = ambient occlusion
   // 5 = gamma
   // 6 = opacity
   GLfloat param[6];    /*!< Material parameters \n
                          0 = lightning model, \n
                          1 = metallic, \n
                          2 = roughness, \n
-                         3 = back lightning, \n
+                         3 = ambient occlusion, \n
                          4 = gamma, \n
                          5 = opacity*/
 };
@@ -485,6 +485,8 @@ struct image
   Lightning l_ghtning;                          /*!< Lightning description */
   Material m_terial;                            /*!< Material description, if any */
   Fog f_g;                                      /*!< Fog description, if any*/
+
+  gboolean ray_tracing;                         /*!< Use or not raytracing rendering with quad billboards, default = TRUE */
 
   int step;                                     /*!< The MD step, in case of trajectory */
   int rep;                                      /*!< Representation: 0 = orthographic, 1 = perspective */
@@ -830,6 +832,7 @@ struct opengl_edition
   GtkWidget * m_scale[5];
   GtkWidget * lights;
   GtkWidget * lights_box;
+  GtkWidget * render_fix;
 
   GtkWidget * basic[2];
   GtkWidget * base_ogl[2][5];
@@ -975,9 +978,7 @@ struct glwin
   GtkWidget * ogl_styles[OGL_STYLES];
   GtkWidget * filled_styles[FILLED_STYLES];
   GtkWidget * color_styles[ATOM_MAPS+POLY_MAPS];
-  GtkWidget * ogl_render[OGL_RENDERS];
   GtkWidget * ogl_rep[OGL_REPS];
-  GtkWidget * ogl_quality;
   GtkWidget ** ogl_box_axis[2];
   GtkWidget * ogl_box[8];
   GtkWidget * ogl_mouse[3];
@@ -1001,7 +1002,7 @@ struct glwin
   GtkWidget * rbuild[2];
   GtkWidget * cbuilder;
 
-  // Matrices
+  // Matrices et OpenGL
   vec3_t model_position;
   vec4_t view_port;
   mat4_t projection_matrix;

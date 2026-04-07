@@ -1,6 +1,6 @@
 Name:           atomes
 %global upname atomes-GNU
-Version:        1.2.1
+Version:        1.3.0
 Release:        1%{?dist}
 Summary:        An atomistic toolbox
 License:        AGPL-3.0-or-later
@@ -39,7 +39,7 @@ Provides: %{name} = %{version}-%{release}
 
 %description
 atomes: a toolbox to analyze, to visualize 
-and to create/edit three-dimensional atomistic models.
+and to create/edit three-dimensional atomic scale models.
 It offers a workspace that allows to have many projects opened simultaneously.
 The different projects in the workspace can exchange data: 
 analysis results, atomic coordinates...
@@ -88,6 +88,9 @@ appstream-util validate-relax --nonet %{buildroot}%{_metainfodir}/fr.ipcms.%{nam
 %{_metainfodir}/fr.ipcms.%{name}.appdata.xml
 
 %changelog
+* Tue Apr 30 2026 Sébastien Le Roux <sebastien.leroux@ipcms.unistra.fr> - 1.3.0-1
+- New features (see:  https://github.com/Slookeur/atomes-GNU/releases/tag/v1.3.0)
+
 * Tue Sep 30 2025 Sébastien Le Roux <sebastien.leroux@ipcms.unistra.fr> - 1.2.1-1
 - New features (see:  https://github.com/Slookeur/atomes-GNU/releases/tag/v1.2.1)
 

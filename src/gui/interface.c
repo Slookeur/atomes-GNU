@@ -11,7 +11,7 @@ See the GNU General Public License for more details.
 You should have received a copy of the GNU Affero General Public License along with 'atomes'.
 If not, see <https://www.gnu.org/licenses/>
 
-Copyright (C) 2022-2025 by CNRS and University of Strasbourg */
+Copyright (C) 2022-2026 by CNRS and University of Strasbourg */
 
 /*!
 * @file interface.c
@@ -180,9 +180,13 @@ G_MODULE_EXPORT void create_about_dialog (GtkWidget * widg, gpointer data)
 #else
   GdkPixbuf * atomes_logo = gdk_pixbuf_new_from_file (PACKAGE_LAGPL, NULL);
 #endif
-  const gchar *authors[] = {"Dr. Sébastien Le Roux <sebastien.leroux@ipcms.unistra.fr>", "", NULL};
+  const gchar * authors[] = {"Dr. Sébastien Le Roux <sebastien.leroux@ipcms.unistra.fr>",
+                             "",
+                             "Collaborations:",
+                             "",
+                             "Dr. Noël Jakse <noel.jakse@grenoble-inp.fr> : dynamic structure factor", NULL};
   const gchar * weblabel = "https://atomes.ipcms.fr";
-  const gchar * comments = "Visualization, analyzis, creation/edition and post-processing of atomistic models !";
+  const gchar * comments = "Visualization, analyzis, creation/edition and post-processing of atomic scale models !";
   const gchar * copyrights = "Copyright © 2025 \nDr. Sébastien Le Roux";
 
   // gtk_about_dialog_set_url_hook (about_dialog_handle_url, NULL, NULL);
@@ -745,6 +749,12 @@ void init_data_ (int * nats, int * nspc, int * stps, int * cid)
   active_project -> natomes = * nats;
   active_project -> nspec = * nspc;
   active_project -> steps = * stps;
+  if (active_project -> steps > 1)
+  {
+    active_project -> skt_corr_threshold = (active_project -> steps < 20) ? 1 : 10;
+    active_project -> skt_n_data_sets = min (5, active_project -> steps);
+    active_project -> sqw_n_data_sets = 5;
+  }
   alloc_proj_data (active_project, * cid);
   if (* cid) active_chem = active_project -> chemistry;
 }
@@ -794,7 +804,7 @@ void spec_data_ (int * status, int * ind, int * atd, int * nsp,
 
   \param str the text
   \param stag the tags
-  \param buffer the GtkTextBuffer to print to
+  \param buffer the GtkTextBuffer to print into
 */
 void print_info  (gchar * str, gchar * stag, GtkTextBuffer * buffer)
 {
@@ -905,8 +915,12 @@ void lattice_info_ (int * bid, double * volume, double * density,
   active_cell -> box[* bid].dens = * density;
   if ((active_cell -> npt && * bid == active_project -> steps-1) || ! active_cell -> npt)
   {
-    active_project -> max[GR] = fdmax_ (& active_cell -> pbc);
-    active_project -> min[SQ] = active_project -> min[SK] = fkmin_ (& active_cell -> pbc);
+    if (active_project -> analysis)
+    {
+      active_project -> analysis[GDR] -> max = fdmax_ (& active_cell -> pbc);
+      active_project -> analysis[SQD] -> min = active_project -> analysis[SKD] -> min = fkmin_ (& active_cell -> pbc);
+      if (active_project -> analysis[SKT]) active_project -> analysis[SKT] -> min = active_project -> analysis[SKD] -> min;
+    }
     int i, j;
     active_cell -> volume = active_cell -> density = 0.0;
     i = (active_cell -> npt) ? active_project -> steps : 1;
@@ -1043,11 +1057,11 @@ void update_after_calc (int calc)
   for (i=0; i<nprojects; i++)
   {
     this_proj = get_project_by_id(i);
-    if (this_proj -> initok[calc])
+    if (this_proj -> analysis[calc] -> init_ok)
     {
-      for (j= 0; j < this_proj -> numc[calc]; j++)
+      for (j= 0; j < this_proj -> analysis[calc] -> numc; j++)
       {
-        if (this_proj -> curves[calc][j] -> plot != NULL)
+        if (this_proj -> analysis[calc] -> curves[j] -> plot != NULL)
         {
           cd.a = i;
           cd.b = calc;

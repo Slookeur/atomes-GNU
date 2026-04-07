@@ -11,7 +11,7 @@ See the GNU General Public License for more details.
 You should have received a copy of the GNU Affero General Public License along with 'atomes'.
 If not, see <https://www.gnu.org/licenses/>
 
-Copyright (C) 2022-2025 by CNRS and University of Strasbourg */
+Copyright (C) 2022-2026 by CNRS and University of Strasbourg */
 
 /*!
 * @file w_advance.c
@@ -54,7 +54,6 @@ Copyright (C) 2022-2025 by CNRS and University of Strasbourg */
   G_MODULE_EXPORT void run_light_source_to_be_removed (GtkDialog * win, gint response_id, gpointer data);
   G_MODULE_EXPORT void show_light_param (GtkComboBox * box, gpointer data);
   G_MODULE_EXPORT void set_nlights_spin (GtkSpinButton * res, gpointer data);
-  G_MODULE_EXPORT void set_nlights (GtkEntry * res, gpointer data);
   G_MODULE_EXPORT void update_light_param (GtkEntry * res, gpointer data);
   G_MODULE_EXPORT void set_object_pos (GtkEntry * res, gpointer data);
   G_MODULE_EXPORT void set_light_type (GtkComboBox * box, gpointer data);
@@ -64,6 +63,8 @@ Copyright (C) 2022-2025 by CNRS and University of Strasbourg */
   G_MODULE_EXPORT void set_use_template_toggle (GtkCheckButton * but, gpointer data);
   G_MODULE_EXPORT void set_use_template_toggle (GtkToggleButton * but, gpointer data);
   G_MODULE_EXPORT void set_template (GtkComboBox * box, gpointer data);
+  G_MODULE_EXPORT void set_r_model (GtkComboBox * box, gpointer data);
+  G_MODULE_EXPORT void set_f_model (GtkComboBox * box, gpointer data);
   G_MODULE_EXPORT void set_l_model (GtkComboBox * box, gpointer data);
   G_MODULE_EXPORT void update_mat_param (GtkEntry * res, gpointer data);
   G_MODULE_EXPORT void scale_param (GtkRange * range, gpointer data);
@@ -77,10 +78,12 @@ Copyright (C) 2022-2025 by CNRS and University of Strasbourg */
   GtkWidget * bdv_box (GtkWidget * box, char * lab, int size, float xalign);
   GtkWidget * GtkWidget * create_setting_pos (gchar * lab, int size, float xalign, int pid, int lid, float * values, opengl_edition * ogl_win);
   GtkWidget * lights_tab (glwin * view, opengl_edition * ogl_edit, Lightning * the_light);
+  GtkWidget * rendering_fix (glwin * view);
+  GtkWidget * lightning_fix (glwin * view);
   GtkWidget * materials_tab (glwin * view, opengl_edition * ogl_edit, Material * the_mat);
   GtkWidget * fog_tab (glwin * view, opengl_edition * ogl_edit, Fog * the_fog);
 
-  Light init_light_source (int type, float val, float vbl);
+  Light init_light_source (int type, float size);
   Light copy_light_source (Light old_sp);
   Light * copy_light_sources (int dima, int dimb, Light * old_sp);
 
@@ -102,17 +105,17 @@ gchar * material_template[TEMPLATES] = {"Opaque",
                                         "Translucent",
                                         "Diffuse"};
 
-GLfloat template_parameters[TEMPLATES][5] ={{0.50, 0.50, 0.90, 1.00, 1.00},  // Ok
-                                            {0.90, 0.60, 1.00, 1.50, 1.00},  // Ok
-                                            {0.80, 0.40, 1.00, 1.00, 1.00},  // Ok
-                                            {0.35, 0.15, 1.00, 1.50, 1.00},  // Ok
-                                            {0.50, 0.50, 0.50, 1.00, 0.50},  //
-                                            {0.50, 0.50, 0.50, 1.00, 0.75},  //
-                                            {0.35, 0.80, 1.00, 1.50, 1.00}}; // Ok
+GLfloat template_parameters[TEMPLATES][5] ={{0.50, 0.50, 0.99, 1.00, 1.00},  // Ok
+                                            {0.90, 0.60, 0.99, 1.50, 1.00},  // Ok
+                                            {0.80, 0.40, 0.99, 1.00, 1.00},  // Ok
+                                            {0.35, 0.15, 0.99, 1.50, 1.00},  // Ok
+                                            {0.50, 0.50, 0.99, 1.00, 0.50},  //
+                                            {0.50, 0.50, 0.99, 1.00, 0.75},  //
+                                            {0.35, 0.80, 0.99, 1.50, 1.00}}; // Ok
 
 float mat_min_max[5][2] = {{0.0, 1.0},
                            {0.0, 1.0},
-                           {0.0, 10.0},
+                           {0.0, 1.0},
                            {0.0, 10.0},
                            {0.0, 1.0}};
 
@@ -231,18 +234,25 @@ GtkWidget ** light_but;
 */
 G_MODULE_EXPORT void run_light_source_to_be_removed (GtkDialog * win, gint response_id, gpointer data)
 {
-  Lightning * ogl_lightning = (Lightning *)data;
-  int i, j;
-  j = 0;
-  for (i=0; i<ogl_lightning -> lights; i++)
+  if (! status)
   {
-    if (button_get_status ((GtkWidget *)light_but[i]))
+    Lightning * ogl_lightning = (Lightning *)data;
+    int i;
+    for (i=0; i<ogl_lightning -> lights; i++)
     {
-      light_list[j] = i;
-      j ++;
+      if (button_get_status ((GtkWidget *)light_but[i]))
+      {
+        light_list[i] = i+1;
+      }
     }
+    destroy_this_dialog (win);
   }
-  destroy_this_dialog (win);
+  else
+  {
+    gchar * str = g_strdup_printf ("You must select %d light source(s) to be removed !", status);
+    show_warning (str, GTK_WIDGET(win));
+    g_free (str);
+  }
 }
 
 /*!
@@ -259,29 +269,28 @@ int * light_source_to_be_removed (int val, Lightning * ogl_lightning, opengl_edi
   int i;
   gchar * str;
   status = val;
-  GtkWidget * win = dialogmodal ("Remove light source(s)", GTK_WINDOW(ogl_edit -> win));
-  GtkWidget * vbox = dialog_get_content_area (win);
-  d_close =  gtk_dialog_get_widget_for_response (GTK_DIALOG (win), GTK_RESPONSE_CLOSE);
-  widget_set_sensitive (d_close, 0);
   if (val > 1)
   {
     str = g_strdup_printf ("Please select the %d light sources to be removed: ", val);
   }
   else
   {
-    str = g_strdup_printf ("Please select the %d light source to be removed: ", val);
+    str = g_strdup_printf ("Please select the light source to be removed: ");
   }
-  bbox (vbox, str);
+  GtkWidget * win = message_dialogmodal (str, "Remove light source(s)", GTK_MESSAGE_INFO, GTK_BUTTONS_CLOSE, ogl_edit -> win);
+  GtkWidget * vbox = dialog_get_content_area (win);
+  d_close =  gtk_dialog_get_widget_for_response (GTK_DIALOG (win), GTK_RESPONSE_CLOSE);
+  widget_set_sensitive (d_close, 0);
   g_free (str);
-  light_but = g_malloc (ogl_lightning -> lights * sizeof*light_but);
+  light_but = g_malloc0(ogl_lightning -> lights * sizeof*light_but);
   for (i=0; i<ogl_lightning -> lights; i++)
   {
     str = g_strdup_printf ("Light N°%d", i+1);
-    light_but[i] = check_button (str, -1, 40, FALSE, G_CALLBACK(toggled_delete_ligth), (gpointer)GINT_TO_POINTER(i));
+    light_but[i] = check_button (str, -1, 25, FALSE, G_CALLBACK(toggled_delete_ligth), (gpointer)GINT_TO_POINTER(i));
     add_box_child_start (GTK_ORIENTATION_VERTICAL, vbox, light_but[i], TRUE, TRUE, 0);
     g_free (str);
   }
-  light_list = allocint(val);
+  light_list = allocint (ogl_lightning -> lights);
   run_this_gtk_dialog (win, G_CALLBACK(run_light_source_to_be_removed), ogl_lightning);
   return light_list;
 }
@@ -325,46 +334,43 @@ void print_light_source (Light source, int i)
 */
 
 /*!
-  \fn Light init_light_source (int type, float val, float vbl)
+  \fn Light init_light_source (int type, float size)
 
   \brief initialize a light source
 
   \param type the type of light
-  \param size depth or max (a,b,c)
-  \param depth field depth
-  \param intens
+  \param size system size
 */
-Light init_light_source (int type, float size, float depth)
+Light init_light_source (int type, float size)
 {
   Light new_light;
   new_light.type = type;
   new_light.fix = (type != 1) ? 0 : 1;
   new_light.show = 0;
+  new_light.intensity = vec3(0.0, 0.0, 0.0);
   new_light.direction = vec3(0.0, 0.0, 0.0);
-  double intensity = (type == 1) ? 100.0*DEFAULT_INTENSITY : DEFAULT_INTENSITY;
-  if (size != depth)
-  {
-    intensity *= exp (size/depth);
-  }
-  if (! preferences && depth <= 50.0) intensity *= depth / 100.0;
-  new_light.intensity = vec3 (intensity, intensity, intensity);
-  new_light.attenuation = vec3 (1.0, 0.14, 0.07);
-  new_light.spot_data = vec3 (20.0, 20.0, 20.0);
+  new_light.position = vec3(0.0, 0.0, 0.0);
+  new_light.attenuation = vec3(0.0, 0.0, 0.0);
   if (type == 0)
   {
+    new_light.intensity = vec3 (DEFAULT_INTENSITY, DEFAULT_INTENSITY, DEFAULT_INTENSITY);
     new_light.position = vec3 (0.0, 0.0, 0.0);
-    new_light.direction = vec3 (0.0, 0.0, -1.0);
+    new_light.direction = vec3 (0.5, 1.0, 0.7);
+    new_light.attenuation = vec3 (1.0, 0.0, 0.0);
+  }
+  else if (type == 1)
+  {
+    new_light.intensity = vec3 (1.2, 1.1, 1.0);
+    new_light.position  = vec3 (0.0, 0.0, size * 0.8);
+    new_light.attenuation = vec3 (1.0, 0.01 / size, 0.001 / (size * size));
   }
   else
   {
-    new_light.position  = vec3 (depth*1.5, 0.0, 0.0);
-    if (type == 2)
-    {
-      new_light.intensity = v3_muls (new_light.intensity, 100.0);
-      float tan = (size * sqrt(2.0) / 2.0) / (depth - size);
-      float tetha = fabs(atanf (tan)) * 90.0 / pi;
-      new_light.spot_data = vec3 (tetha, tetha, tetha);
-    }
+    new_light.intensity = vec3 (1.5, 1.4, 1.3);
+    new_light.position = vec3 (0.0, 0.0, size * 0.5); // Au centre
+    new_light.direction = vec3 (0.0, 0.0, -1.0);      // Vers le bas
+    new_light.attenuation = vec3 (1.0, 0.01 / size, 0.001 / (size * size));
+    new_light.spot_data = vec3 (45.0, 5.0, 8.0);
   }
   return new_light;
 }
@@ -402,7 +408,7 @@ Light copy_light_source (Light old_sp)
 Light * copy_light_sources (int dima, int dimb, Light * old_sp)
 {
   int j;
-  Light * new_sp = g_malloc (dima*sizeof * new_sp);
+  Light * new_sp = g_malloc0(dima*sizeof * new_sp);
   for (j=0; j<dimb; j++)
   {
     //print_light_source (old_sp[j], j);
@@ -434,14 +440,14 @@ void show_active_light_data (opengl_edition * ogl_win, int lid, int tid)
   Light * this_light = (preferences) ? & tmp_lightning.spot[lid] : & get_project_by_id(ogl_win -> proj) -> modelgl -> anim -> last -> img -> l_ghtning.spot[lid];
   this_light -> type = tid;
 
-  if (is_the_widget_visible(ogl_win -> advanced_light_box)) hide_the_widgets (ogl_win -> advanced_light_box);
+  hide_the_widgets (ogl_win -> advanced_light_box);
   widget_set_sensitive (ogl_win -> light_type, lid);
   if (this_light -> type) show_the_widgets (ogl_win -> advanced_light_box);
   int i;
   for (i=0; i<2; i++)
   {
-    if (is_the_widget_visible(ogl_win -> light_b_coord[i])) hide_the_widgets (ogl_win -> light_b_coord[i]);
-    if (is_the_widget_visible(ogl_win -> light_b_entry[i])) hide_the_widgets (ogl_win -> light_b_entry[i]);
+    hide_the_widgets (ogl_win -> light_b_coord[i]);
+    hide_the_widgets (ogl_win -> light_b_entry[i]);
   }
   if (this_light -> type)
   {
@@ -458,7 +464,7 @@ void show_active_light_data (opengl_edition * ogl_win, int lid, int tid)
   }
   if (! preferences)
   {
-    if (is_the_widget_visible(ogl_win -> light_show)) hide_the_widgets (ogl_win -> light_show);
+    hide_the_widgets (ogl_win -> light_show);
     if (this_light -> type) show_the_widgets (ogl_win -> light_show);
   }
 }
@@ -549,12 +555,12 @@ void create_lights_combo (int num_lights, opengl_edition * ogl_win)
 
   \brief add or remove lights
 
-  \param val total number of light(s)
+  \param val total number of light(s) to keep
   \param data the associated data pointer
 */
 void add_remove_lights (int val, gpointer data)
 {
-  int i, j, k, m;
+  int i, j, k;
   project * this_proj;
   glwin * view;
   Lightning * this_lightning;
@@ -572,7 +578,6 @@ void add_remove_lights (int val, gpointer data)
     ogl_edit = pref_ogl_edit;
   }
 
-  gboolean delete_ligth;
   i = this_lightning -> lights;
   Light * old_spots;
   if (val > i)
@@ -585,12 +590,11 @@ void add_remove_lights (int val, gpointer data)
     g_free (this_lightning -> spot);
     this_lightning -> spot = copy_light_sources (val, i, old_spots);
     this_lightning -> lights = val;
-    float pos = (preferences) ? 20.0 : (this_proj -> cell.box[0].param[0][0] == 0.0) ? 20.0 : this_proj -> cell.box[0].param[0][0];
     for (j=i; j<val; j++)
     {
-      this_lightning -> spot[j] = init_light_source (0, pos, (! preferences) ? this_proj -> modelgl -> p_moy : 1.0); // Init directional by default
+      this_lightning -> spot[j] = init_light_source (0, (! preferences) ? this_proj -> modelgl -> p_moy : 1.0); // Init directional by default
     }
-    //free (old_spots);
+    g_free (old_spots);
   }
   else if (val < i)
   {
@@ -602,27 +606,23 @@ void add_remove_lights (int val, gpointer data)
     if (ltr != NULL)
     {
       old_spots = copy_light_sources (i, i, this_lightning -> spot);
-      for (k=0; k < i-val; k++)
-      {
-#ifdef DEBUG
-        g_debug ("REMOVING_LIGHT_SOURCES:: k= %d, ltr[%d]= %d", k, k, ltr[k]);
-#endif
-      }
       g_free (this_lightning -> spot);
-      this_lightning -> spot = g_malloc (val*sizeof*this_lightning -> spot);
-      m = -1;
+      this_lightning -> spot = g_malloc0(val*sizeof*this_lightning -> spot);
+      k = -1;
       for (j=0; j<i; j++)
       {
-        delete_ligth = FALSE;
-        for (k=0; k< i-val; k++)
+        if (! ltr[j])
         {
-          if (j == ltr[k]) delete_ligth = TRUE;
+          // Keeping this light source
+          k ++;
+          this_lightning -> spot[k] = copy_light_source (old_spots[j]);
         }
-        if (! delete_ligth)
+#ifdef DEBUG
+        else
         {
-          m ++;
-          this_lightning -> spot[m] = copy_light_source (old_spots[j]);
+          g_debug ("REMOVING_LIGHT_SOURCES:: j= %d, ltr[%d]= %d", j, j, ltr[j]);
         }
+#endif // DEBUG
       }
       g_free (old_spots);
       this_lightning -> lights = val;
@@ -631,14 +631,14 @@ void add_remove_lights (int val, gpointer data)
 #endif
     }
   }
-  create_lights_combo (this_lightning -> lights, ogl_edit);
   ogl_edit -> lights = destroy_this_widget (ogl_edit -> lights);
+  create_lights_combo (this_lightning -> lights, ogl_edit);
   show_the_widgets (ogl_edit -> lights);
   combo_set_active (ogl_edit -> lights, 0);
   update_light_data (0, ogl_edit);
   if (! preferences)
   {
-    view -> create_shaders[LIGHT] = TRUE;
+    init_shaders (view);
     update (view);
   }
 }
@@ -646,7 +646,7 @@ void add_remove_lights (int val, gpointer data)
 /*!
   \fn G_MODULE_EXPORT void set_nlights_spin (GtkSpinButton * res, gpointer data)
 
-  \brief  change the number of light(s) - spin button
+  \brief change the number of light(s) - spin button
 
   \param res the GtkSpinButton sending the signal
   \param data the associated data pointer
@@ -654,23 +654,6 @@ void add_remove_lights (int val, gpointer data)
 G_MODULE_EXPORT void set_nlights_spin (GtkSpinButton * res, gpointer data)
 {
   add_remove_lights (gtk_spin_button_get_value_as_int(res), data);
-}
-
-/*!
-  \fn G_MODULE_EXPORT void set_nlights (GtkEntry * res, gpointer data)
-
-  \brief change the number of light(s) - entry
-
-  \param res the GtkEntry sending the signal
-  \param data the associated data pointer
-*/
-G_MODULE_EXPORT void set_nlights (GtkEntry * res, gpointer data)
-{
-  int i;
-  const gchar * m;
-  m = entry_get_text (res);
-  i = (int) string_to_double ((gpointer)m);
-  add_remove_lights (i, data);
 }
 
 /*!
@@ -1020,8 +1003,10 @@ GtkWidget * lights_tab (glwin * view, opengl_edition * ogl_edit, Lightning * ogl
   update_light_data (0, ogl_edit);
 
   append_comments (vbox, "<sup>*</sup>", "Note that light N°1 must be a directional light");
-  if (preferences) append_comments (vbox, "<sup>**</sup>", "Intensity and position will be corrected based on model depth");
-
+  if (preferences)
+  {
+    append_comments (vbox, "<sup>**</sup>", "Position and attenuation will be corrected based on model depth");
+  }
   return layout;
 }
 
@@ -1148,6 +1133,48 @@ G_MODULE_EXPORT void set_template (GtkComboBox * box, gpointer data)
     update_entry_double (GTK_ENTRY(ogl_edit -> entogl[0][2]), the_mat -> albedo.z);
   }
   if (! preferences) update (view);
+}
+
+/*!
+  \fn G_MODULE_EXPORT void set_r_model (GtkComboBox * box, gpointer data)
+
+  \brief change OpenGL rendering model
+
+  \param box the GtkComboBox sending the signal
+  \param data the associated data pointer
+*/
+G_MODULE_EXPORT void set_r_model (GtkComboBox * box, gpointer data)
+{
+  if (preferences)
+  {
+    tmp_opengl[4] = combo_get_active ((GtkWidget *)box);
+    widget_set_sensitive (pref_ogl_edit -> render_fix, ! tmp_opengl[4]);
+  }
+  else
+  {
+    glwin * view = (glwin *)data;
+    view -> anim -> last -> img -> ray_tracing = combo_get_active ((GtkWidget *)box);
+    view -> anim -> last -> img -> render = 0;
+    widget_set_sensitive (view -> opengl_win -> render_fix, ! view -> anim -> last -> img -> ray_tracing);
+    init_default_shaders (view);
+    update (view);
+  }
+}
+
+/*!
+  \fn G_MODULE_EXPORT void set_f_model (GtkComboBox * box, gpointer data)
+
+  \brief change OpenGL filling model
+
+  \param box the GtkComboBox sending the signal
+  \param data the associated data pointer
+*/
+G_MODULE_EXPORT void set_f_model (GtkComboBox * box, gpointer data)
+{
+  glwin * view = (glwin *)data;
+  view -> anim -> last -> img -> render = combo_get_active ((GtkWidget *)box);
+  init_default_shaders (view);
+  update (view);
 }
 
 /*!
@@ -1286,9 +1313,55 @@ G_MODULE_EXPORT void scale_quality (GtkRange * range, gpointer data)
 }
 
 /*!
-  \fn GtkWidget * lightning_box (glwin * view, Material this_material)
+  \fn GtkWidget * rendering_fix (glwin * view)
 
-  \brief create ligthning model combo box
+  \brief create rendering parameters
+
+  \param view the target glwin, if any
+  \param ogl_edit the target OpenGL edition window
+*/
+GtkWidget * rendering_fix (glwin * view, opengl_edition * ogl_edit)
+{
+  GtkWidget * fix = gtk_fixed_new ();
+  GtkWidget * rmodel = create_combo ();
+  gtk_fixed_put (GTK_FIXED (fix), rmodel, 0, 10);
+  char * r_model[2] = {"3D objects", "Ray tracing"};
+  int i;
+  for (i=0; i<2; i++)
+  {
+    combo_text_append (rmodel, r_model[i]);
+  }
+  g_signal_connect (G_OBJECT (rmodel), "changed", G_CALLBACK(set_r_model), view);
+  gtk_widget_set_size_request (rmodel, 110, -1);
+  combo_set_active (rmodel, (view) ? view -> anim -> last -> img -> ray_tracing : tmp_opengl[4]);
+
+  ogl_edit -> render_fix = gtk_fixed_new ();
+  gtk_fixed_put (GTK_FIXED (fix), ogl_edit -> render_fix, 130, 0);
+  GtkWidget * quality_scale = create_hscale (3, 500, 1, (view) ? view -> anim -> last -> img -> quality : tmp_opengl[3], GTK_POS_TOP, 1, 100, G_CALLBACK(scale_quality), G_CALLBACK(scroll_scale_quality), view);
+  gtk_fixed_put (GTK_FIXED (ogl_edit -> render_fix), quality_scale, 0, 0);
+  if (! preferences)
+  {
+    GtkWidget * fmodel = create_combo ();
+    gtk_fixed_put (GTK_FIXED (ogl_edit -> render_fix), fmodel, 120, 10);
+    char * f_model[3] = {"Filled", "Lines", "Points"};
+    int i;
+    for (i=0; i<3; i++)
+    {
+      combo_text_append (fmodel, f_model[i]);
+    }
+    g_signal_connect (G_OBJECT (fmodel), "changed", G_CALLBACK(set_f_model), view);
+    gtk_widget_set_size_request (fmodel, 100, -1);
+    combo_set_active (fmodel, view -> anim -> last -> img -> render);
+  }
+  widget_set_sensitive (ogl_edit -> render_fix, (view) ? ! view -> anim -> last -> img -> ray_tracing : ! tmp_opengl[4]);
+
+  return fix;
+}
+
+/*!
+  \fn GtkWidget * lightning_fix (glwin * view, Material this_material)
+
+  \brief create lightning model combo box
 
   \param view the target glwin, if any
   \param this_material the target material, if any
@@ -1328,8 +1401,8 @@ GtkWidget * materials_tab (glwin * view, opengl_edition * ogl_edit, Material * t
   GtkWidget * box, * hbox;
 
   box = adv_box (vbox, "<b>Quality</b> ", 5, 150, 0.0);
-  add_box_child_start (GTK_ORIENTATION_HORIZONTAL, box, create_hscale (2, 500, 1, (view) ? view -> anim -> last -> img -> quality : tmp_opengl[3], GTK_POS_TOP, 1, 200,
-                       G_CALLBACK(scale_quality), G_CALLBACK(scroll_scale_quality), view), FALSE, FALSE, 0);
+  add_box_child_start (GTK_ORIENTATION_HORIZONTAL, box, rendering_fix (view, ogl_edit), FALSE, FALSE, 0);
+
   box = adv_box (vbox, "<b>Lightning model</b> ", 5, 150, 0.0);
   add_box_child_start (GTK_ORIENTATION_HORIZONTAL, box, lightning_fix (view, the_mat), FALSE, FALSE, 0);
   add_box_child_start (GTK_ORIENTATION_VERTICAL, vbox, gtk_separator_new (GTK_ORIENTATION_HORIZONTAL), FALSE, FALSE, 20);
@@ -1384,6 +1457,8 @@ GtkWidget * materials_tab (glwin * view, opengl_edition * ogl_edit, Material * t
 }
 
 // ***************** FOG ******************* //
+
+GtkWidget * fogtype;
 
 /*!
   \fn void fog_param_changed (gpointer data, GLfloat u, GtkRange * range)
@@ -1520,6 +1595,8 @@ void setup_fog_dialogs (opengl_edition * ogl_edit, int fid)
     this_fog = & tmp_fog;
   }
   this_fog -> mode = fid;
+  widget_set_sensitive (fogtype, (this_fog -> mode == 1) ? TRUE : FALSE);
+  if (this_fog -> mode) combo_set_active (fogtype, 0);
   if (this_fog -> mode)
   {
     show_the_widgets (ogl_edit -> param_fog);
@@ -1583,12 +1660,13 @@ GtkWidget * fog_tab (glwin * view, opengl_edition * ogl_edit, Fog * the_fog)
   add_box_child_start (GTK_ORIENTATION_VERTICAL, vbox, ogl_edit -> param_fog, FALSE, FALSE, 0);
 
   box = adv_box (ogl_edit -> param_fog, "<b>Fog type</b> ", 5, 150, 0.0);
-  GtkWidget * fogtype = create_combo ();
+  fogtype = create_combo ();
   combo_text_append (fogtype, "Plane based");
   combo_text_append (fogtype, "Range based");
   gtk_widget_set_size_request (fogtype, 200, -1);
-  combo_set_active (fogtype, the_fog -> based);
+  combo_set_active (fogtype, the_fog -> mode);
   g_signal_connect (G_OBJECT (fogtype), "changed", G_CALLBACK(set_fog_type), ogl_edit);
+  widget_set_sensitive (fogtype, (the_fog -> mode == 1) ? TRUE : FALSE);
   add_box_child_start (GTK_ORIENTATION_HORIZONTAL, box, fogtype, FALSE, FALSE, 0);
 
   ogl_edit -> dens_box =  adv_box (ogl_edit -> param_fog, "<b>Fog density</b>", 10, 150.0, 0.0);
@@ -1672,7 +1750,7 @@ G_MODULE_EXPORT void opengl_advanced (GtkWidget * widg, gpointer data)
   glwin * view = (glwin *)data;
   if (view -> opengl_win == NULL)
   {
-    view -> opengl_win = g_malloc0 (sizeof*view -> opengl_win);
+    view -> opengl_win = g_malloc0(sizeof*view -> opengl_win);
     view -> opengl_win -> proj = view -> proj;
     int i;
     for (i=0; i<6; i++)

@@ -11,7 +11,7 @@ See the GNU General Public License for more details.
 You should have received a copy of the GNU Affero General Public License along with 'atomes'.
 If not, see <https://www.gnu.org/licenses/>
 
-Copyright (C) 2022-2025 by CNRS and University of Strasbourg */
+Copyright (C) 2022-2026 by CNRS and University of Strasbourg */
 
 /*!
 * @file w_search.c
@@ -150,7 +150,7 @@ int get_asearch_object (atom_search * asearch)
 {
   if (asearch -> object < 0) return 0;
   if (asearch -> mode) return asearch -> object;
-  if (get_project_by_id(asearch -> proj) -> natomes >= 10000)
+  if (get_project_by_id(asearch -> proj) -> natomes >= GTK_LIMIT)
   {
     return (asearch -> object > 1) ? 2 : asearch -> object;
   }
@@ -174,7 +174,7 @@ int get_asearch_filter (atom_search * asearch)
   {
     return asearch -> object + asearch -> filter;
   }
-  else if (get_project_by_id(asearch -> proj) -> natomes >= 10000)
+  else if (get_project_by_id(asearch -> proj) -> natomes >= GTK_LIMIT)
   {
     return (asearch -> object > 1) ? 1 + asearch -> filter : asearch -> filter;
   }
@@ -454,7 +454,7 @@ void check_all_trees (project * this_proj)
   {
     if (i != 5 && this_proj -> modelgl -> search_widg[i] != NULL)
     {
-      if (this_proj -> modelgl -> search_widg[i] -> atom_model && this_proj -> modelgl -> search_widg[i] -> todo_size < 10000)
+      if (this_proj -> modelgl -> search_widg[i] -> atom_model && this_proj -> modelgl -> search_widg[i] -> todo_size < GTK_LIMIT)
       {
         check_tree_for_this_search (this_proj, this_proj -> modelgl -> search_widg[i]);
       }
@@ -905,45 +905,27 @@ void fill_atom_model (atom_search * asearch, project * this_proj)
   int step = this_proj -> modelgl -> anim -> last -> img -> step;
   if (asearch -> action != INSERT)
   {
-    if (asearch -> todo_size >= 10000 && ! asearch -> passivating && ! asearch -> mode)
+    if (asearch -> todo_size >= GTK_LIMIT && ! asearch -> passivating && ! asearch -> mode)
     {
-      if (! is_the_widget_visible(asearch -> info[1]))
-      {
-        show_the_widgets (asearch -> info[1]);
-      }
-      if (is_the_widget_visible (asearch -> id_box))
-      {
-        hide_the_widgets (asearch -> id_box);
-      }
+      show_the_widgets (asearch -> info[1]);
+      hide_the_widgets (asearch -> id_box);
     }
     else
     {
-      if (is_the_widget_visible(asearch -> info[1]))
-      {
-        hide_the_widgets (asearch -> info[1]);
-      }
+      hide_the_widgets (asearch -> info[1]);
       if (asearch -> mode)
       {
-        if (is_the_widget_visible(asearch -> id_box))
-        {
-          hide_the_widgets (asearch -> id_box);
-        }
+        hide_the_widgets (asearch -> id_box);
       }
       else
       {
         if (asearch -> passivating || (filter > 2 && obj == 2))
         {
-          if (is_the_widget_visible (asearch -> id_box))
-          {
-            hide_the_widgets (asearch -> id_box);
-          }
+          hide_the_widgets (asearch -> id_box);
         }
         else
         {
-          if (! is_the_widget_visible (asearch -> id_box))
-          {
-            show_the_widgets (asearch -> id_box);
-          }
+          show_the_widgets (asearch -> id_box);
         }
       }
       int val = get_asearch_num_objects (asearch);
@@ -1009,7 +991,7 @@ void fill_atom_model (atom_search * asearch, project * this_proj)
           }
           break;
         default:
-          if (val >= 10000 && (obj == 1 || asearch -> object == 3))
+          if (val >= GTK_LIMIT && (obj == 1 || asearch -> object == 3))
           {
             // Improbable: more than 10 000 fragments or molecules
             // Note: so far the selection and the test case functions are not ready yet
@@ -1334,7 +1316,7 @@ gboolean update_this_search (atom_search * asearch)
   {
     return FALSE;
   }
-  else if (! asearch -> passivating && asearch -> todo_size >= 10000)
+  else if (! asearch -> passivating && asearch -> todo_size >= GTK_LIMIT)
   {
     return FALSE;
   }
@@ -2228,7 +2210,7 @@ void adjust_this_tree_branch (atom_search * asearch, project * this_proj, int oi
       }
       break;
   }
-  if (asearch -> todo_size < 10000 || asearch -> passivating || (object == 2 && filter > 2)) update_search_tree (asearch);
+  if (asearch -> todo_size < GTK_LIMIT || asearch -> passivating || (object == 2 && filter > 2)) update_search_tree (asearch);
 }
 
 /*!
@@ -2355,7 +2337,7 @@ G_MODULE_EXPORT void select_atom (GtkCellRendererToggle * cell_renderer, gchar *
   else
   {
     // For spec i
-    if (asearch -> todo_size >= 10000 && ! asearch -> passivating)
+    if (asearch -> todo_size >= GTK_LIMIT && ! asearch -> passivating)
     {
       GtkTreeIter child;
       gtk_tree_model_get (GTK_TREE_MODEL(asearch -> atom_model), & iter, dat -> b, & j, -1);
@@ -2567,7 +2549,7 @@ G_MODULE_EXPORT void changed_action_renderer (GtkCellRendererCombo * combo, gcha
       // The entire species
       if (i)
       {
-        if (! asearch -> passivating && this_proj -> natomes >= 10000)
+        if (! asearch -> passivating && this_proj -> natomes >= GTK_LIMIT)
         {
           if (gtk_tree_model_iter_children (GTK_TREE_MODEL(asearch -> atom_model), & child, iter))
           {
@@ -2592,7 +2574,7 @@ G_MODULE_EXPORT void changed_action_renderer (GtkCellRendererCombo * combo, gcha
       }
       else
       {
-        if (! asearch -> passivating && this_proj -> natomes >= 10000)
+        if (! asearch -> passivating && this_proj -> natomes >= GTK_LIMIT)
         {
           gtk_tree_store_set (asearch -> atom_model, iter, 5, "Select for all ...", -1);
           if (gtk_tree_model_iter_children (GTK_TREE_MODEL(asearch -> atom_model), & child, iter))
@@ -2718,10 +2700,7 @@ void search_set_visible (GtkTreeViewColumn * col, GtkCellRenderer * renderer, Gt
   gtk_cell_renderer_set_visible (renderer, vis);
   if (vis && (i < TOLAB || i > TOPIC))
   {
-    gchar * str = NULL;
-    gtk_tree_model_get (mod, iter, i, & str, -1);
-    g_object_set (renderer, "markup", str, NULL, NULL);
-    g_free (str);
+    set_renderer_markup (mod, iter, renderer, i);
   }
 }
 
@@ -3608,7 +3587,7 @@ GtkWidget * create_atoms_tree (atom_search * asearch, project * this_proj, int n
   {
     asearch -> atom_model = gtk_tree_store_newv (8, coltype[k]);
   }
-  if (! (nats  > 10000) || asearch -> action == INSERT)
+  if (! (nats >= GTK_LIMIT) || asearch -> action == INSERT)
   {
     fill_atom_model (asearch, this_proj);
   }
@@ -3790,8 +3769,8 @@ void clean_picked_and_labelled (atom_search * asearch, gboolean clean_msd)
 {
   project * this_proj;
   int val = get_asearch_num_objects (asearch);
-  asearch -> lab = allocint(val);
-  asearch -> pick = allocint(val);
+  asearch -> lab = allocint (val);
+  asearch -> pick = allocint (val);
   if (asearch -> action == RANMOVE)
   {
     this_proj = get_project_by_id (asearch -> proj);
@@ -3830,7 +3809,7 @@ G_MODULE_EXPORT void set_spec_changed (GtkComboBox * box, gpointer data)
   int i = combo_get_active ((GtkWidget *)box);
   asearch -> spec = i;
   update_search_tree (asearch);
-  if (get_project_by_id(asearch -> proj) -> natomes >= 10000)
+  if (get_project_by_id(asearch -> proj) -> natomes >= GTK_LIMIT)
   {
     if (i > 0)
     {
@@ -3886,7 +3865,7 @@ G_MODULE_EXPORT void set_object_changed (GtkComboBox * box, gpointer data)
   int was_object;
   int object;
   int filter;
-  if (get_project_by_id(asearch -> proj) -> natomes >= 10000)
+  if (get_project_by_id(asearch -> proj) -> natomes >= GTK_LIMIT)
   {
     was_object = ((! asearch -> mode && asearch -> object > 1) || (asearch -> mode && asearch -> object)) ? 1 : 0;
     asearch -> object = combo_get_active ((GtkWidget *)box);
@@ -3895,21 +3874,21 @@ G_MODULE_EXPORT void set_object_changed (GtkComboBox * box, gpointer data)
     if ((! asearch -> mode && (asearch -> object == 1 || asearch -> object == 3)) || (asearch -> mode && asearch -> object))
     {
       if (! asearch -> mode) asearch -> passivating = TRUE;
-      if (is_the_widget_visible(asearch -> id_box)) hide_the_widgets (asearch -> id_box);
-      if (is_the_widget_visible(asearch -> info[1])) hide_the_widgets (asearch -> info[1]);
+      hide_the_widgets (asearch -> id_box);
+      hide_the_widgets (asearch -> info[1]);
     }
     else
     {
       asearch -> passivating = FALSE;
       if (((! asearch -> mode && asearch -> object == 2) || (asearch -> mode && asearch -> object)) && filter > 2)
       {
-        if (is_the_widget_visible(asearch -> id_box)) hide_the_widgets (asearch -> id_box);
-        if (is_the_widget_visible(asearch -> info[1])) hide_the_widgets (asearch -> info[1]);
+        hide_the_widgets (asearch -> id_box);
+        hide_the_widgets (asearch -> info[1]);
       }
       else
       {
-        if (! is_the_widget_visible(asearch -> id_box)) show_the_widgets (asearch -> id_box);
-        if (! is_the_widget_visible(asearch -> info[1])) show_the_widgets (asearch -> info[1]);
+        show_the_widgets (asearch -> id_box);
+        show_the_widgets (asearch -> info[1]);
       }
     }
   }
@@ -3919,8 +3898,8 @@ G_MODULE_EXPORT void set_object_changed (GtkComboBox * box, gpointer data)
     asearch -> object = combo_get_active ((GtkWidget *)box);
     filter = get_asearch_filter (asearch);
     object = (asearch -> object) ? 1 : 0;
-    if (is_the_widget_visible(asearch -> id_box)) hide_the_widgets (asearch -> id_box);
-    if (is_the_widget_visible(asearch -> info[1])) hide_the_widgets (asearch -> info[1]);
+    hide_the_widgets (asearch -> id_box);
+    hide_the_widgets (asearch -> info[1]);
   }
   if (was_object)
   {
@@ -3996,7 +3975,7 @@ G_MODULE_EXPORT void set_search_mode (GtkComboBox * box, gpointer data)
       add_random_column (asearch);
     }
   }
-  if (this_proj -> natomes >= 10000)
+  if (this_proj -> natomes >= GTK_LIMIT)
   {
     if (asearch -> object_box)
     {
@@ -4129,7 +4108,7 @@ GtkWidget * selection_tab (atom_search * asearch, int nats)
 {
   project * this_proj = get_project_by_id (asearch -> proj);
   int i, j;
-  i = (nats < 10000) ? 1 : 0;
+  i = (nats < GTK_LIMIT) ? 1 : 0;
   j = (asearch -> action == 5) ? 300 : -1;
   GtkWidget * selection = create_layout (j, 390 + (! i)*60 - i*100);
   GtkWidget * vbox = add_vbox_to_layout (selection, 0, (asearch -> action > 1) ? 0 : 10);

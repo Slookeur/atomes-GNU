@@ -68,7 +68,7 @@ inc = -I$(gui) -I$(work) -I$(proj) -I$(read) -I$(calc) -I$(dlpoly) -I$(lammps) -
 includes = $(inc) -DGTK_DISABLE_DEPRECATED
 
 # Use AM_CFLAGS to define additional C flags:
-AM_CFLAGS = $(includes) $(OpenMP_FLAGS) $(LIBS_CFLAGS)
+AM_CFLAGS = $(includes) $(OpenMP_FLAGS) $(LIBS_CFLAGS) -std=gnu99
 
 atomes_fortran_modules = $(for)parameters.F90 \
 			 $(for)mendeleiev.F90
@@ -103,6 +103,7 @@ atomes_fortran_files = $(for)allocbonds.F90 \
 			$(for)rings_ogl.F90 \
 			$(for)rings-primitive.F90 \
 			$(for)sk.F90 \
+			$(for)skt.F90 \
 			$(for)spherical.F90 \
 			$(for)sq.F90 \
 			$(for)threads.F90 \
@@ -132,6 +133,7 @@ atomes_gui = $(gui)bdcall.c \
 	     $(gui)ringscall.c \
 	     $(gui)spcall.c \
 	     $(gui)sqcall.c \
+	     $(gui)sktcall.c \
 	     $(gui)tools.c \
 	     $(gui)work_menu.c 
 

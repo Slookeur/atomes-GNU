@@ -11,7 +11,7 @@ See the GNU General Public License for more details.
 You should have received a copy of the GNU Affero General Public License along with 'atomes'.
 If not, see <https://www.gnu.org/licenses/>
 
-Copyright (C) 2022-2025 by CNRS and University of Strasbourg */
+Copyright (C) 2022-2026 by CNRS and University of Strasbourg */
 
 /*!
 * @file callbacks.c
@@ -32,7 +32,7 @@ Copyright (C) 2022-2025 by CNRS and University of Strasbourg */
 *
 * List of functions:
 
-  int open_save (FILE * fp, int i, int pid, int aid, int npi, gchar * pfile);
+  int open_save (FILE * fp, int act, int wid, int pid, int aid, gchar * pfile);
   int open_save_workspace (FILE * fp, int act);
   int prep_chem_data ();
   int to_read_trj_or_vas (int ff);
@@ -102,7 +102,8 @@ char * coord_files_ext[NCFORMATS+1]={"xyz", "xyz", "c3d", "trj", "trj", "xdatcar
                                     "pdb", "ent", "cif", "cif", "cif", "hist", "ipf"};
 
 char ** las;
-void initcwidgets ();
+
+extern void simple_image_render();
 extern G_MODULE_EXPORT void on_edit_activate (GtkWidget * widg, gpointer data);
 extern gchar * substitute_string (gchar * init, gchar * o_motif, gchar * n_motif);
 extern const gchar * dfi[2];
@@ -111,17 +112,6 @@ extern int open_coord_file (gchar * filename, int fti);
 extern int open_history_file (gchar * filename);
 extern int open_cell_file (int format, gchar * filename);
 extern double get_z_from_periodic_table (gchar * lab);
-
-/*!
-  \fn void quit_gtk ()
-
-  \brief Leave the application
-*/
-void quit_gtk ()
-{
-  profree_ ();
-  g_application_quit (G_APPLICATION(AtomesApp));
-}
 
 /*!
   \fn G_MODULE_EXPORT void on_close_workspace (GtkWidget * widg, gpointer data)
@@ -161,26 +151,26 @@ G_MODULE_EXPORT void on_close_workspace (GtkWidget * widg, gpointer data)
 gboolean save = TRUE;
 
 /*!
-  \fn int open_save (FILE * fp, int i, int pid, int aid, int npi, gchar * pfile)
+  \fn int open_save (FILE * fp, int act, int wid, int pid, int aid, gchar * pfile)
 
   \brief open or save project file
 
   \param fp the file pointer
-  \param i 0 = read, 1 = write
+  \param act 0 = read, 1 = write
+  \param wid read or save workspace (1/0)
   \param pid the project id
   \param aid the active project id
-  \param npi total number of projects
   \param pfile the file name
 */
-int open_save (FILE * fp, int i, int pid, int aid, int npi, gchar * pfile)
+int open_save (FILE * fp, int act, int wid, int pid, int aid, gchar * pfile)
 {
   int j;
   gchar * err;
 
-  if (i == 0)
+  if (act == 0)
   {
     reading_input = TRUE;
-    j = open_project (fp, npi);
+    j = open_project (fp, wid);
     reading_input = FALSE;
     if (j != 0)
     {
@@ -196,13 +186,20 @@ int open_save (FILE * fp, int i, int pid, int aid, int npi, gchar * pfile)
     else
     {
       get_project_by_id (pid) -> projfile = g_strdup_printf ("%s", pfile);
-      add_project_to_workspace ();
-      prep_calc_actions ();
+      if (! atomes_render_image)
+      {
+        add_project_to_workspace ();
+        prep_calc_actions ();
+      }
+      else
+      {
+        simple_image_render ();
+      }
     }
   }
   else
   {
-    j = save_project (fp, get_project_by_id(pid), npi);
+    j = save_project (fp, get_project_by_id(pid), wid);
     if (j != 0)
     {
       // error at write
@@ -222,6 +219,28 @@ int open_save (FILE * fp, int i, int pid, int aid, int npi, gchar * pfile)
 }
 
 /*!
+  \fn void quit_gtk ()
+
+  \brief Leave the application
+*/
+void quit_gtk ()
+{
+  if (atomes_from_libreoffice)
+  {
+    // Update image for LibreOffice document
+    atomes_render_image = TRUE;
+    simple_image_render();
+    atomes_render_image = FALSE;
+    // Mandatory saving of the project file
+    FILE * fp = fopen (projfile, dfi[1]);
+    open_save (fp, 1, 1, 0, 0, NULL);
+    fclose (fp);
+  }
+  profree_ ();
+  g_application_quit (G_APPLICATION(AtomesApp));
+}
+
+/*!
   \fn int open_save_workspace (FILE * fp, int act)
 
   \brief open or save the active workspace
@@ -231,7 +250,7 @@ int open_save (FILE * fp, int i, int pid, int aid, int npi, gchar * pfile)
 */
 int open_save_workspace (FILE * fp, int act)
 {
-  int i, j, k, l, m;
+  int i, j, k, l;
   gchar * ver;
   /*PangoFontDescription * font_desc;
   GtkTextBuffer * buffer;
@@ -242,7 +261,7 @@ int open_save_workspace (FILE * fp, int act)
   if (act == 0)
   {
     if (fread (& i, sizeof(int), 1, fp) != 1) return 1;
-    ver = g_malloc0 (i*sizeof*ver);
+    ver = g_malloc0(i*sizeof*ver);
     if (fread (ver, sizeof(char), i, fp) != i) return 1;
     // test on ver for version
     g_free (ver);
@@ -259,8 +278,6 @@ int open_save_workspace (FILE * fp, int act)
     i = 0;
     for (j=0; j<nprojects; j++) if (get_project_by_id(j) -> natomes) i++;
     if (fwrite (& i, sizeof(int), 1, fp) != 1) return 1;
-    l = i;
-    i = nprojects;
   }
 
   if (i > 0)
@@ -271,13 +288,13 @@ int open_save_workspace (FILE * fp, int act)
       if (act == 0)
       {
         init_project (FALSE);
-        m = open_save (fp, act, j, k, i, NULL);
-        if (m != 0) return m;
+        l = open_save (fp, act, 1, j, k, NULL);
+        if (l != 0) return l;
       }
       else if (get_project_by_id(j) -> natomes)
       {
-        m = open_save (fp, act, j, k, l, NULL);
-        if (m != 0) return m;
+        l = open_save (fp, act, 1, j, k, NULL);
+        if (l != 0) return l;
       }
     }
     return 0;
@@ -301,7 +318,9 @@ void open_this_proj (gpointer data, gpointer user_data)
   FILE * fp = fopen (data, dfi[0]);
   int pactive = activep;
   init_project (FALSE);
-  open_save (fp, 0, activew, pactive, 0, data);
+  reading_project = TRUE;
+  open_save (fp, 0, 0, activew, pactive, data);
+  reading_project = FALSE;
   fclose (fp);
   activew = activep;
 }
@@ -389,7 +408,7 @@ G_MODULE_EXPORT void run_on_open_save_active (GtkDialog * info, gint response_id
     }
     else if (osp.a == 1)
     {
-      open_save (fp, osp.a, activew, osp.c, 0, projfile);
+      open_save (fp, osp.a, 0, activew, osp.c, projfile);
     }
     else
     {
@@ -632,6 +651,10 @@ void run_project ()
 {
   if (! active_project -> run)
   {
+    if (! active_project -> analysis)
+    {
+      init_atomes_analysis (active_project, TRUE);
+    }
     int i, j;
     j = (active_cell -> npt) ? active_project -> steps : 1;
     for (i=0; i<j; i++)
@@ -646,7 +669,6 @@ void run_project ()
     }
     to_read_pos ();
     prep_pos_ (& active_cell -> pbc, & active_cell -> frac);
-    if (active_project -> numwid < 0) initcwidgets ();
     active_project -> dmtx = FALSE;
     active_project -> run = 1;
   }
@@ -668,7 +690,7 @@ void apply_project (gboolean showtools)
     initcutoffs (active_chem, active_project -> nspec);
   }
   prep_model (active_project -> id);
-  if (showtools) show_the_widgets (curvetoolbox);
+  if (showtools && ! atomes_render_image) show_the_widgets (curvetoolbox);
 }
 
 /*!
@@ -832,9 +854,9 @@ void to_read_pos ()
   double * x, * y, * z;
   double lat[3];
 
-  x = allocdouble(active_project -> steps*active_project -> natomes);
-  y = allocdouble(active_project -> steps*active_project -> natomes);
-  z = allocdouble(active_project -> steps*active_project -> natomes);
+  x = allocdouble (active_project -> steps*active_project -> natomes);
+  y = allocdouble (active_project -> steps*active_project -> natomes);
+  z = allocdouble (active_project -> steps*active_project -> natomes);
   k = 0;
   lat[0] = lat[1] = lat[2] = 0.0;
   if (active_cell -> crystal)
@@ -864,7 +886,7 @@ void to_read_pos ()
 }
 
 GtkWidget * read_box;
-GtkWidget * all_sp_box;
+GtkWidget * all_sp_box = NULL;
 GtkWidget * sa_lab[2];
 GtkWidget * sa_entry[2];
 GtkWidget * read_this;
@@ -1057,7 +1079,7 @@ G_MODULE_EXPORT void update_at_sp (GtkEntry * res, gpointer data)
         if (this_reader -> z) g_free (this_reader -> z);
         this_reader -> z = allocdouble (v);
         if (this_reader -> label) g_free (this_reader -> label);
-        this_reader -> label = g_malloc0 (v*sizeof*this_reader -> label);
+        this_reader -> label = g_malloc0(v*sizeof*this_reader -> label);
       }
       up = TRUE;
     }
@@ -1114,6 +1136,16 @@ G_MODULE_EXPORT void run_to_read_trj_or_vas (GtkDialog * dialog, gint response_i
         reading_vas_trj = 3;
       break;
   }
+  if (all_sp_box)
+  {
+    int i;
+    for (i=0; i<2; i++)
+    {
+      sa_lab[i] = destroy_this_widget(sa_lab[i]);
+      sa_entry[i] = destroy_this_widget(sa_entry[i]);
+    }
+    all_sp_box = destroy_this_widget(all_sp_box);
+  }
   destroy_this_dialog (dialog);
 }
 
@@ -1128,7 +1160,7 @@ int to_read_trj_or_vas (int ff)
 {
   int i;
   gchar * rlabel[2]={"Total number of atom(s):", "Number of chemical species:"};
-  GtkWidget * dialog = dialogmodal ("Data to read CPMD / VASP trajectory", GTK_WINDOW(MainWindow));
+  GtkWidget * dialog = dialogmodal ("Reading CPMD / VASP trajectory", GTK_WINDOW(MainWindow));
   read_this = gtk_dialog_add_button (GTK_DIALOG (dialog), "Apply", GTK_RESPONSE_APPLY);
   GtkWidget * vbox = dialog_get_content_area (dialog);
   widget_set_sensitive (read_this, 0);
@@ -1270,7 +1302,7 @@ int open_coordinate_file (int id)
   int result;
   int length = strlen(active_project -> coordfile);
   clock_gettime (CLOCK_MONOTONIC, & sta_time);
-  this_reader = g_malloc0 (sizeof*this_reader);
+  this_reader = g_malloc0(sizeof*this_reader);
   // Set default message type to warning
   this_reader -> mid = 1;
   switch (id)
@@ -1453,28 +1485,35 @@ void open_this_coordinate_file (int format, gchar * proj_name)
     chemistry_ ();
     apply_project (TRUE);
     active_project_changed (activep);
-    if ((format == 9 || format == 10 || format == 11) && active_cell -> has_a_box)
+    if (atomes_render_image)
     {
-#ifdef GTK3
-      gtk_check_menu_item_set_active ((GtkCheckMenuItem *)active_glwin -> ogl_rep[0], TRUE);
-      set_rep (active_glwin -> ogl_rep[0], & active_glwin -> colorp[0][0]);
-      gtk_check_menu_item_set_active ((GtkCheckMenuItem *)active_glwin -> ogl_clones[0], TRUE);
-      widget_set_sensitive (active_glwin -> ogl_clones[0], active_glwin -> allbonds[1]);
-      show_hide_clones (active_glwin -> ogl_clones[0], active_glwin);
-#endif
-      shift_it (vec3 (0.0, 0.0, 0.0), 1, activep);
-      active_glwin -> wrapped = TRUE;
+      simple_image_render();
     }
-    add_project_to_workspace ();
-    if ((format == 9 || format == 10) && cif_use_symmetry_positions)
+    else
     {
-      gchar * file_name = g_strdup_printf ("%s", active_project -> coordfile);
-      gchar * proj_name = g_strdup_printf ("%s - symmetry position(s)", active_project -> name);
-      init_project (TRUE);
-      active_project -> coordfile = g_strdup_printf ("%s", file_name);
-      g_free (file_name);
-      open_this_coordinate_file (11, proj_name);
-      g_free (proj_name);
+      if ((format == 9 || format == 10 || format == 11) && active_cell -> has_a_box)
+      {
+#ifdef GTK3
+        gtk_check_menu_item_set_active ((GtkCheckMenuItem *)active_glwin -> ogl_rep[0], TRUE);
+        set_rep (active_glwin -> ogl_rep[0], & active_glwin -> colorp[0][0]);
+        gtk_check_menu_item_set_active ((GtkCheckMenuItem *)active_glwin -> ogl_clones[0], TRUE);
+        widget_set_sensitive (active_glwin -> ogl_clones[0], active_glwin -> allbonds[1]);
+        show_hide_clones (active_glwin -> ogl_clones[0], active_glwin);
+#endif
+        shift_it (vec3 (0.0, 0.0, 0.0), 1, activep);
+        active_glwin -> wrapped = TRUE;
+      }
+      add_project_to_workspace ();
+      if ((format == 9 || format == 10) && cif_use_symmetry_positions)
+      {
+        gchar * file_name = g_strdup_printf ("%s", active_project -> coordfile);
+        gchar * proj_name = g_strdup_printf ("%s - symmetry position(s)", active_project -> name);
+        init_project (TRUE);
+        active_project -> coordfile = g_strdup_printf ("%s", file_name);
+        g_free (file_name);
+        open_this_coordinate_file (11, proj_name);
+        g_free (proj_name);
+      }
     }
   }
   else

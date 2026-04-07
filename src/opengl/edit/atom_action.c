@@ -11,7 +11,7 @@ See the GNU General Public License for more details.
 You should have received a copy of the GNU Affero General Public License along with 'atomes'.
 If not, see <https://www.gnu.org/licenses/>
 
-Copyright (C) 2022-2025 by CNRS and University of Strasbourg */
+Copyright (C) 2022-2026 by CNRS and University of Strasbourg */
 
 /*!
 * @file atom_action.c
@@ -151,7 +151,6 @@ void clean_this_project (project * this_proj)
   g_free (opengl_project -> chemistry);
   opengl_project -> chemistry = NULL;
   init_curves_and_calc (opengl_project);
-  opengl_project -> numwid = -1;
   frag_update = mol_update = 0;
   prep_calc_actions ();
   free_glwin_spec_data (opengl_project, opengl_project -> nspec);
@@ -251,13 +250,13 @@ int action_atoms_from_project (project * this_proj, atom_search * asearch, gbool
       {
         if (to_rem != NULL)
         {
-          tmp_rem -> next = g_malloc0 (sizeof*tmp_rem);
+          tmp_rem -> next = g_malloc0(sizeof*tmp_rem);
           tmp_rem -> next -> prev = tmp_rem;
           tmp_rem = tmp_rem -> next;
         }
         else
         {
-          to_rem = g_malloc0 (sizeof*to_rem);
+          to_rem = g_malloc0(sizeof*to_rem);
           tmp_rem = to_rem;
         }
         tmp_rem -> id = i;
@@ -304,13 +303,13 @@ int action_atoms_from_project (project * this_proj, atom_search * asearch, gbool
         {
           if (to_add)
           {
-            tmp_add -> next = g_malloc0 (sizeof*tmp_add);
+            tmp_add -> next = g_malloc0(sizeof*tmp_add);
             tmp_add -> next -> prev = tmp_add;
             tmp_add = tmp_add -> next;
           }
           else
           {
-            to_add = g_malloc0 (sizeof*to_add);
+            to_add = g_malloc0(sizeof*to_add);
             tmp_add = to_add;
           }
           tmp_add -> id = this_proj -> natomes + extra - remove;
@@ -458,11 +457,17 @@ int action_atoms_from_project (project * this_proj, atom_search * asearch, gbool
   }
 
   // Clean curves data
-  for (i=0 ; i<NGRAPHS ; i++)
+  if (this_proj -> analysis)
   {
-    this_proj -> visok[i]=FALSE;
-    hide_curves (this_proj, i);
-    erase_curves (this_proj, i);
+    for (i=0 ; i<NCALCS ; i++)
+    {
+      if (this_proj -> analysis[i])
+      {
+        this_proj -> analysis[i] -> calc_ok = FALSE;
+        hide_curves (this_proj, i);
+        erase_curves (this_proj, i);
+      }
+    }
   }
   if (this_proj -> modelgl -> rings)
   {
@@ -560,7 +565,7 @@ int action_atoms_from_project (project * this_proj, atom_search * asearch, gbool
     for (i=0; i<2; i++)
     {
       j= this_proj -> nspec + edit -> add_spec;
-      tmpgeo[i] = g_malloc (j*sizeof*tmpgeo[i]);
+      tmpgeo[i] = g_malloc0(j*sizeof*tmpgeo[i]);
       for (k=0; k<j; k++)
       {
         tmpgeo[i][k] = allocint (edit -> coord -> ntg[i][k]);
@@ -607,7 +612,7 @@ int action_atoms_from_project (project * this_proj, atom_search * asearch, gbool
   {
     for (i=0; i<2; i++)
     {
-      tmpgeo[i] = g_malloc (edit -> coord -> species*sizeof*tmpgeo[i]);
+      tmpgeo[i] = g_malloc0(edit -> coord -> species*sizeof*tmpgeo[i]);
       for (j=0; j<edit -> coord -> species; j++)
       {
         tmpgeo[i][j] = allocint (edit -> coord -> ntg[i][j]);
@@ -635,13 +640,13 @@ int action_atoms_from_project (project * this_proj, atom_search * asearch, gbool
         {
           if (to_add != NULL)
           {
-            tmp_add -> next = g_malloc0 (sizeof*tmp_add);
+            tmp_add -> next = g_malloc0(sizeof*tmp_add);
             tmp_add -> next -> prev = tmp_add;
             tmp_add = tmp_add -> next;
           }
           else
           {
-            to_add = g_malloc0 (sizeof*to_add);
+            to_add = g_malloc0(sizeof*to_add);
             tmp_add = to_add;
           }
           for (j=0; j<2; j++) tmp_add -> pick[j] = tmp_new -> pick[j];
@@ -665,13 +670,13 @@ int action_atoms_from_project (project * this_proj, atom_search * asearch, gbool
     {
       if (new_list)
       {
-        tmp_new -> next = g_malloc0 (sizeof*tmp_new -> next);
+        tmp_new -> next = g_malloc0(sizeof*tmp_new -> next);
         tmp_new -> next -> prev = tmp_new;
         tmp_new = tmp_new -> next;
       }
       else
       {
-        new_list = g_malloc0 (sizeof*new_list);
+        new_list = g_malloc0(sizeof*new_list);
         tmp_new = new_list;
       }
       tmp_new -> sp = tmp_add -> type;
@@ -753,7 +758,7 @@ int action_atoms_from_project (project * this_proj, atom_search * asearch, gbool
   }
   else
   {
-    this_proj -> atoms = g_malloc0 (sizeof*this_proj -> atoms);
+    this_proj -> atoms = g_malloc0(sizeof*this_proj -> atoms);
   }
 
   int rem_spec;
@@ -761,7 +766,7 @@ int action_atoms_from_project (project * this_proj, atom_search * asearch, gbool
   spid = allocint (this_proj -> nspec + edit -> add_spec);
   spdel = allocint (this_proj -> nspec + edit -> add_spec);
   int * atid = allocint (new_atoms);
-  this_proj -> atoms[0] = g_malloc0 (new_atoms*sizeof*this_proj -> atoms[0]);
+  this_proj -> atoms[0] = g_malloc0(new_atoms*sizeof*this_proj -> atoms[0]);
   tmp_new = new_list;
   i = 0;
   while (tmp_new)
@@ -917,10 +922,17 @@ int action_atoms_from_project (project * this_proj, atom_search * asearch, gbool
   {
     if (test_vol(active_box -> param, active_box -> vect))
     {
-      for (j=0; j<3; j=j+2) active_project -> runok[j] = TRUE;
+      if (active_project -> analysis)
+      {
+        if (active_project -> analysis[GDR])
+        {
+          active_project -> analysis[GDR] -> avail_ok = TRUE;
+          active_project -> analysis[GDK] -> avail_ok = TRUE;
+        }
+      }
     }
   }
-  initcwidgets ();
+  init_atomes_analysis (active_project, TRUE);
   active_project -> dmtx = FALSE;
   active_project -> run = (active_project -> natomes) ? TRUE : FALSE;
   chemistry_ () ;
@@ -1057,7 +1069,7 @@ void clean_all_trees (atom_search * asearch, project * this_proj)
       }
       update_search_tree (this_proj -> modelgl -> search_widg[i+2]);
     }
-    if ((i == 0 || i == 4) && this_proj -> modelgl -> search_widg[i+2] -> todo_size >= 10000)
+    if ((i == 0 || i == 4) && this_proj -> modelgl -> search_widg[i+2] -> todo_size >= GTK_LIMIT)
     {
       re_populate_tree_search (this_proj -> modelgl -> search_widg[i+2]);
     }
@@ -1975,7 +1987,7 @@ gboolean do_we_have_objects_in_selection (project * this_proj, atom_search * ase
 */
 atom_search * duplicate_atom_search (atom_search * asearch)
 {
-  atom_search * bsearch = g_malloc0 (sizeof*bsearch);
+  atom_search * bsearch = g_malloc0(sizeof*bsearch);
   bsearch -> search_digit = asearch -> search_digit;
   bsearch -> proj = asearch -> proj;
   bsearch -> action = asearch -> action;

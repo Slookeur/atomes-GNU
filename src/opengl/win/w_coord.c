@@ -11,7 +11,7 @@ See the GNU General Public License for more details.
 You should have received a copy of the GNU Affero General Public License along with 'atomes'.
 If not, see <https://www.gnu.org/licenses/>
 
-Copyright (C) 2022-2025 by CNRS and University of Strasbourg */
+Copyright (C) 2022-2026 by CNRS and University of Strasbourg */
 
 /*!
 * @file w_coord.c
@@ -994,7 +994,7 @@ GtkWidget * fragmol_tab (glwin * view, int geo)
   gtk_widget_set_vexpand (fragmol, TRUE);
   project * this_proj = get_project_by_id(view -> proj);
   i =  this_proj -> coord -> totcoord[geo];
-  if (i >  10000)
+  if (i >= GTK_LIMIT)
   {
     add_container_child (CONTAINER_SCR, fragmol, create_frag_mol_search(this_proj, geo));
   }
@@ -1021,7 +1021,7 @@ GtkWidget * fragmol_tab (glwin * view, int geo)
       ColRGBA col = view -> anim -> last -> img -> spcolor[geo][0][j];
       col.alpha = 1.0;
       add_box_child_start (GTK_ORIENTATION_HORIZONTAL, wb,
-                           color_button (col, TRUE, 80, -1, G_CALLBACK(set_color_frag_mol), & view -> gcid[geo][j][0]),
+                           color_button (col, TRUE, 80, -1, G_CALLBACK(set_color_frag_mol), & view -> gcid[geo][j][geo]),
                            FALSE, FALSE, 5);
 
       add_box_child_start (GTK_ORIENTATION_HORIZONTAL, wb,
@@ -1453,7 +1453,7 @@ G_MODULE_EXPORT void coord_properties (GtkWidget * widg, gpointer data)
   int page = get_page_from_geo_coord(view, id -> b, id -> c);
   if (view -> coord_win == NULL)
   {
-    view -> coord_win = g_malloc0 (sizeof*view -> coord_win);
+    view -> coord_win = g_malloc0(sizeof*view -> coord_win);
     view -> coord_win -> win = advanced_coord_properties (view, page);
   }
   else if (GTK_IS_WIDGET(view -> coord_win -> win))

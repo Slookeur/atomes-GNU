@@ -11,7 +11,7 @@ See the GNU General Public License for more details.
 You should have received a copy of the GNU Affero General Public License along with 'atomes'.
 If not, see <https://www.gnu.org/licenses/>
 
-Copyright (C) 2022-2025 by CNRS and University of Strasbourg */
+Copyright (C) 2022-2026 by CNRS and University of Strasbourg */
 
 /*!
 * @file w_spiner.c
@@ -61,14 +61,31 @@ gboolean spin (gpointer data)
 //  g_debug (":: SPIN:: a= %d, c= %d", val -> a, val -> c);
 //  g_debug (":: SPIN:: speed[c]= %d", this_proj -> modelgl -> spin_speed[val -> c]);
 #endif
-  if (this_proj -> modelgl -> spin[val -> c])
+  // The next 2 tests are required if a spinning project is closed
+  // For some reason even after ending the spin the signal is not
+  // terminated before deleting the project's glwin.
+  if (this_proj)
   {
-    save_rotation_quaternion (this_proj -> modelgl);
-    double cameraAngle[2] = {0.0, 0.0};
-    cameraAngle[val -> c] = 0.1 * this_proj -> modelgl -> spin_speed[val -> c];
-    rotate_x_y (this_proj -> modelgl, cameraAngle[0], cameraAngle[1]);
-    update (this_proj -> modelgl);
-    return TRUE;
+    if (this_proj -> modelgl)
+    {
+      if (this_proj -> modelgl -> spin[val -> c])
+      {
+        save_rotation_quaternion (this_proj -> modelgl);
+        double cameraAngle[2] = {0.0, 0.0};
+        cameraAngle[val -> c] = 0.1 * this_proj -> modelgl -> spin_speed[val -> c];
+        rotate_x_y (this_proj -> modelgl, cameraAngle[0], cameraAngle[1]);
+        update (this_proj -> modelgl);
+        return TRUE;
+      }
+      else
+      {
+        return FALSE;
+      }
+    }
+    else
+    {
+      return FALSE;
+    }
   }
   else
   {
@@ -160,7 +177,7 @@ G_MODULE_EXPORT void window_spinner (GtkWidget * widg, gpointer data)
   glwin * view = (glwin *) data;
   if (view -> spiner == NULL)
   {
-    view -> spiner = g_malloc0 (sizeof*view -> spiner);
+    view -> spiner = g_malloc0(sizeof*view -> spiner);
     gchar * str = g_strdup_printf ("%s - spin", prepare_for_title(get_project_by_id(view -> proj) -> name));
     view -> spiner -> win = create_win (str, view -> win, FALSE, FALSE);
     g_free (str);

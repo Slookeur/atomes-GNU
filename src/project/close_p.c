@@ -11,7 +11,7 @@ See the GNU General Public License for more details.
 You should have received a copy of the GNU Affero General Public License along with 'atomes'.
 If not, see <https://www.gnu.org/licenses/>
 
-Copyright (C) 2022-2025 by CNRS and University of Strasbourg */
+Copyright (C) 2022-2026 by CNRS and University of Strasbourg */
 
 /*!
 * @file close_p.c
@@ -51,6 +51,7 @@ Copyright (C) 2022-2025 by CNRS and University of Strasbourg */
 
 extern GtkTreeStore * tool_model;
 extern GtkTreeModel * replace_combo_tree (gboolean insert, int proj);
+extern G_MODULE_EXPORT void spin_stop (GtkButton * but, gpointer data);
 
 /*!
   \fn void update_insert_combos ()
@@ -135,6 +136,8 @@ void close_project (project * to_close)
       to_close -> modelgl -> player -> win = destroy_this_widget (to_close -> modelgl -> player -> win);
       g_free (to_close -> modelgl -> player);
     }
+    // Stop the spinning if any
+    spin_stop (NULL, to_close -> modelgl);
     if (to_close -> modelgl -> spiner)
     {
       to_close -> modelgl -> spiner -> win = destroy_this_widget (to_close -> modelgl -> spiner -> win);
@@ -199,18 +202,25 @@ void close_project (project * to_close)
   }
   if (to_close -> run)
   {
-    for (i=0 ; i<NGRAPHS ; i++)
+    for (i=0 ; i<NCALCS ; i++)
     {
-      to_close -> visok[i]=FALSE;
-      if (to_close -> curves[i])
+      if (to_close -> analysis)
       {
-        hide_curves (to_close, i);
-        erase_curves (to_close, i);
+        if (to_close -> analysis[i])
+        {
+          to_close -> analysis[i] -> calc_ok = FALSE;
+          if (to_close -> analysis[i] -> curves)
+          {
+            hide_curves (to_close, i);
+            erase_curves (to_close, i);
+          }
+        }
       }
     }
   }
-  clean_view ();
-  if (nprojects == 1)
+  if (! atomes_render_image) clean_view ();
+  g_debug ("CLOSE_PROJECT: so far so good");
+  if (nprojects == 1 && ! atomes_render_image)
   {
     prep_calc_actions ();
     workzone.first = NULL;
@@ -245,6 +255,7 @@ void close_project (project * to_close)
   }
   g_free (to_close);
   nprojects --;
+  g_debug ("CLOSE_PROJECT: so far so good nprojects= %d", nprojects);
   if (nprojects)
   {
     project * this_proj = workzone.first;
@@ -285,13 +296,19 @@ void close_project (project * to_close)
           }
         }
       }
-      for (j=0; j<NGRAPHS; j++)
+      if (this_proj -> analysis)
       {
-        if (this_proj -> idcc[j] != NULL)
+        for (j=0; j<NCALCS; j++)
         {
-          for (k=0; k<this_proj -> numc[j]; k++)
+          if (this_proj -> analysis[j])
           {
-            this_proj -> idcc[j][k].a = i;
+            if (this_proj -> analysis[j] -> idcc != NULL)
+            {
+              for (k=0; k<this_proj -> analysis[j] -> numc; k++)
+              {
+                this_proj -> analysis[j] -> idcc[k].a = i;
+              }
+            }
           }
         }
       }
@@ -301,16 +318,22 @@ void close_project (project * to_close)
     for (i=0 ; i<nprojects ; i++)
     {
       this_proj -> id = i;
-      for (j=0; j<NGRAPHS; j++)
+      if (this_proj -> analysis)
       {
-        for (k=0; k<this_proj -> numc[j]; k++)
+        for (j=0; j<NCALCS; j++)
         {
-          if (this_proj -> curves[j][k] -> window)
+          if (this_proj -> analysis[j])
           {
-            curve_window_add_menu_bar (&  this_proj -> idcc[j][k]);
-            if (is_the_widget_visible(this_proj -> curves[j][k] -> plot))
+            for (k=0; k<this_proj -> analysis[j] -> numc; k++)
             {
-              gtk_widget_queue_draw (this_proj -> curves[j][k] -> plot);
+              if (this_proj -> analysis[j] -> curves[k] -> window)
+              {
+                curve_window_add_menu_bar (&  this_proj -> analysis[j] -> idcc[k]);
+                if (is_the_widget_visible(this_proj -> analysis[j] -> curves[k] -> plot))
+                {
+                  gtk_widget_queue_draw (this_proj -> analysis[j] -> curves[k] -> plot);
+                }
+              }
             }
           }
         }
@@ -318,7 +341,7 @@ void close_project (project * to_close)
       if (this_proj -> next != NULL) this_proj = this_proj -> next;
     }
   }
-  update_insert_combos ();
+  if (! atomes_render_image) update_insert_combos ();
 }
 
 /*!
@@ -336,7 +359,7 @@ void to_close_this_project (int to_activate, project * this_proj)
   {
     activate_project (NULL, GINT_TO_POINTER(to_activate));
   }
-  else
+  else if (! atomes_render_image)
   {
     remove_edition_and_analyze_actions ();
     active_project = NULL;

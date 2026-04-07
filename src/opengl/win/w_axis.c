@@ -11,7 +11,7 @@ See the GNU General Public License for more details.
 You should have received a copy of the GNU Affero General Public License along with 'atomes'.
 If not, see <https://www.gnu.org/licenses/>
 
-Copyright (C) 2022-2025 by CNRS and University of Strasbourg */
+Copyright (C) 2022-2026 by CNRS and University of Strasbourg */
 
 /*!
 * @file w_axis.c
@@ -234,6 +234,8 @@ void activate_pos_box (glwin * view, gboolean val)
 G_MODULE_EXPORT void set_axis_template (GtkComboBox * box, gpointer data)
 {
   int i = combo_get_active ((GtkWidget *)box);
+  // The next line is mandatory for GTK4
+  if (i < 0) return;
   glwin * view;
   if (preferences)
   {
@@ -287,8 +289,8 @@ G_MODULE_EXPORT void set_axis_combo_style (GtkComboBox * box, gpointer data)
   {
     case 0:
       * axis = WIREFRAME;
-      if (is_the_widget_visible(the_axis -> radius_box)) hide_the_widgets (the_axis -> radius_box);
-      if (! is_the_widget_visible(the_axis -> width_box)) show_the_widgets (the_axis -> width_box);
+      hide_the_widgets (the_axis -> radius_box);
+      show_the_widgets (the_axis -> width_box);
       if (! preferences)
       {
 #ifdef GTK3
@@ -301,8 +303,8 @@ G_MODULE_EXPORT void set_axis_combo_style (GtkComboBox * box, gpointer data)
       break;
     case 1:
       * axis = CYLINDERS;
-      if (is_the_widget_visible(the_axis -> width_box)) hide_the_widgets (the_axis -> width_box);
-      if (! is_the_widget_visible(the_axis -> radius_box)) show_the_widgets (the_axis -> radius_box);
+      hide_the_widgets (the_axis -> width_box);
+      show_the_widgets (the_axis -> radius_box);
       if (! preferences)
       {
 #ifdef GTK3
@@ -571,12 +573,12 @@ G_MODULE_EXPORT void use_axis_default_colors (GtkToggleButton * but, gpointer da
   {
     if (! preferences)
     {
-      view -> anim -> last -> img -> xyz -> color = g_malloc (3*sizeof*view -> anim -> last -> img -> xyz -> color);
+      view -> anim -> last -> img -> xyz -> color = g_malloc0(3*sizeof*view -> anim -> last -> img -> xyz -> color);
       init_axis_colors (view -> anim -> last -> img -> xyz -> color, the_axis);
     }
     else
     {
-      tmp_axis -> color = g_malloc (3*sizeof*tmp_axis -> color);
+      tmp_axis -> color = g_malloc0(3*sizeof*tmp_axis -> color);
       init_axis_colors (tmp_axis -> color, the_axis);
     }
 

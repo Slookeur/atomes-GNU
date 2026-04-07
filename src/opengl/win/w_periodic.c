@@ -11,7 +11,7 @@ See the GNU General Public License for more details.
 You should have received a copy of the GNU Affero General Public License along with 'atomes'.
 If not, see <https://www.gnu.org/licenses/>
 
-Copyright (C) 2022-2025 by CNRS and University of Strasbourg */
+Copyright (C) 2022-2026 by CNRS and University of Strasbourg */
 
 /*!
 * @file w_periodic.c
@@ -692,7 +692,7 @@ int get_atom_id_from_periodic_table (atom_search * asearch)
   else
   {
     str = g_strdup_printf ("Periodic table of the elements");
-    periodic_search = g_malloc0 (sizeof*periodic_search);
+    periodic_search = g_malloc0(sizeof*periodic_search);
     periodic_search -> proj = -1;
     periodic_search -> action = -1;
 #ifdef GTK3

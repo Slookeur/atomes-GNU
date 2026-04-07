@@ -11,7 +11,7 @@ See the GNU General Public License for more details.
 You should have received a copy of the GNU Affero General Public License along with 'atomes'.
 If not, see <https://www.gnu.org/licenses/>
 
-Copyright (C) 2022-2025 by CNRS and University of Strasbourg */
+Copyright (C) 2022-2026 by CNRS and University of Strasbourg */
 
 /*!
 * @file global.c
@@ -87,14 +87,6 @@ gchar * PACKAGE_JPG = NULL;
 gchar * PACKAGE_BMP = NULL;
 gchar * PACKAGE_TIFF = NULL;
 gchar * PACKAGE_VOID = NULL;
-gchar * PACKAGE_GR = NULL;
-gchar * PACKAGE_SQ = NULL;
-gchar * PACKAGE_BD = NULL;
-gchar * PACKAGE_AN = NULL;
-gchar * PACKAGE_RI = NULL;
-gchar * PACKAGE_CH = NULL;
-gchar * PACKAGE_SP = NULL;
-gchar * PACKAGE_MS = NULL;
 gchar * PACKAGE_TD = NULL;
 gchar * PACKAGE_MOL = NULL;
 gchar * PACKAGE_OGL = NULL;
@@ -188,6 +180,13 @@ gboolean selected_status = FALSE;
 gboolean silent_input = FALSE;
 gboolean cif_use_symmetry_positions = FALSE;
 
+gboolean atomes_from_libreoffice = FALSE;
+gboolean atomes_render_image = FALSE;
+int atomes_image_format = -1;
+int atomes_image_style = -1;
+int * atomes_image_pixels = NULL;
+gchar * atomes_image_output = NULL;
+
 struct timespec start_time;
 struct timespec stop_time;
 
@@ -195,7 +194,6 @@ double opac = 0.75;
 double pi = 3.141592653589793238462643383279502884197;
 
 GSimpleAction * edition_actions[3];
-GSimpleAction * analyze_actions[9];
 
 GtkApplication * AtomesApp = NULL;
 GtkWidget * MainWindow = NULL;
@@ -255,7 +253,7 @@ gboolean * allocbool (int  val)
 {
   gboolean * var = NULL;
 
-  var = g_malloc0 (val*sizeof*var);
+  var = g_malloc0(val*sizeof*var);
   return var;
 }
 
@@ -272,7 +270,7 @@ gboolean ** allocdbool (int xal, int yal)
   gboolean ** var = NULL;
   int i;
 
-  var = g_malloc (xal*sizeof*var);
+  var = g_malloc0(xal*sizeof*var);
   for ( i = 0 ; i < xal ; i ++ )
   {
     /* allocation d'un tableau de tableau */
@@ -295,7 +293,7 @@ gboolean *** alloctbool (int xal, int yal, int zal)
   gboolean *** var = NULL;
   int i;
 
-  var = g_malloc (xal*sizeof*var);
+  var = g_malloc0(xal*sizeof*var);
   for ( i = 0 ; i < xal ; i ++ )
   {
     /* allocation d'un tableau de tableau */
@@ -315,7 +313,7 @@ int * allocint (int  val)
 {
   int * var = NULL;
 
-  var = g_malloc0 (val*sizeof*var);
+  var = g_malloc0(val*sizeof*var);
   return var;
 }
 
@@ -332,11 +330,11 @@ int ** allocdint (int xal, int yal)
   int ** var = NULL;
   int i;
 
-  var = g_malloc (xal*sizeof*var);
+  var = g_malloc0(xal*sizeof*var);
   for ( i = 0 ; i < xal ; i ++ )
   {
     /* allocation d'un tableau de tableau */
-    var[i] = allocint(yal);
+    var[i] = allocint (yal);
   }
   return var;
 }
@@ -355,11 +353,11 @@ int *** alloctint (int xal, int yal, int zal)
   int *** var = NULL;
   int i;
 
-  var = g_malloc (xal*sizeof*var);
+  var = g_malloc0(xal*sizeof*var);
   for ( i = 0 ; i < xal ; i ++ )
   {
     /* allocation d'un tableau de tableau */
-    var[i] = allocdint(yal, zal);
+    var[i] = allocdint (yal, zal);
   }
   return var;
 }
@@ -379,11 +377,11 @@ int **** allocqint (int wal, int xal, int yal, int zal)
   int **** var = NULL;
   int i;
 
-  var = g_malloc (wal*sizeof*var);
+  var = g_malloc0(wal*sizeof*var);
   for ( i = 0 ; i < wal ; i ++ )
   {
     /* allocation d'un tableau de tableau */
-    var[i] = alloctint(xal, yal, zal);
+    var[i] = alloctint (xal, yal, zal);
   }
   return var;
 }
@@ -399,7 +397,7 @@ float * allocfloat (int  val)
 {
   float * var = NULL;
 
-  var = g_malloc0 (val*sizeof*var);
+  var = g_malloc0(val*sizeof*var);
   return var;
 }
 
@@ -416,11 +414,11 @@ float ** allocdfloat (int xal, int yal)
   float ** var = NULL;
   int i;
 
-  var = g_malloc (xal*sizeof*var);
+  var = g_malloc0(xal*sizeof*var);
   for ( i = 0 ; i < xal ; i ++ )
   {
     /* allocation d'un tableau de tableau */
-    var[i] = allocfloat(yal);
+    var[i] = allocfloat (yal);
   }
   return var;
 }
@@ -439,7 +437,7 @@ float *** alloctfloat (int xal, int yal, int zal)
   float *** var = NULL;
   int i;
 
-  var = g_malloc (xal*sizeof*var);
+  var = g_malloc0(xal*sizeof*var);
   for ( i = 0 ; i < xal ; i ++ )
   {
     /* allocation d'un tableau de tableau */
@@ -460,7 +458,7 @@ double * allocdouble (int val)
 {
   double * var = NULL;
 
-  var = g_malloc0 (val*sizeof*var);
+  var = g_malloc0(val*sizeof*var);
   return var;
 }
 
@@ -477,7 +475,7 @@ double ** allocddouble (int xal, int yal)
   double ** var = NULL;
   int i;
 
-  var = g_malloc (xal*sizeof*var);
+  var = g_malloc0(xal*sizeof*var);
   for ( i = 0 ; i < xal ; i ++ )
   {
     /* allocation d'un tableau de tableau */
@@ -500,7 +498,7 @@ double *** alloctdouble (int xal, int yal, int zal)
   double *** var = NULL;
   int i;
 
-  var = g_malloc (xal*sizeof*var);
+  var = g_malloc0(xal*sizeof*var);
   for ( i = 0 ; i < xal ; i ++ )
   {
     /* allocation d'un tableau de tableau */
@@ -524,7 +522,7 @@ double **** allocqdouble (int wal, int xal, int yal, int zal)
   double **** var = NULL;
   int i;
 
-  var = g_malloc (wal*sizeof*var);
+  var = g_malloc0(wal*sizeof*var);
   for ( i = 0 ; i < wal ; i ++ )
   {
     /* allocation d'un tableau de tableau */
@@ -543,7 +541,7 @@ double **** allocqdouble (int wal, int xal, int yal, int zal)
 */
 gchar ** duplicate_strings (int num, gchar ** old_val)
 {
-  gchar ** new_val = g_malloc0 (num*sizeof*new_val);
+  gchar ** new_val = g_malloc0(num*sizeof*new_val);
   int i;
   for (i=0; i<num; i++) new_val[i] = g_strdup_printf ("%s", old_val[i]);
   return new_val;

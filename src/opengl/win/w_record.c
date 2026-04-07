@@ -11,7 +11,7 @@ See the GNU General Public License for more details.
 You should have received a copy of the GNU Affero General Public License along with 'atomes'.
 If not, see <https://www.gnu.org/licenses/>
 
-Copyright (C) 2022-2025 by CNRS and University of Strasbourg */
+Copyright (C) 2022-2026 by CNRS and University of Strasbourg */
 
 /*!
 * @file w_record.c
@@ -154,7 +154,7 @@ G_MODULE_EXPORT void window_recorder (GtkWidget * widg, gpointer data)
   glwin * view = (glwin *) data;
   if (view -> rec == NULL)
   {
-    view -> rec = g_malloc0 (sizeof*view -> rec);
+    view -> rec = g_malloc0(sizeof*view -> rec);
     gchar * str = g_strdup_printf ("%s - record", get_project_by_id(view -> proj) -> name);
     view -> rec -> win = create_win (str, view -> win, FALSE, FALSE);
     g_free (str);

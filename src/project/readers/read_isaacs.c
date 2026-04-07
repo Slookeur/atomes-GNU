@@ -11,7 +11,7 @@ See the GNU General Public License for more details.
 You should have received a copy of the GNU Affero General Public License along with 'atomes'.
 If not, see <https://www.gnu.org/licenses/>
 
-Copyright (C) 2022-2025 by CNRS and University of Strasbourg */
+Copyright (C) 2022-2026 by CNRS and University of Strasbourg */
 
 /*!
 * @file read_isaacs.c
@@ -430,7 +430,7 @@ int XmlwriterFilename (const char * uri)
     {
       lgt = 10;
       lgt += strfind (active_chem -> label[i]) + strlen("-") + strfind(active_chem -> label[j]);
-      ncut = g_malloc0 (lgt*sizeof*ncut);
+      ncut = g_malloc0(lgt*sizeof*ncut);
       strncpy (ncut, active_chem -> label[i], strfind(active_chem -> label[i]));
       strcat (ncut, "-");
       strncat (ncut, active_chem -> label[j], strfind(active_chem -> label[j]));
@@ -1142,7 +1142,7 @@ int setcutoffs (xmlNodePtr cutnode)
     {
       lgt=10;
       lgt+=strfind(active_chem -> label[i]) + strlen("-") + strfind(active_chem -> label[j]);
-      ncut = g_malloc0 (lgt*sizeof*ncut);
+      ncut = g_malloc0(lgt*sizeof*ncut);
       strncpy (ncut, active_chem -> label[i], strfind(active_chem -> label[i]));
       strcat (ncut, "-");
       strncat (ncut, active_chem -> label[j], strfind(active_chem -> label[j]));

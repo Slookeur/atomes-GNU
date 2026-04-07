@@ -11,7 +11,7 @@ See the GNU General Public License for more details.
 You should have received a copy of the GNU Affero General Public License along with 'atomes'.
 If not, see <https://www.gnu.org/licenses/>
 
-Copyright (C) 2022-2025 by CNRS and University of Strasbourg */
+Copyright (C) 2022-2026 by CNRS and University of Strasbourg */
 
 /*!
 * @file workspace.c
@@ -86,22 +86,12 @@ GdkPixbuf * wpix = NULL;
 gchar * wchar = NULL;
 int projects_in_workspace = 0;
 
-char * work_menu_items[NITEMS-2] = {"Workspace                ",
-                                    "Settings                 ",
-                                   //"OpenGL - 3D              ",
-                                    "Visualization            ",
-                                   //"Calc. visualization      ",
-                                    "Analysis                 ",
-                                    "g(r)/G(r)                ",
-                                    "S(q) from g(r)           ",
-                                    "S(q) from Debye equation ",
-                                    "g(r) from FFT[S(q) Debye]",
-                                    "Bonding information      ",
-                                    "Angle distribution       ",
-                                    "Ring statistics          ",
-                                    "Chain statistics         ",
-                                    "Spherical harmonics      ",
-                                    "Mean Square Displacement "};
+char * work_menu_items[NITEMS] = {"Workspace                ",
+                                  "Settings                 ",
+                                  //"OpenGL - 3D            ",
+                                  "Visualization            ",
+                                  //"Calc. visualization    ",
+                                  "Analysis                 "};
 
 /*!
   \fn void add_project (GtkTreeStore * store, int i)
@@ -118,13 +108,14 @@ void add_project (GtkTreeStore * store, int i)
   GtkTreeIter steplevel;
   GtkTreeIter optslevel;
   gtk_tree_store_append (store, & piter[i], & worklevel);
+  project * this_proj = get_project_by_id(i);
   if (i == activep)
   {
-    tmp = g_strdup_printf ("<b>%s</b>", active_project -> name);
+    tmp = g_strdup_printf ("<b>%s</b>", this_proj -> name);
   }
   else
   {
-    tmp = g_strdup_printf ("%s", get_project_by_id(i) -> name);
+    tmp = g_strdup_printf ("%s", this_proj -> name);
   }
   gtk_tree_store_set (store, & piter[i], 0, THETD, 1, tmp, 2, -1, -1);
   prpath[i] = gtk_tree_model_get_path (GTK_TREE_MODEL(store), & piter[i]);
@@ -134,19 +125,16 @@ void add_project (GtkTreeStore * store, int i)
   // OpenGL
   gtk_tree_store_append (store, & steplevel, & piter[i]);
   gtk_tree_store_set (store, & steplevel, 0, OGLM, 1, work_menu_items[2], 2, -2, -1);
-  //gtk_tree_store_append (store, & optslevel, & steplevel);
-  //gtk_tree_store_set (store, & optslevel, 0, OGLM, 1, work_menu_items[3], 2, -1, -1);
-  //gtk_tree_store_append (store, & optslevel, & steplevel);
-  //gtk_tree_store_set (store, & optslevel, 0, OGLC, 1, work_menu_items[4], 2, -1, -1);
   // Calculations
   gtk_tree_store_append (store, & steplevel, & piter[i]);
   gtk_tree_store_set (store, & steplevel, 0, RUN, 1, work_menu_items[3], 2, -1, -1);
-  for (j=0; j<NCALCS-2; j++)
+
+  for (j=0; j<NCALCS; j++)
   {
-    if (j < NCALCS-3 || get_project_by_id(i) -> steps > 1)
+    if (j < NCALCS-2 || get_project_by_id(i) -> steps > 1)
     {
       gtk_tree_store_append (store, & optslevel, & steplevel);
-      gtk_tree_store_set (store, & optslevel, 0, gdk_pixbuf_new_from_file(graph_img[j], NULL), 1, work_menu_items[4+j], 2, j, -1);
+      gtk_tree_store_set (store, & optslevel, 0, gdk_pixbuf_new_from_file(graph_img[j], NULL), 1, graph_name[j], 2, j, -1);
     }
   }
   gtk_tree_view_expand_to_path (GTK_TREE_VIEW(worktree), gtk_tree_model_get_path(GTK_TREE_MODEL(store), & worklevel));
@@ -171,8 +159,8 @@ static void fill_workspace (GtkTreeStore * store)
   if (prpath != NULL) g_free (prpath);
   if (nprojects > 0)
   {
-    piter = g_malloc (nprojects*sizeof*piter);
-    prpath = g_malloc (nprojects*sizeof*prpath);
+    piter = g_malloc0(nprojects*sizeof*piter);
+    prpath = g_malloc0(nprojects*sizeof*prpath);
   }
   for (i=0; i<nprojects; i++)
   {
@@ -311,7 +299,6 @@ G_MODULE_EXPORT void workspace_ondc (GtkTreeView * treeview,
       g_debug ("WORKSPACE_ONDC: wchar = %s", wchar);
 #endif
       gtk_tree_model_get (model, & iter, 2, & i, -1);
-      i += 4;
 #ifdef DEBUG
       g_debug ("WORKSPACE_ONDC: creating view id= %d", i);
 #endif
@@ -320,7 +307,7 @@ G_MODULE_EXPORT void workspace_ondc (GtkTreeView * treeview,
       g_debug ("WORKSPACE_ONDC: for project= %d", j);
 #endif
       if (j < 0) j = activep;
-      if (i == 2) prep_model (j);
+      if (i == -2) prep_model (j);
       workinfo (get_project_by_id(j), i);
     }
   }
@@ -435,15 +422,15 @@ G_MODULE_EXPORT void change_project_name (GtkWidget * wid, gpointer edata)
       }
     }
     g_free (tmp_title);
-    for (j=0; j<NGRAPHS; j++)
+    for (j=0; j<NCALCS; j++)
     {
-      if (this_proj -> initok[j])
+      if (this_proj -> analysis[j] -> init_ok)
       {
-        for (k=0; k<this_proj -> numc[j]; k++)
+        for (k=0; k<this_proj -> analysis[j] -> numc; k++)
         {
-          if (this_proj -> curves[j][k] -> window != NULL)
+          if (this_proj -> analysis[j] -> curves[k] -> window != NULL)
           {
-            correct_this_window_title (this_proj -> curves[j][k] -> window, g_strdup_printf ("%s - %s", prepare_for_title(this_proj -> name), this_proj -> curves[j][k] -> name));
+            correct_this_window_title (this_proj -> analysis[j] -> curves[k] -> window, g_strdup_printf ("%s - %s", prepare_for_title(this_proj -> name), this_proj -> analysis[j] -> curves[k] -> name));
           }
         }
       }
@@ -485,7 +472,7 @@ void workspace_menu (GtkWidget * tree, gpointer event, double x, double y)
 #ifdef GTK3
   pop_menu_at_pointer (menu, (GdkEvent *)event);
 #else
-  gtk_widget_set_parent (menu, MainWindow);
+  gtk_widget_set_parent (menu, tree);
   pop_menu_at_pointer (menu, x, y);
 #endif
 }
@@ -615,15 +602,15 @@ void add_project_to_workspace ()
     if (projects_in_workspace > 0)
     {
       GtkTreeIter ** tmpiter;
-      tmpiter = g_malloc (projects_in_workspace*sizeof*tmpiter);
+      tmpiter = g_malloc0(projects_in_workspace*sizeof*tmpiter);
       for (i=0; i<projects_in_workspace; i++)
       {
         tmpiter[i] = gtk_tree_iter_copy (& piter[i]);
       }
       if (piter != NULL) g_free (piter);
       if (prpath != NULL) g_free (prpath);
-      piter = g_malloc ((projects_in_workspace+1)*sizeof*piter);
-      prpath = g_malloc ((projects_in_workspace+1)*sizeof*prpath);
+      piter = g_malloc0((projects_in_workspace+1)*sizeof*piter);
+      prpath = g_malloc0((projects_in_workspace+1)*sizeof*prpath);
       for (i=0; i<projects_in_workspace; i++)
       {
         piter[i] = * gtk_tree_iter_copy (tmpiter[i]);
@@ -636,8 +623,8 @@ void add_project_to_workspace ()
     {
       if (prpath != NULL) g_free (prpath);
       if (piter != NULL) g_free (piter);
-      piter = g_malloc ((projects_in_workspace+1)*sizeof*piter);
-      prpath = g_malloc ((projects_in_workspace+1)*sizeof*prpath);
+      piter = g_malloc0((projects_in_workspace+1)*sizeof*piter);
+      prpath = g_malloc0((projects_in_workspace+1)*sizeof*prpath);
     }
     add_project (workstore, activep);
     newspace = FALSE;
@@ -681,7 +668,7 @@ void remove_project_from_workspace (int id)
     }
     if (projects_in_workspace > 1)
     {
-      tmpiter = g_malloc ((projects_in_workspace-1)*sizeof*tmpiter);
+      tmpiter = g_malloc0((projects_in_workspace-1)*sizeof*tmpiter);
       j = -1;
       for (i=0; i<projects_in_workspace; i++)
       {
@@ -695,8 +682,8 @@ void remove_project_from_workspace (int id)
       g_free (piter);
       g_free (prpath);
       projects_in_workspace --;
-      piter = g_malloc (projects_in_workspace*sizeof*piter);
-      prpath = g_malloc (projects_in_workspace*sizeof*prpath);
+      piter = g_malloc0(projects_in_workspace*sizeof*piter);
+      prpath = g_malloc0(projects_in_workspace*sizeof*prpath);
       j = -1;
       for (i=0; i<projects_in_workspace+1; i++)
       {

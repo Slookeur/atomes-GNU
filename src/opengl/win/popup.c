@@ -11,7 +11,7 @@ See the GNU General Public License for more details.
 You should have received a copy of the GNU Affero General Public License along with 'atomes'.
 If not, see <https://www.gnu.org/licenses/>
 
-Copyright (C) 2022-2025 by CNRS and University of Strasbourg */
+Copyright (C) 2022-2026 by CNRS and University of Strasbourg */
 
 /*!
 * @file popup.c
@@ -180,7 +180,7 @@ int selected_aspec;
 int selected_bspec;
 int is_selected;
 int is_labelled;
-int is_filled;
+
 atom_selection * bond_selection = NULL;
 
 tint atoid[CONTEXTACT][4];
@@ -253,7 +253,6 @@ G_MODULE_EXPORT void set_full_screen (GtkWidget * widg, gpointer data)
 int get_style (gchar * str)
 {
   int i;
-  is_filled = NONE;
 #ifdef GTK4
   i = strlen (str);
   return (int) string_to_double ((gpointer)g_strdup_printf ("%c", str[i-1]));
@@ -266,8 +265,7 @@ int get_style (gchar * str)
   {
     if (g_strcmp0 (text_filled[i], str) == 0)
     {
-      is_filled = i;
-      return SPACEFILL;
+      return OGL_STYLES + i;
     }
   }
 #endif
@@ -712,6 +710,8 @@ G_MODULE_EXPORT void add_object (GSimpleAction * action, GVariant * parameter, g
 G_MODULE_EXPORT void add_object (GtkWidget * widg, gpointer data)
 #endif
 {
+  int i, j;
+  i = opengl_project -> natomes;
   prepare_atom_edition (data, FALSE);
   insert_search = allocate_atom_search (opengl_project -> id, INSERT, INSERT, 0);
   if (insert_this_object)
@@ -742,7 +742,6 @@ G_MODULE_EXPORT void add_object (GtkWidget * widg, gpointer data)
     tint ul = ulam_coord (opengl_project -> modelgl);
     opengl_project -> modelgl -> atom_win -> to_be_inserted[1] = duplicate_atomic_object (copied_object);
     atomic_object * object = opengl_project -> modelgl -> atom_win -> to_be_inserted[1];
-    int i;
     for (i=0; i<object -> atoms; i++)
     {
       object -> at_list[i].x += opengl_project -> modelgl -> insert_coords.x + object -> dim*ul.a;
@@ -754,6 +753,20 @@ G_MODULE_EXPORT void add_object (GtkWidget * widg, gpointer data)
     insert_search -> in_selection ++;
   }
   insert_object (3, data);
+  if (! i && opengl_project -> natomes)
+  {
+    if (opengl_project -> modelgl -> anim -> last -> img -> style == SPACEFILL)
+    {
+      j = OGL_STYLES + opengl_project -> modelgl -> anim -> last -> img -> filled_type;
+      set_this_style (opengl_project -> modelgl, WIREFRAME);
+    }
+    else
+    {
+      j = opengl_project -> modelgl -> anim -> last -> img -> style;
+      set_this_style (opengl_project -> modelgl, OGL_STYLES);
+    }
+    set_this_style (opengl_project -> modelgl, j);
+  }
 }
 
 #ifdef GTK4
@@ -2096,6 +2109,7 @@ void create_new_project_using_data (atom_selection * selection)
   {
     active_cell -> ltype = opengl_project -> cell.ltype;
     active_cell -> pbc = opengl_project -> cell.pbc;
+    active_cell -> has_a_box = opengl_project -> cell.has_a_box;
     k = (active_cell -> npt) ? opengl_project -> modelgl -> anim -> last -> img -> step : 0;
     for (i=0; i<3; i++)
     {
@@ -2151,10 +2165,7 @@ void create_new_project_using_data (atom_selection * selection)
       if (tmp -> next != NULL) tmp = tmp -> next;
     }
   }
-  active_project -> runok[BD] = TRUE;
-  active_project -> runok[RI] = TRUE;
-  active_project -> runok[CH] = TRUE;
-  active_project -> runok[SP] = TRUE;
+  update_analysis_availability (active_project);
   active_project_changed (activep);
   add_project_to_workspace ();
   i = opengl_project -> modelgl -> anim -> last -> img -> style;
@@ -2195,7 +2206,7 @@ G_MODULE_EXPORT void edit_in_new_project (GtkWidget * widg, gpointer data)
   int h, i, j;
   atom_selection * selected;
   atom_in_selection * tmp_a;
-  selected = g_malloc0 (sizeof*selected);
+  selected = g_malloc0(sizeof*selected);
   h = get_to_be_selected (opengl_project -> modelgl);
   if (! sel -> b)
   {
@@ -2280,7 +2291,7 @@ G_MODULE_EXPORT void edit_coord (GtkWidget * widg, gpointer data)
   atom_in_selection * tmp_a;
   gboolean save_it;
 
-  selected = g_malloc0 (sizeof*selected);
+  selected = g_malloc0(sizeof*selected);
   j = opengl_project -> modelgl -> anim -> last -> img -> step;
   for (i=0; i<opengl_project -> natomes; i++)
   {
@@ -2345,7 +2356,7 @@ G_MODULE_EXPORT void edit_atoms (GtkWidget * widg, gpointer data)
   atom_selection * selected;
   atom_in_selection * tmp_a;
 
-  selected = g_malloc0 (sizeof*selected);
+  selected = g_malloc0(sizeof*selected);
   j = opengl_project -> modelgl -> anim -> last -> img -> step;
   for (i=0; i<opengl_project -> natomes; i++)
   {
@@ -2876,7 +2887,7 @@ G_MODULE_EXPORT void select_action_for_all_bonds (GtkWidget * widg, gpointer dat
         {
           if (! bond_selection)
           {
-            bond_selection = g_malloc0 (sizeof*bond_selection);
+            bond_selection = g_malloc0(sizeof*bond_selection);
             bond_selection -> first = new_atom_in_selection (j, opengl_project -> atoms[s][j].sp);
             tmp_a = bond_selection -> first;
           }
@@ -3034,10 +3045,22 @@ GMenu * add_style_sub_menu (glwin * view, gchar * act, int aid, GCallback handle
 {
   GMenu * menu = g_menu_new ();
   gchar * actc = g_strdup_printf ("%s-%d", act, aid);
-  int i;
+  int i, j;
   for (i=0; i<OGL_STYLES; i++)
   {
-    append_opengl_item (view, menu, text_styles[i], actc, 1, i, NULL, IMG_NONE, NULL, FALSE, handler, data, FALSE, FALSE, FALSE, TRUE);
+    if (i != SPACEFILL)
+    {
+      append_opengl_item (view, menu, text_styles[i], actc, i, i, NULL, IMG_NONE, NULL, FALSE, handler, data, FALSE, FALSE, FALSE, TRUE);
+    }
+    else
+    {
+      GMenu * menuf = g_menu_new ();
+      for (j=0; j < FILLED_STYLES; j++)
+      {
+        append_opengl_item (view, menuf, text_filled[j], actc, j+OGL_STYLES, j+OGL_STYLES, NULL, IMG_NONE, NULL, FALSE, handler, data, FALSE, FALSE, FALSE, TRUE);
+      }
+      append_submenu (menu, text_styles[i], menuf);
+    }
   }
   g_free (actc);
   return menu;
@@ -3056,14 +3079,14 @@ void add_style_sub_menu (GtkWidget * item, GCallback handler, gpointer data)
 {
   GtkWidget * menu = gtk_menu_new ();
   gtk_menu_item_set_submenu ((GtkMenuItem *)item, menu);
-  int i; //, j;
+  int i, j;
   for (i=0; i<OGL_STYLES; i++)
   {
-    //if (i != SPACEFILL)
+    if (i != SPACEFILL)
     {
       gtk3_menu_item (menu, text_styles[i], IMG_NONE, NULL, handler, data, FALSE, 0, 0, FALSE, FALSE, FALSE);
     }
-    /* else
+    else
     {
       GtkWidget *widg = create_menu_item (FALSE, "Spacefilled");
       gtk_menu_shell_append ((GtkMenuShell *)menu, widg);
@@ -3073,36 +3096,9 @@ void add_style_sub_menu (GtkWidget * item, GCallback handler, gpointer data)
       {
         gtk3_menu_item (menuf, text_filled[j], IMG_NONE, NULL, handler, data, FALSE, 0, 0, FALSE, FALSE, FALSE);
       }
-    } */
+    }
   }
 }
-
-/*void add_style_sub_menu (GtkWidget * item, GCallback handler, gpointer data)
-{
-  GtkWidget * menu = gtk_menu_new ();
-  GtkWidget * pmenu;
-  GtkWidget * sitem, * pitem;
-  gtk_menu_item_set_submenu ((GtkMenuItem *)item, menu);
-  int i, j;
-  for (i=0; i<OGL_STYLES; i++)
-  {
-    if (i != SPACEFILL)
-    {
-      sitem =  gtk3_menu_item (menu, text_stylesled[j], IMG_NONE, NULL, handler, data, FALSE, 0, 0, TRUE, TRUE, FALSE);
-    }
-    else
-    {
-      sitem = create_menu_item (FALSE, "Spacefilled");
-      gtk_menu_shell_append ((GtkMenuShell *)menu, sitem);
-      pmenu = gtk_menu_new ();
-      gtk_menu_item_set_submenu ((GtkMenuItem *)sitem, pmenu);
-      for (j=0; j < FILLED_STYLES; j++)
-      {
-        pitem = gtk3_menu_item (menu, text_filled[j], IMG_NONE, NULL, handler, data, FALSE, 0, 0, TRUE, TRUE, FALSE);
-      }
-    }
-  }
-}*/
 
 /*!
   \fn void add_edition_sub_menu (GtkWidget * item, GCallback handler, gpointer data)
@@ -3856,6 +3852,19 @@ void popup_selection (glwin * view, double ptx, double pty, int spe, int mmod, i
 #endif
   gboolean go;
 
+ /* 0 = Select
+    1 = Unselect
+    2 = Label
+    3 = Unlabel
+    4 = Show
+    5 = Hide
+    6 = Style
+    7 = Color
+    8 = Edit as New Project"
+    9 = Remove
+   10 = Replace
+   11 = Copy
+ */
   for (i=0; i<12; i++)
   {
     go = TRUE;

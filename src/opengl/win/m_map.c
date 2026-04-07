@@ -11,7 +11,7 @@ See the GNU General Public License for more details.
 You should have received a copy of the GNU Affero General Public License along with 'atomes'.
 If not, see <https://www.gnu.org/licenses/>
 
-Copyright (C) 2022-2025 by CNRS and University of Strasbourg */
+Copyright (C) 2022-2026 by CNRS and University of Strasbourg */
 
 /*!
 * @file m_map.c
@@ -165,7 +165,7 @@ void init_map_range (colormap * map, int pts)
     map -> values = NULL;
   }
   map -> positions = allocfloat (pts);
-  map -> values = g_malloc (pts*sizeof*map -> values);
+  map -> values = g_malloc0(pts*sizeof*map -> values);
   int i;
   for (i=0;  i<pts; i++)
   {
@@ -187,14 +187,14 @@ void init_map_range (colormap * map, int pts)
 */
 colormap * allocate_color_map (int pts, project * this_proj)
 {
-  colormap * map = g_malloc0 (sizeof*map);
-  map -> data = g_malloc (this_proj -> steps*sizeof*map -> data);
-  map -> colors = g_malloc (this_proj -> steps*sizeof*map -> colors);
+  colormap * map = g_malloc0(sizeof*map);
+  map -> data = g_malloc0(this_proj -> steps*sizeof*map -> data);
+  map -> colors = g_malloc0(this_proj -> steps*sizeof*map -> colors);
   int i;
   for (i=0; i<this_proj -> steps; i++)
   {
-    map -> data[i] = g_malloc0 (this_proj -> natomes*sizeof*map -> data[i]);
-    map -> colors[i] = g_malloc0 (this_proj -> natomes*sizeof*map -> colors[i]);
+    map -> data[i] = g_malloc0(this_proj -> natomes*sizeof*map -> data[i]);
+    map -> colors[i] = g_malloc0(this_proj -> natomes*sizeof*map -> colors[i]);
   }
   return map;
 }
@@ -506,7 +506,7 @@ G_MODULE_EXPORT void custom_mize_map (GtkWidget * but, gpointer data)
   gtk_dialog_add_button (GTK_DIALOG(win), "Apply", GTK_RESPONSE_APPLY);
   gtk_widget_set_size_request (win, 300, -1);
   GtkWidget * vbox = dialog_get_content_area (win);
-  tmp_map = g_malloc0 (sizeof*tmp_map);
+  tmp_map = g_malloc0(sizeof*tmp_map);
   tmp_map -> cmin = the_map -> cmin;
   tmp_map -> cmax = the_map -> cmax;
   tmp_map -> points = the_map -> points;
@@ -740,7 +740,7 @@ G_MODULE_EXPORT void edit_data_map (GtkWidget * but, gpointer data)
   gtk_widget_set_size_request (win, 250, 600);
   GtkWidget * vbox = dialog_get_content_area (win);
   GtkWidget * maps = create_scroll(NULL, -1, -1, GTK_SHADOW_NONE);
-  tmp_data = allocfloat(this_proj -> natomes*this_proj -> steps);
+  tmp_data = allocfloat (this_proj -> natomes*this_proj -> steps);
   int i, j, k;
   k = 0;
   for (i=0; i<this_proj -> steps; i++)
@@ -771,7 +771,7 @@ gboolean open_save_map (FILE * fp, int act, project * this_proj)
   int i, j;
   if (act == 0)
   {
-    float * tmp_map = allocfloat(this_proj -> natomes*this_proj -> steps);
+    float * tmp_map = allocfloat (this_proj -> natomes*this_proj -> steps);
     rewind (fp);
     for (i=0; i<this_proj -> natomes*this_proj -> steps; i++)
     {

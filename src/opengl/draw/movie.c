@@ -11,7 +11,7 @@ See the GNU General Public License for more details.
 You should have received a copy of the GNU Affero General Public License along with 'atomes'.
 If not, see <https://www.gnu.org/licenses/>
 
-Copyright (C) 2022-2025 by CNRS and University of Strasbourg */
+Copyright (C) 2022-2026 by CNRS and University of Strasbourg */
 
 /*!
 * @file movie.c
@@ -247,8 +247,8 @@ static GLubyte * capture_opengl_image (unsigned int width, unsigned int height)
 {
   size_t i, nvals;
   nvals = width * height * 4;
-  GLubyte * pixels = g_malloc (nvals * sizeof(GLubyte));
-  GLubyte * rgb = g_malloc (nvals * sizeof(GLubyte));
+  GLubyte * pixels = g_malloc0(nvals * sizeof(GLubyte));
+  GLubyte * rgb = g_malloc0(nvals * sizeof(GLubyte));
   glReadPixels (0, 0, width, height, GL_BGRA, GL_UNSIGNED_BYTE, pixels);
   // Flip data veritcally
   for (i = 0; i < height; i++)
@@ -450,7 +450,7 @@ AVCodecContext * add_codec_context (AVFormatContext * fc, const AVCodec * vc, vi
 */
 VideoStream * add_video_stream (AVFormatContext * fc, const AVCodec * vc, video_options * vopts)
 {
-  VideoStream * stream = g_malloc0 (sizeof*stream);
+  VideoStream * stream = g_malloc0(sizeof*stream);
   stream -> cc = add_codec_context (fc, vc, vopts);
   if (stream -> cc == NULL) return NULL;
 
@@ -522,7 +522,7 @@ gboolean check_to_update_shaders (glwin * view, image * img_a, image * img_b, in
   int i, j, k;
   int stp = img_b -> step;
 
-  if (ogl_q == 0 && img_a -> quality != img_b -> quality)
+  if ((img_a -> ray_tracing != img_b -> ray_tracing) || (ogl_q == 0 && img_a -> quality != img_b -> quality))
   {
     view -> create_shaders[MDBOX] = TRUE;
     view -> create_shaders[MAXIS] = TRUE;
@@ -1107,7 +1107,7 @@ gboolean create_movie (glwin * view, video_options * vopts, gchar * videofile)
   recreate_all_shaders (view);
   for (frame_id=0; frame_id<2; frame_id++)
   {
-    old_cmap[frame_id] = allocint(get_project_by_id(view -> proj) -> steps);
+    old_cmap[frame_id] = allocint (get_project_by_id(view -> proj) -> steps);
     set_old_cmap (view -> anim -> last -> img, 0, frame_id);
   }
   double fraction;

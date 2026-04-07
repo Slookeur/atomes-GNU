@@ -11,7 +11,7 @@ See the GNU General Public License for more details.
 You should have received a copy of the GNU Affero General Public License along with 'atomes'.
 If not, see <https://www.gnu.org/licenses/>
 
-Copyright (C) 2022-2025 by CNRS and University of Strasbourg */
+Copyright (C) 2022-2026 by CNRS and University of Strasbourg */
 
 /*!
 * @file calc_menu.c
@@ -30,18 +30,25 @@ Copyright (C) 2022-2025 by CNRS and University of Strasbourg */
 *
 * List of functions:
 
-  gboolean test_gr (int gr);
-  gboolean test_sq (int sq);
+  gboolean test_gr (int rdf);
+  gboolean test_sq (int fdq);
   gboolean test_bonds ();
   gboolean test_rings ();
-  gboolean test_msd ();
   gboolean test_sph ();
+  gboolean test_msd ();
+  gboolean test_skt ();
 
+  void update_omega_max ();
   void calc_sph (GtkWidget * vbox);
-  void calc_msd (GtkWidget * vbox);
+  void calc_msd (GtkWidget * vbox, int cid);
   void calc_rings (GtkWidget * vbox);
   void calc_bonds (GtkWidget * vbox);
+  void add_advanced_options (int skq, dint skadv[2], GtkWidget * vbox);
+  void add_smoothing_options (int grsqk, GtkWidget * vbox);
   void calc_gr_sq (GtkWidget * box, int id);
+  void add_remove_t_steps_q_vectors (int val, int calc);
+  void add_correlations_options (int cid);
+  void calc_sk_t (GtkWidget * box);
 
   G_MODULE_EXPORT void set_max (GtkEntry * entry, gpointer data);
   G_MODULE_EXPORT void set_delta (GtkEntry * entry, gpointer data);
@@ -59,6 +66,12 @@ Copyright (C) 2022-2025 by CNRS and University of Strasbourg */
   G_MODULE_EXPORT void set_sfact (GtkEntry * entry, gpointer data);
   G_MODULE_EXPORT void on_show_curve_toolbox (GtkWidget * widg, gpointer data);
   G_MODULE_EXPORT void on_smoother_released (GtkButton * button, gpointer data);
+  G_MODULE_EXPORT void set_skt_step_id (GtkEntry * res, gpointer data);
+  G_MODULE_EXPORT void set_sqw_q_id (GtkEntry * res, gpointer data);
+  G_MODULE_EXPORT void set_t_q_spin (GtkSpinButton * res, gpointer data);
+  G_MODULE_EXPORT void set_correlations (GtkEntry * entry, gpointer data);
+  G_MODULE_EXPORT void toggle_skt_all (GtkCheckButton * but, gpointer data);
+  G_MODULE_EXPORT void toggle_skt_all (GtkToggleButton * but, gpointer data);
   G_MODULE_EXPORT void run_on_calc_activate (GtkDialog * dial, gint response_id, gpointer data);
   G_MODULE_EXPORT void on_calc_activate (GtkWidget * widg, gpointer data);
 
@@ -80,12 +93,13 @@ extern G_MODULE_EXPORT void on_calc_gr_released (GtkWidget * widg, gpointer data
 extern G_MODULE_EXPORT void on_calc_gq_released (GtkWidget * widg, gpointer data);
 extern G_MODULE_EXPORT void on_calc_sq_released (GtkWidget * widg, gpointer data);
 extern G_MODULE_EXPORT void on_calc_sk_released (GtkWidget * widg, gpointer data);
+extern G_MODULE_EXPORT void on_calc_skt_released (GtkWidget * widg, gpointer data);
 extern gboolean toggled_rings;
 extern G_MODULE_EXPORT void on_calc_rings_released (GtkWidget * widg, gpointer data);
 extern G_MODULE_EXPORT void on_calc_chains_released (GtkWidget * widg, gpointer data);
 extern G_MODULE_EXPORT void on_calc_msd_released (GtkWidget * widg, gpointer data);
 extern G_MODULE_EXPORT void on_calc_sph_released (GtkWidget * widg, gpointer data);
-extern gchar * calc_img[NCALCS-2];
+extern void dyna_parameters (GtkWidget * vbox, int cid);
 
 GtkWidget * calc_win = NULL;
 GtkWidget * ba_entry[2];
@@ -101,13 +115,10 @@ int search_type;
 GtkWidget * calc_window (int i)
 {
   calc_dialog = dialog_cancel_apply (calc_name[i], MainWindow, FALSE);
-#ifndef GTK4
-  /* GtkWidget * apply_button =
-  button_set_image (GTK_BUTTON(apply_button), calc_name[i], IMG_FILE, (gpointer)calc_img[i]);
-  show_the_widgets (apply_button); */
-#endif
   return calc_dialog;
 }
+
+void add_remove_t_steps_q_vectors (int val, int calc);
 
 /*!
   \fn G_MODULE_EXPORT void set_max (GtkEntry * entry, gpointer data)
@@ -122,18 +133,57 @@ G_MODULE_EXPORT void set_max (GtkEntry * entry, gpointer data)
   int c = GPOINTER_TO_INT(data);
   const gchar * m = entry_get_text (entry);
   double v = string_to_double ((gpointer)m);
-  if (v > 0)
+  if (v > 0.0 && v > active_project -> analysis[c] -> min)
   {
-    if (active_project -> max[c] != v)
+    if (active_project -> analysis[c] -> max != v)
     {
-      active_project -> max[c] = v;
+      active_project -> analysis[c] -> max = v;
+      if (c == SKT)
+      {
+        add_remove_t_steps_q_vectors (active_project -> sqw_n_data_sets, 1);
+      }
       // Max has changed do something !?
     }
   }
-  update_entry_double (entry, active_project -> max[c]);
+  update_entry_double (entry, active_project -> analysis[c] -> max);
 }
 
 GtkWidget * rings_box[2];
+GtkWidget * omega_max_hbox = NULL;
+GtkWidget * omega_max_info = NULL;
+
+/*!
+  \fn void update_omega_max ()
+
+  \brief update omega max information string
+*/
+void update_omega_max ()
+{
+  gchar * freq_unit[5]={" THz", " THz", " MHz", " KHz", " Hz"};
+  gchar * str;
+  omega_max_info = destroy_this_widget(omega_max_info);
+  double delt = (preferences) ? tmp_delta_t[0]: active_project -> analysis[MSD] -> delta;
+  int num_delt = (preferences) ? tmp_num_delta[MSD-2] : active_project -> analysis[MSD] -> num_delta;
+  int t_unit = (preferences) ? (int)tmp_delta_t[1] : active_project -> tunit;
+  if ( delt > 0.0 && num_delt && t_unit > -1)
+  {
+    omega_max_info = create_hbox(0);
+    double omega_max = pi/(delt * num_delt);
+    add_box_child_start (GTK_ORIENTATION_HORIZONTAL, omega_max_info, markup_label ("&#969;<sub>max</sub> =", 50, -1, 0.0, 0.5), FALSE, FALSE, 2);
+    str = g_strdup_printf ("%f", (t_unit == 1) ? omega_max : omega_max * 1000.0);
+    add_box_child_start (GTK_ORIENTATION_HORIZONTAL, omega_max_info, markup_label (str, 100, -1, 1.0, 0.5), FALSE, FALSE, 0);
+    g_free (str);
+    add_box_child_start (GTK_ORIENTATION_HORIZONTAL, omega_max_info, markup_label (freq_unit[t_unit], 50, -1, 0.0, 0.5), FALSE, FALSE, 0);
+  }
+  else
+  {
+    str = g_strdup_printf ("Update step(s) between conf. and &#x3b4;t to evaluate &#969;<sub>max</sub>");
+    omega_max_info = markup_label (str, -1, -1, 0.5, 0.5);
+    g_free (str);
+  }
+  add_box_child_start (GTK_ORIENTATION_HORIZONTAL, omega_max_hbox, omega_max_info, FALSE, FALSE, 5);
+  show_the_widgets (omega_max_hbox);
+}
 
 /*!
   \fn G_MODULE_EXPORT void set_delta (GtkEntry * entry, gpointer data)
@@ -150,7 +200,7 @@ G_MODULE_EXPORT void set_delta (GtkEntry * entry, gpointer data)
   double v = string_to_double ((gpointer)m);
   int i, j, k;
   i = (int)v;
-  if (c == RI)
+  if (c == RIN)
   {
     if (preferences)
     {
@@ -162,27 +212,27 @@ G_MODULE_EXPORT void set_delta (GtkEntry * entry, gpointer data)
       k = active_project -> rsparam[j][1];
     }
   }
-  else if (c == CH)
+  else if (c == CHA)
   {
     k = (preferences) ? tmp_csparam[1] : active_project -> csparam[5];
   }
   else if (c > -1 && ! preferences)
   {
-    k = active_project -> num_delta[c];
+    k = active_project -> analysis[c] -> num_delta;
   }
   if (c < 0 && ! preferences)
   {
     if (v > 0.0)
     {
-      if (active_project -> delta[-c] != v)
+      if (active_project -> analysis[-c] -> delta != v)
       {
-        active_project -> delta[-c] = v;
+        active_project -> analysis[-c] -> delta = v;
       }
     }
   }
   else if (i > 0 && ! preferences)
   {
-    if (c == RI)
+    if (c == RIN)
     {
       if (active_project -> rsparam[j][1] != i)
       {
@@ -190,7 +240,7 @@ G_MODULE_EXPORT void set_delta (GtkEntry * entry, gpointer data)
       }
       k = active_project -> rsparam[j][1] = i;
     }
-    else if (c == CH)
+    else if (c == CHA)
     {
       if (active_project -> csparam[5] != i)
       {
@@ -200,21 +250,22 @@ G_MODULE_EXPORT void set_delta (GtkEntry * entry, gpointer data)
     }
     else
     {
-      if (active_project -> num_delta[c] != i)
+      if (active_project -> analysis[c] -> num_delta != i)
       {
-        active_project -> num_delta[c] = i;
+        active_project -> analysis[c] -> num_delta = i;
       }
-      k = active_project -> num_delta[c];
+      k = active_project -> analysis[c] -> num_delta;
     }
   }
   if (c < 0)
   {
-    update_entry_double (entry, active_project -> delta[-c]);
+    update_entry_double (entry, active_project -> analysis[-c] -> delta);
   }
   else
   {
     update_entry_int (entry, k);
   }
+  if (omega_max_hbox) update_omega_max ();
 }
 
 /*!
@@ -228,6 +279,7 @@ G_MODULE_EXPORT void set_delta (GtkEntry * entry, gpointer data)
 G_MODULE_EXPORT void combox_tunit_changed (GtkComboBox * box, gpointer data)
 {
   active_project -> tunit = combo_get_active ((GtkWidget *)box);
+  if (omega_max_hbox) update_omega_max ();
 }
 
 /*!
@@ -245,46 +297,53 @@ void calc_sph (GtkWidget * vbox)
   add_box_child_start (GTK_ORIENTATION_VERTICAL, vbox, hbox, FALSE, FALSE, 0);
   gchar * str = "Maximum <b><i>l</i></b>, <i>l<sub>max</sub></i> in [2-40]";
   add_box_child_start (GTK_ORIENTATION_HORIZONTAL, hbox,  markup_label (str, 200, -1, 0.0, 0.5), FALSE, FALSE, 0);
-  entry = create_entry (G_CALLBACK(set_delta), 100, 15, FALSE, (gpointer)GINT_TO_POINTER(SP));
-  update_entry_int (GTK_ENTRY(entry), active_project -> num_delta[SP]);
+  entry = create_entry (G_CALLBACK(set_delta), 100, 15, FALSE, (gpointer)GINT_TO_POINTER(SPH));
+  update_entry_int (GTK_ENTRY(entry), active_project -> analysis[SPH] -> num_delta);
   add_box_child_start (GTK_ORIENTATION_HORIZONTAL, hbox, entry, FALSE, FALSE, 0);
 }
 
 /*!
-  \fn void calc_msd (GtkWidget * vbox)
+  \fn void calc_msd (GtkWidget * vbox, int cid)
 
   \brief creation of the MSD calculation widgets
 
   \param vbox GtkWidget that will receive the data
+  \param cid calculation id, MSD or SKT
 */
-void calc_msd (GtkWidget * vbox)
+void calc_msd (GtkWidget * vbox, int cid)
 {
-  int i, j;
+  int i, j, k, l, m;
   gchar * val_b[3]={"Number of configurations:",
                     "\tTime step &#x3b4;t used during the dynamics:",
                     "\tNumber of step(s) between each configuration:"};
+  gchar * val_c[3]={"Number of configurations:",
+                    "Time step &#x3b4;t",
+                    "Step(s) between conf."};
   GtkWidget * hbox;
   GtkWidget * entry;
-  hbox = create_hbox (15);
+  k = (cid == MSD) ? 15 : 0;
+  l = (cid == MSD) ? 350 : 150;
+  m = (cid == MSD) ? 0 : 5;
+  hbox = create_hbox (k);
   add_box_child_start (GTK_ORIENTATION_VERTICAL, vbox, hbox, FALSE, FALSE, 0);
-  add_box_child_start (GTK_ORIENTATION_HORIZONTAL, hbox, gtk_label_new (val_b[0]), FALSE, FALSE, 0);
-  add_box_child_start (GTK_ORIENTATION_HORIZONTAL, hbox, markup_label (g_strdup_printf ("<b>%d</b>",active_project -> steps), -1, 50, 0.5, 0.5), FALSE, FALSE, 0);
+  add_box_child_start (GTK_ORIENTATION_HORIZONTAL, hbox, gtk_label_new (val_b[0]), FALSE, FALSE, m);
+  add_box_child_start (GTK_ORIENTATION_HORIZONTAL, hbox, markup_label (g_strdup_printf ("<b>%d</b>",active_project -> steps), -1, 50, 0.5, 0.5), FALSE, FALSE, 10);
   for (i=1; i<3; i++)
   {
-    hbox = create_hbox (15);
+    hbox = create_hbox (k);
     add_box_child_start (GTK_ORIENTATION_VERTICAL, vbox, hbox, FALSE, FALSE, 0);
-    add_box_child_start (GTK_ORIENTATION_HORIZONTAL, hbox, markup_label (val_b[i], 350, -1, 0.0, 0.5), FALSE, FALSE, 0);
+    add_box_child_start (GTK_ORIENTATION_HORIZONTAL, hbox, markup_label ((cid == MSD) ? val_b[i] : val_c[i], l, -1, 0.0, 0.5), FALSE, FALSE, m);
     if (i == 1)
     {
-      entry = create_entry (G_CALLBACK(set_delta), 100, 15, FALSE, (gpointer)GINT_TO_POINTER(-MS));
-      update_entry_double (GTK_ENTRY(entry), active_project -> delta[MS]);
+      entry = create_entry (G_CALLBACK(set_delta), 100, 15, FALSE, (gpointer)GINT_TO_POINTER(-MSD));
+      update_entry_double (GTK_ENTRY(entry), active_project -> analysis[MSD] -> delta);
     }
     else
     {
-      entry = create_entry (G_CALLBACK(set_delta), 100, 15, FALSE, (gpointer)GINT_TO_POINTER(MS));
-      update_entry_int (GTK_ENTRY(entry), active_project -> num_delta[MS]);
+      entry = create_entry (G_CALLBACK(set_delta), 100, 15, FALSE, (gpointer)GINT_TO_POINTER(MSD));
+      update_entry_int (GTK_ENTRY(entry), active_project -> analysis[MSD] -> num_delta);
     }
-    add_box_child_start (GTK_ORIENTATION_HORIZONTAL, hbox, entry, FALSE, FALSE, 0);
+    add_box_child_start (GTK_ORIENTATION_HORIZONTAL, hbox, entry, FALSE, FALSE, 2*m);
     if (i == 1)
     {
       GtkWidget * tcombo = create_combo ();
@@ -492,15 +551,21 @@ G_MODULE_EXPORT void toggle_rings (GtkToggleButton * but, gpointer data)
       }
       if (oid == 0 && status)
       {
-        for (i=1; i<4; i++) button_set_status(rings_check[i], ! status);
+        for (i=1; i<4; i++)
+        {
+          button_set_status(rings_check[i], ! status);
+          active_project -> csparam[i+1] = ! status;
+        }
       }
       else if (oid == 1 && status)
       {
         button_set_status(rings_check[0], ! status);
+        active_project -> csparam[1] = ! status;
       }
       else if (oid == 2 && status)
       {
         button_set_status(rings_check[1], ! status);
+        active_project -> csparam[2] = ! status;
       }
       break;
   }
@@ -556,7 +621,7 @@ void calc_rings (GtkWidget * vbox)
   add_box_child_start (GTK_ORIENTATION_VERTICAL, vbox, combox_rings (val_a[1], (preferences) ? 2 : active_project -> nspec+1, list_node, 1), FALSE, FALSE, 5);
 
   j = (preferences) ? tmp_rsparam[0] : active_project -> rsearch[0];
-  k = RI + search_type;
+  k = RIN + search_type;
   GtkWidget * hbox;
   for (i=0; i<2; i++)
   {
@@ -599,7 +664,7 @@ void calc_rings (GtkWidget * vbox)
     }
     else
     {
-      status =  (j < 0) ? 0 : (search_type) ? active_project -> csparam[i+1] : active_project -> rsparam[j][i+2];
+      status = (search_type) ? active_project -> csparam[i+1] : active_project -> rsparam[j][i+2];
     }
     rings_check[i] = check_button (val_c[search_type][i], -1, 40, status, G_CALLBACK(toggle_rings), GINT_TO_POINTER(i));
     add_box_child_start (GTK_ORIENTATION_VERTICAL, vbox, rings_check[i], FALSE, FALSE, 0);
@@ -746,17 +811,17 @@ G_MODULE_EXPORT void toggle_bond (GtkToggleButton * Button, gpointer data)
 
   \brief is it safe to compute g(r) ?
 
-  \param gr type of g(r): real space (GR) or FFT (GK)
+  \param rdf type of g(r): real space (GR) or FFT (GK)
 */
-gboolean test_gr (int gr)
+gboolean test_gr (int rdf)
 {
-  if (active_project -> num_delta[gr] < 2)
+  if (active_project -> analysis[rdf] -> num_delta < 2)
   {
     show_warning ("You must specify a number of &#x3b4;r >= 2\n"
                   "to discretize the real space between 0.0 and D<sub>max</sub>\n", calc_win);
     return FALSE;
   }
-  else if (gr == GK && (active_project -> max[gr] > active_project -> max[SK] || active_project -> max[gr] <= active_project -> min[SK]))
+  else if (rdf == GDK && (active_project -> analysis[rdf] -> max > active_project -> analysis[SKD] -> max || active_project -> analysis[rdf] -> max <= active_project -> analysis[SKD] -> min))
   {
     show_warning ("You must specify a maximum wave vector Q<sub>max</sub>[FFT]\n"
                   "for the FFT, with Q<sub>min</sub> < Q<sub>max</sub>[FFT] <= Q<sub>max</sub>", calc_win);
@@ -769,21 +834,21 @@ gboolean test_gr (int gr)
 }
 
 /*!
-  \fn gboolean test_sq (int sq)
+  \fn gboolean test_sq (int fdq)
 
   \brief is it safe to compute s(q) ?
 
-  \param sq type of s(q): FFT (1) or direct (SK)
+  \param fdq type of s(q): 0 = FFT g(r), 1 = Debye, 2 = Dynamic
 */
-gboolean test_sq (int sq)
+gboolean test_sq (int fdq)
 {
-  if (active_project -> max[sq] <= active_project -> min[sq])
+  if (active_project -> analysis[fdq] -> max <= active_project -> analysis[fdq] -> min)
   {
     show_warning ("You must specify a maximum wave vector Q<sub>max</sub>\n"
                   "note that Q<sub>max</sub> must be > Q<sub>min</sub>", calc_win);
     return FALSE;
   }
-  else if (active_project -> num_delta[sq] < 2)
+  else if (active_project -> analysis[fdq] -> num_delta < 2)
   {
     show_warning ("You must specify a number of &#x3b4;q >= 2\n"
                   "to discretize the reciprocal space between 0.0 and Q<sub>max</sub>\n", calc_win);
@@ -802,14 +867,15 @@ gboolean test_sq (int sq)
 */
 gboolean test_bonds ()
 {
-  if (active_project -> runc[0] && active_project -> num_delta[BD] < 2)
+  if (active_project -> runc[0] && active_project -> analysis[BND] -> num_delta < 2)
   {
     show_warning ("You must specify a number of &#x3b4;r >= 2\n"
                   "to discretize the real space between\n"
                   "the shortest and the highest inter-atomic distances", calc_win);
     return FALSE;
   }
-  else if (active_project -> runc[1] && active_project -> num_delta[AN] < 2)
+
+  if (active_project -> runc[1] && active_project -> analysis[ANG] -> num_delta < 2)
   {
     show_warning ("You must specify a number of &#x3b4;&#x3b8; >= 2\n"
                   "to discretize the angular space between 0 and 180°", calc_win);
@@ -860,6 +926,24 @@ gboolean test_rings ()
 }
 
 /*!
+  \fn gboolean test_sph ()
+
+  \brief is it safe to compute spherical harmonics ?
+*/
+gboolean test_sph ()
+{
+  if (active_project -> analysis[SPH] -> num_delta < 2 || active_project -> analysis[SPH] -> num_delta > 40)
+  {
+    show_warning ("You must specify a number <i>l<sub>max</sub></i> in [2-40]", calc_win);
+    return FALSE;
+  }
+  else
+  {
+    return TRUE;
+  }
+}
+
+/*!
   \fn gboolean test_msd ()
 
   \brief is it safe to compute MSD ?
@@ -868,7 +952,7 @@ gboolean test_msd ()
 {
   if(active_project -> steps > 1)
   {
-    if (active_project -> delta[MS] == 0.0)
+    if (active_project -> analysis[MSD] -> delta < 1)
     {
       show_warning ("You must specify the time step &#x3b4;t\n"
                     "used to integrate the Newton's equations\n"
@@ -889,7 +973,7 @@ gboolean test_msd ()
   }
   else
   {
-    if (active_project -> num_delta[MS] < 1)
+    if (active_project -> analysis[MSD] -> num_delta < 1)
     {
       show_warning ("You must specify the number of steps\n"
                     "between each of the %d configurations\n"
@@ -904,20 +988,22 @@ gboolean test_msd ()
 }
 
 /*!
-  \fn gboolean test_sph ()
+  \fn gboolean test_skt ()
 
-  \brief is it safe to compute spherical harmonics ?
+  \brief is it safe to compute dynamic structure factors ?
 */
-gboolean test_sph ()
+gboolean test_skt ()
 {
-  if (active_project -> num_delta[SP] < 2 || active_project -> num_delta[SP] > 40)
+  if (! test_sq(SKT)) return FALSE;
+  if (! test_msd()) return FALSE;
+  if (active_project -> sqw_freq > 0)
   {
-    show_warning ("You must specify a number <i>l<sub>max</sub></i> in [2-40]", calc_win);
-    return FALSE;
+    return TRUE;
   }
   else
   {
-    return TRUE;
+    show_warning ("You must specify the number of frequency points\n", calc_win);
+    return FALSE;
   }
 }
 
@@ -949,8 +1035,8 @@ void calc_bonds (GtkWidget * vbox)
       hbox = create_hbox (0);
       add_box_child_start (GTK_ORIENTATION_VERTICAL, vbox, hbox, FALSE, FALSE, 0);
       add_box_child_start (GTK_ORIENTATION_HORIZONTAL, hbox, markup_label (val_a[i], 200, -1, 0.0, 0.5), FALSE, FALSE, 0);
-      ba_entry[i] = create_entry (G_CALLBACK(set_delta), 150, 15, FALSE, (gpointer)GINT_TO_POINTER(BD+i));
-      update_entry_int (GTK_ENTRY(ba_entry[i]), active_project -> num_delta[BD+i]);
+      ba_entry[i] = create_entry (G_CALLBACK(set_delta), 150, 15, FALSE, (gpointer)GINT_TO_POINTER(BND+i));
+      update_entry_int (GTK_ENTRY(ba_entry[i]), active_project -> analysis[BND+i] -> num_delta);
       widget_set_sensitive (ba_entry[i], active_project -> runc[i]);
       add_box_child_start (GTK_ORIENTATION_HORIZONTAL, hbox, ba_entry[i], FALSE, FALSE, 0);
     }
@@ -974,7 +1060,7 @@ GtkWidget * hbox_note (int i, double val)
   gchar * unit[3] = {" &#xC5;", " &#xC5;<sup>-1</sup>", " &#xC5;<sup>-1</sup>"};
   gchar * str;
   GtkWidget * hbox = create_hbox (0);
-  add_box_child_start (GTK_ORIENTATION_HORIZONTAL, hbox, markup_label (note[i], 50, -1, 0.0, 0.5), FALSE, FALSE, 0);
+  add_box_child_start (GTK_ORIENTATION_HORIZONTAL, hbox, markup_label (note[i], 50, -1, 0.0, 0.5), FALSE, FALSE, 5);
   str = g_strdup_printf ("%f", val);
   add_box_child_start (GTK_ORIENTATION_HORIZONTAL, hbox, markup_label (str, 100, -1, 1.0, 0.5), FALSE, FALSE, 0);
   g_free (str);
@@ -984,6 +1070,7 @@ GtkWidget * hbox_note (int i, double val)
 
 GtkWidget * avbox;
 GtkWidget * smbox;
+dint skadv[2];
 int avsize;
 
 /*!
@@ -1038,25 +1125,28 @@ G_MODULE_EXPORT void expand_opt (GtkWidget * exp, gpointer data)
 */
 G_MODULE_EXPORT void set_advanced_sq (GtkEntry * entry, gpointer data)
 {
-  int c = GPOINTER_TO_INT(data);
+  dint * idc = (dint *)data;
   const gchar * m = entry_get_text (entry);
   double v = string_to_double ((gpointer)m);
-  if (v != active_project -> sk_advanced[c])
+  double qmin = active_project -> analysis[idc -> a] -> min;
+  double qmax = active_project -> analysis[idc -> a] -> max;
+  int idk = (idc -> a == SKD) ? 0 : 1;
+  if (v != active_project -> sk_advanced[idk][idc -> b])
   {
-    if (c == 0 && (v < 0.0 || v > 1.0))
+    if (idc -> b == 0 && (v < 0.0 || v > 1.0))
     {
       show_warning ("You must specify a probability between 0.0 and 1.0", calc_win);
     }
-    else if (c == 1 && (v < active_project -> min[SK] || v > active_project -> max[SK]))
+    else if (idc -> b == 1 && (v < qmin || v > qmax))
     {
       show_warning ("Q<sub>lim</sub> must be &#8805; Q<sub>min</sub> and &#8804; Q<sub>max</sub>", calc_win);
     }
     else
     {
-      active_project -> sk_advanced[c] = v;
+      active_project -> sk_advanced[idk][idc -> b] = v;
     }
   }
-  update_entry_double (entry, active_project -> sk_advanced[c]);
+  update_entry_double (entry, active_project -> sk_advanced[idk][idc -> b]);
 }
 
 /*!
@@ -1079,9 +1169,9 @@ G_MODULE_EXPORT void set_sfact (GtkEntry * entry, gpointer data)
   }
   else
   {
-    active_project -> fact[i] = v;
+    active_project -> analysis[i] -> fact = v;
   }
-  update_entry_double (entry, active_project -> fact[i]);
+  update_entry_double (entry, active_project -> analysis[i] -> fact);
 }
 
 /*!
@@ -1114,149 +1204,225 @@ G_MODULE_EXPORT void on_show_curve_toolbox (GtkWidget * widg, gpointer data)
 */
 G_MODULE_EXPORT void on_smoother_released (GtkButton * button, gpointer data)
 {
-  int i, k, l, m;
+  int g, h, i, j, k, l, m;
 
   l = GPOINTER_TO_INT(data);
-  if (active_project -> visok[l])
+  if (active_project -> analysis[l] -> calc_ok)
   {
-    if (l == 2)
+    if (l == SKD || l == SKT)
     {
-      xsk = duplicate_double(active_project -> curves[l][0] -> ndata, active_project -> curves[l][0] -> data[0]);
+      xsk = duplicate_double(active_project -> analysis[l] -> curves[0] -> ndata, active_project -> analysis[l] -> curves[0] -> data[0]);
     }
-    i = 1;
-    smooth_and_save_ (active_project -> curves[l][i-1] -> data[0],
-                      active_project -> curves[l][i-1] -> data[1],
-                      & active_project -> fact[l],
-                      & i,
-                      & active_project -> curves[l][i-1] -> ndata,
-                      & l);
-    i = i+2;
-    smooth_and_save_ (active_project -> curves[l][i-1] -> data[0],
-                      active_project -> curves[l][i-1] -> data[1],
-                      & active_project -> fact[l],
-                      & i,
-                      & active_project -> curves[l][i-1] -> ndata,
-                      & l);
-    i = i+2;
-    smooth_and_save_ (active_project -> curves[l][i-1] -> data[0],
-                      active_project -> curves[l][i-1] -> data[1],
-                      & active_project -> fact[l],
-                      & i,
-                      & active_project -> curves[l][i-1] -> ndata,
-                      & l);
-    i = i+2;
-    smooth_and_save_ (active_project -> curves[l][i-1] -> data[0],
-                      active_project -> curves[l][i-1] -> data[1],
-                      & active_project -> fact[l],
-                      & i,
-                      & active_project -> curves[l][i-1] -> ndata,
-                      & l);
-    if (l == 0 || l == 3)
+    g = (l == SKT) ? (active_project -> skt_all_sets) ? active_project -> steps - active_project -> skt_corr_threshold : active_project -> skt_n_data_sets : 1;
+    h = (l == SKT) ? active_project -> analysis[SKD] -> numc : 1;
+    for (j=0; j<g; j++)
     {
-      i = i+2;
-      smooth_and_save_ (active_project -> curves[l][i-1] -> data[0],
-                        active_project -> curves[l][i-1] -> data[1],
-                        & active_project -> fact[l],
+      i = 1 + j*h;
+      smooth_and_save_ (active_project -> analysis[l] -> curves[i-1] -> data[0],
+                        active_project -> analysis[l] -> curves[i-1] -> data[1],
+                        & active_project -> analysis[l] -> fact,
                         & i,
-                        & active_project -> curves[l][i-1] -> ndata,
+                        & active_project -> analysis[l] -> curves[i-1] -> ndata,
                         & l);
       i = i+2;
-      smooth_and_save_ (active_project -> curves[l][i-1] -> data[0],
-                        active_project -> curves[l][i-1] -> data[1],
-                        & active_project -> fact[l],
+      smooth_and_save_ (active_project -> analysis[l] -> curves[i-1] -> data[0],
+                        active_project -> analysis[l] -> curves[i-1] -> data[1],
+                        & active_project -> analysis[l] -> fact,
                         & i,
-                        & active_project -> curves[l][i-1] -> ndata,
+                        & active_project -> analysis[l] -> curves[i-1] -> ndata,
                         & l);
       i = i+2;
-      smooth_and_save_ (active_project -> curves[l][i-1] -> data[0],
-                        active_project -> curves[l][i-1] -> data[1],
-                        & active_project -> fact[l],
+      smooth_and_save_ (active_project -> analysis[l] -> curves[i-1] -> data[0],
+                        active_project -> analysis[l] -> curves[i-1] -> data[1],
+                        & active_project -> analysis[l] -> fact,
                         & i,
-                        & active_project -> curves[l][i-1] -> ndata,
+                        & active_project -> analysis[l] -> curves[i-1] -> ndata,
                         & l);
       i = i+2;
-      smooth_and_save_ (active_project -> curves[l][i-1] -> data[0],
-                        active_project -> curves[l][i-1] -> data[1],
-                        & active_project -> fact[l],
+      smooth_and_save_ (active_project -> analysis[l] -> curves[i-1] -> data[0],
+                        active_project -> analysis[l] -> curves[i-1] -> data[1],
+                        & active_project -> analysis[l] -> fact,
                         & i,
-                        & active_project -> curves[l][i-1] -> ndata,
+                        & active_project -> analysis[l] -> curves[i-1] -> ndata,
                         & l);
-    }
-    for (k=0 ; k<active_project -> nspec ; k++)
-    {
-      for (m=0 ; m<active_project -> nspec ; m++)
+      if (l ==GDR || l == GDK)
       {
         i = i+2;
-        smooth_and_save_ (active_project -> curves[l][i-1] -> data[0],
-                          active_project -> curves[l][i-1] -> data[1],
-                          & active_project -> fact[l],
+        smooth_and_save_ (active_project -> analysis[l] -> curves[i-1] -> data[0],
+                          active_project -> analysis[l] -> curves[i-1] -> data[1],
+                          & active_project -> analysis[l] -> fact,
                           & i,
-                          & active_project -> curves[l][i-1] -> ndata,
+                          & active_project -> analysis[l] -> curves[i-1] -> ndata,
                           & l);
-        if (l == 0 || l == 3)
-        {
-          i = i+2;
-          smooth_and_save_ (active_project -> curves[l][i-1] -> data[0],
-                            active_project -> curves[l][i-1] -> data[1],
-                            & active_project -> fact[l],
-                            & i,
-                            & active_project -> curves[l][i-1] -> ndata,
-                            & l);
-          i = i+1;
-        }
+        i = i+2;
+        smooth_and_save_ (active_project -> analysis[l] -> curves[i-1] -> data[0],
+                          active_project -> analysis[l] -> curves[i-1] -> data[1],
+                          & active_project -> analysis[l] -> fact,
+                          & i,
+                          & active_project -> analysis[l] -> curves[i-1] -> ndata,
+                          & l);
+        i = i+2;
+        smooth_and_save_ (active_project -> analysis[l] -> curves[i-1] -> data[0],
+                          active_project -> analysis[l] -> curves[i-1] -> data[1],
+                          & active_project -> analysis[l] -> fact,
+                          & i,
+                          & active_project -> analysis[l] -> curves[i-1] -> ndata,
+                          & l);
+        i = i+2;
+        smooth_and_save_ (active_project -> analysis[l] -> curves[i-1] -> data[0],
+                          active_project -> analysis[l] -> curves[i-1] -> data[1],
+                          & active_project -> analysis[l] -> fact,
+                          & i,
+                          & active_project -> analysis[l] -> curves[i-1] -> ndata,
+                          & l);
       }
-    }
-    if (l == 1 || l == 2)
-    {
       for (k=0 ; k<active_project -> nspec ; k++)
       {
         for (m=0 ; m<active_project -> nspec ; m++)
         {
           i = i+2;
-          smooth_and_save_ (active_project -> curves[l][i-1] -> data[0],
-                            active_project -> curves[l][i-1] -> data[1],
-                            & active_project -> fact[l],
+          smooth_and_save_ (active_project -> analysis[l] -> curves[i-1] -> data[0],
+                            active_project -> analysis[l] -> curves[i-1] -> data[1],
+                            & active_project -> analysis[l] -> fact,
                             & i,
-                            & active_project -> curves[l][i-1] -> ndata,
+                            & active_project -> analysis[l] -> curves[i-1] -> ndata,
                             & l);
+          if (l == GDR || l == GDK)
+          {
+            i = i+2;
+            smooth_and_save_ (active_project -> analysis[l] -> curves[i-1] -> data[0],
+                              active_project -> analysis[l] -> curves[i-1] -> data[1],
+                              & active_project -> analysis[l] -> fact,
+                              & i,
+                              & active_project -> analysis[l] -> curves[i-1] -> ndata,
+                              & l);
+            i = i+1;
+          }
+        }
+      }
+      if (l == SQD || l == SKD || l == SKT)
+      {
+        for (k=0 ; k<active_project -> nspec ; k++)
+        {
+          for (m=0 ; m<active_project -> nspec ; m++)
+          {
+            i = i+2;
+            smooth_and_save_ (active_project -> analysis[l] -> curves[i-1] -> data[0],
+                              active_project -> analysis[l] -> curves[i-1] -> data[1],
+                              & active_project -> analysis[l] -> fact,
+                              & i,
+                              & active_project -> analysis[l] -> curves[i-1] -> ndata,
+                              & l);
+          }
+        }
+      }
+      if (active_project -> nspec == 2)
+      {
+        m = 3;
+        if (l == SQD || l == SKD || l == SKT) m = m+1;
+        for (k=0 ; k<m; k++)
+        {
+          i = i+2;
+          smooth_and_save_ (active_project -> analysis[l] -> curves[i-1] -> data[0],
+                            active_project -> analysis[l] -> curves[i-1] -> data[1],
+                            & active_project -> analysis[l] -> fact,
+                            & i,
+                            & active_project -> analysis[l] -> curves[i-1] -> ndata,
+                           & l);
         }
       }
     }
-    if (active_project -> nspec == 2)
-    {
-      m = 3;
-      if (l == 1 || l == 2) m = m+1;
-      for (k=0 ; k<m; k++)
-      {
-        i = i+2;
-        smooth_and_save_ (active_project -> curves[l][i-1] -> data[0],
-                          active_project -> curves[l][i-1] -> data[1],
-                          & active_project -> fact[l],
-                          & i,
-                          & active_project -> curves[l][i-1] -> ndata,
-                          & l);
-      }
-    }
-    if (l == 2)
+    if (l == SKD || l == SKT)
     {
       g_free (xsk);
       xsk = NULL;
     }
     fill_tool_model ();
     show_the_widgets (curvetoolbox);
-    if (l == 0 || l == 3)
+    if (l == GDR || l == GDK)
     {
       for (i=0; i<4; i=i+3) update_after_calc (i);
     }
-    else
+    else if (l == SQD || l == SKD)
     {
       for (i=1; i<3; i++) update_after_calc (i);
+    }
+    else
+    {
+      update_after_calc (l);
     }
   }
   else
   {
     show_error ("No data set(s) to be smoothed\n", 0, calc_win);
   }
+}
+
+/*!
+  \fn void add_advanced_options (int skq, dint skadv[2], GtkWidget * vbox)
+
+  \brief add k-point selection advanced options
+
+  \param skq calculation ID (SKD or SKT)
+  \param skadv associated pointers
+  \param vbox target box widget
+*/
+void add_advanced_options (int skq, dint skadv[2], GtkWidget * vbox)
+{
+  gchar * adv_name[2]={"Probability to keep wave\nvector <i>q</i> > Q<sub>lim</sub> [0.0-1.0]",
+                       "Q<sub>lim</sub> [&#xC5;<sup>-1</sup>] in [Q<sub>min</sub>-Q<sub>max</sub>]"};
+  GtkWidget * advanced_options = create_expander ("  Advanced options", NULL);
+  gtk_widget_set_size_request (advanced_options, -1, 20);
+  add_box_child_start (GTK_ORIENTATION_VERTICAL, vbox, advanced_options, FALSE, TRUE, 10);
+  avbox = create_vbox (5);
+  GtkWidget * ahbox;
+  GtkWidget * fixed;
+  GtkWidget * aentry;
+  int i, j;
+  i = (skq == SKT) ? 1 : 0;
+  for (j=0; j<2; j++)
+  {
+    ahbox = create_hbox (5);
+    add_box_child_start (GTK_ORIENTATION_VERTICAL, avbox, ahbox, FALSE, FALSE, 5);
+    add_box_child_start (GTK_ORIENTATION_HORIZONTAL, ahbox, markup_label (adv_name[j], 175, -1, 0.0, 0.5), FALSE, FALSE, 5);
+    aentry = create_entry (G_CALLBACK(set_advanced_sq), 100, 15, FALSE, & skadv[j]);
+    update_entry_double (GTK_ENTRY(aentry), active_project -> sk_advanced[i][j]);
+    fixed = gtk_fixed_new ();
+    gtk_fixed_put (GTK_FIXED(fixed), aentry, 0.0, 0.0);
+    add_box_child_start (GTK_ORIENTATION_HORIZONTAL, ahbox, fixed, FALSE, FALSE, 10);
+  }
+  g_signal_connect (G_OBJECT(advanced_options), "activate", G_CALLBACK(expand_opt), GINT_TO_POINTER(i));
+  add_container_child (CONTAINER_EXP, advanced_options, avbox);
+  show_the_widgets (advanced_options);
+  widget_set_sensitive (advanced_options, 1);
+}
+
+/*!
+  \fn void add_smoothing_options (int grsqk, GtkWidget * vbox)
+
+  \brief add gaussian smoothing options
+
+  \param calculation ID (GDR, SQD, SKD, GDK or SKT)
+  \param vbox target box widget
+*/
+void add_smoothing_options (int grsqk, GtkWidget * vbox)
+{
+  GtkWidget * smooth_options = create_expander ("  Gaussian data smoothing", NULL);
+  gtk_widget_set_size_request (smooth_options, -1, 20);
+  add_box_child_start (GTK_ORIENTATION_VERTICAL, vbox, smooth_options, FALSE, TRUE, 10);
+  GtkWidget * avbox = create_vbox (5);
+  GtkWidget * smbox = create_hbox (0);
+  add_box_child_start (GTK_ORIENTATION_HORIZONTAL, smbox, gtk_label_new("Factor [0.0-1.0]"), FALSE, FALSE, 0);
+  GtkWidget * sentry = create_entry (G_CALLBACK(set_sfact), 100, 15, FALSE, GINT_TO_POINTER(grsqk));
+  update_entry_double (GTK_ENTRY(sentry), active_project -> analysis[grsqk] -> fact);
+  add_box_child_start (GTK_ORIENTATION_HORIZONTAL, smbox, sentry, FALSE, TRUE, 10);
+  GtkWidget * smooth = create_button ("Smooth", IMG_NONE, NULL, -1, -1, GTK_RELIEF_NORMAL, G_CALLBACK(on_smoother_released), GINT_TO_POINTER(grsqk));
+  g_signal_connect (G_OBJECT(smooth_options), "activate", G_CALLBACK(expand_opt), GINT_TO_POINTER(0));
+  add_box_child_start (GTK_ORIENTATION_HORIZONTAL, smbox, smooth, FALSE, FALSE, 0);
+  add_box_child_start (GTK_ORIENTATION_VERTICAL, avbox, smbox, FALSE, FALSE, 5);
+  add_container_child (CONTAINER_EXP, smooth_options, avbox);
+  show_the_widgets (smooth_options);
+  widget_set_sensitive (smooth_options, 1);
 }
 
 /*!
@@ -1277,41 +1443,47 @@ void calc_gr_sq (GtkWidget * box, int id)
                     "Q<sub>max</sub> [&#xC5;<sup>-1</sup>]",
                     "Q<sub>max</sub> for the FFT [&#xC5;<sup>-1</sup>]"};
 
+  if (id == SKD)
+  {
+    skadv[0].a = skadv[1].a = SKD;
+    skadv[0].b = 0;
+    skadv[1].b = 1;
+  }
   GtkWidget * vbox = create_vbox (5);
   add_box_child_start (GTK_ORIENTATION_VERTICAL, box, vbox, FALSE, FALSE, 0);
   GtkWidget * hbox = create_hbox (0);
   add_box_child_start (GTK_ORIENTATION_VERTICAL, vbox, hbox, FALSE, FALSE, 0);
   add_box_child_start (GTK_ORIENTATION_HORIZONTAL, hbox, markup_label (val_a[id], 150, -1, 0.0, 0.5), FALSE, FALSE, 10);
   GtkWidget * entry= create_entry (G_CALLBACK(set_delta), 100, 15, FALSE, GINT_TO_POINTER(id));
-  update_entry_int (GTK_ENTRY(entry), active_project -> num_delta[id]);
+  update_entry_int (GTK_ENTRY(entry), active_project -> analysis[id] -> num_delta);
   add_box_child_start (GTK_ORIENTATION_HORIZONTAL, hbox, entry, FALSE, FALSE, 10);
-  if (id > GR)
+  if (id > GDR)
   {
     hbox = create_hbox (0);
     add_box_child_start (GTK_ORIENTATION_VERTICAL, vbox, hbox, FALSE, FALSE, 0);
     add_box_child_start (GTK_ORIENTATION_HORIZONTAL, hbox, markup_label (val_b[id-1], 150, -1, 0.0, 0.5), FALSE, FALSE, 10);
     GtkWidget * entry= create_entry (G_CALLBACK(set_max), 100, 15, FALSE, GINT_TO_POINTER(id));
-    update_entry_double (GTK_ENTRY(entry), active_project -> max[id]);
+    update_entry_double (GTK_ENTRY(entry), active_project -> analysis[id] -> max);
     add_box_child_start (GTK_ORIENTATION_HORIZONTAL, hbox, entry, FALSE, FALSE, 10);
   }
 
-  if (id == GR || id == GK)
+  if (id == GDR || id == GDK)
   {
-    add_box_child_start (GTK_ORIENTATION_VERTICAL, vbox, hbox_note (0, active_project -> max[GR]), FALSE, FALSE, 0);
+    add_box_child_start (GTK_ORIENTATION_VERTICAL, vbox, hbox_note (0, active_project -> analysis[GDR] -> max), FALSE, FALSE, 0);
   }
-  if (id == SQ)
+  if (id == SQD)
   {
-    add_box_child_start (GTK_ORIENTATION_VERTICAL, vbox, hbox_note (1, active_project -> min[SQ]), FALSE, FALSE, 0);
+    add_box_child_start (GTK_ORIENTATION_VERTICAL, vbox, hbox_note (1, active_project -> analysis[SQD] -> min), FALSE, FALSE, 0);
   }
-  if (id == SK|| id == GK)
+  if (id == SKD|| id == GDK)
   {
-    add_box_child_start (GTK_ORIENTATION_VERTICAL, vbox, hbox_note (1, active_project -> min[SK]), FALSE, FALSE, 0);
+    add_box_child_start (GTK_ORIENTATION_VERTICAL, vbox, hbox_note (1, active_project -> analysis[SKD] -> min), FALSE, FALSE, 0);
   }
-  if (id == GK)
+  if (id == GDK)
   {
-    add_box_child_start (GTK_ORIENTATION_VERTICAL, vbox, hbox_note (2, active_project -> max[SK]), FALSE, FALSE, 0);
+    add_box_child_start (GTK_ORIENTATION_VERTICAL, vbox, hbox_note (2, active_project -> analysis[SKD] -> max), FALSE, FALSE, 0);
   }
-  if (id == GR || id == GK)
+  if (id == GDR || id == GDK)
   {
     add_box_child_start (GTK_ORIENTATION_VERTICAL, vbox,
                          markup_label ("D<sub>max</sub> is the maximum inter-atomic distance in the model", -1, -1, 0.0, 0.5),
@@ -1323,7 +1495,7 @@ void calc_gr_sq (GtkWidget * box, int id)
                          markup_label ("Q<sub>min</sub> is the minimum wave vector for the model", -1, -1, 0.0, 0.5),
                          FALSE, FALSE, 0);
   }
-  if (id == GK)
+  if (id == GDK)
   {
     add_box_child_start (GTK_ORIENTATION_VERTICAL, vbox,
                          markup_label ("Q<sub>max</sub> is the maximum wave vector to compute S(q)", -1, -1, 0.0, 0.5),
@@ -1332,51 +1504,462 @@ void calc_gr_sq (GtkWidget * box, int id)
 
   vbox = create_vbox (BSEP);
   add_box_child_start (GTK_ORIENTATION_VERTICAL, box, vbox, FALSE, FALSE, 0);
-  GtkWidget * aentry;
-  if (id == SK)
+
+  if (id == SKD) add_advanced_options (SKD, skadv, vbox);
+
+  add_smoothing_options (id, vbox);
+}
+
+GtkWidget * skt_all_info;
+GtkWidget * sktqw_vbox[2];
+GtkWidget * sktqw_delta[2];
+GtkWidget * t_q_vbox[2];
+GtkWidget * skt_res_info;
+
+/*!
+  \fn G_MODULE_EXPORT void set_skt_step_id (GtkEntry * res, gpointer data)
+
+  \brief set "to be saved" step id
+
+  \param res the GtkEntry sending the signal
+  \param data the associated data pointer
+*/
+G_MODULE_EXPORT void set_skt_step_id (GtkEntry * res, gpointer data)
+{
+  int sid = GPOINTER_TO_INT (data);
+  const gchar * m = entry_get_text (res);
+  int v = (int) string_to_double ((gpointer)m);
+  if (sid && sid < active_project -> skt_n_data_sets - 1)
   {
-    gchar * adv_name[2]={"Probability to keep wave\nvector <i>q</i> > Q<sub>lim</sub> [0.0-1.0]",
-                         "Q<sub>lim</sub> [&#xC5;<sup>-1</sup>] in [Q<sub>min</sub>-Q<sub>max</sub>]"};
-    GtkWidget * advanced_options = create_expander ("  Advanced options", NULL);
-    gtk_widget_set_size_request (advanced_options, -1, 20);
-    add_box_child_start (GTK_ORIENTATION_VERTICAL, vbox, advanced_options, FALSE, TRUE, 10);
-    avbox = create_vbox (5);
-    GtkWidget * ahbox;
-    GtkWidget * fixed;
-    int i;
-    for (i=0; i<2; i++)
+    if (v > active_project -> skt_step_id[sid-1] && v < active_project -> skt_step_id[sid+1]) active_project -> skt_step_id[sid] = v;
+  }
+  else if (sid)
+  {
+    if (v > active_project -> skt_step_id[sid-1]) active_project -> skt_step_id[sid] = v;
+  }
+  else if (! sid && active_project -> skt_n_data_sets > 1)
+  {
+    if (v < active_project -> skt_step_id[sid+1]) active_project -> skt_step_id[sid] = v;
+  }
+  update_entry_int (res, active_project -> skt_step_id[sid]);
+}
+
+/*!
+  \fn G_MODULE_EXPORT void set_sqw_q_id (GtkEntry * res, gpointer data)
+
+  \brief set "to be saved" q vector
+
+  \param res the GtkEntry sending the signal
+  \param data the associated data pointer
+*/
+G_MODULE_EXPORT void set_sqw_q_id (GtkEntry * res, gpointer data)
+{
+  int sid = GPOINTER_TO_INT (data);
+  const gchar * m = entry_get_text (res);
+  double v = string_to_double ((gpointer)m);
+  if (sid && sid < active_project -> sqw_n_data_sets - 1)
+  {
+    if (v > active_project -> sqw_q_id[sid-1] && v < active_project -> sqw_q_id[sid+1]) active_project -> sqw_q_id[sid] = v;
+  }
+  else if (sid)
+  {
+    if (v > active_project -> sqw_q_id[sid-1] && v <= active_project -> analysis[SKT] -> max) active_project -> sqw_q_id[sid] = v;
+  }
+  else if (! sid && active_project -> sqw_n_data_sets > 1)
+  {
+    if (v < active_project -> sqw_q_id[sid+1] && v >= active_project -> analysis[SKT] -> min) active_project -> sqw_q_id[sid] = v;
+  }
+  update_entry_double (res, active_project -> sqw_q_id[sid]);
+}
+
+/*!
+  \fn void add_remove_t_steps_q_vectors (int val, int calc)
+
+  \brief add or remove t steps results to save
+
+  \param val total number of t steps
+  \param calc 0 = S(k,t), 1 = S(q,w)
+*/
+void add_remove_t_steps_q_vectors (int val, int calc)
+{
+  t_q_vbox[calc] = destroy_this_widget (t_q_vbox[calc]);
+  switch (calc)
+  {
+    case 0:
+      if (active_project -> skt_step_id) g_free (active_project -> skt_step_id);
+      active_project -> skt_step_id = NULL;
+      break;
+    case 1:
+      if (active_project -> sqw_q_id) g_free (active_project -> sqw_q_id);
+      active_project -> sqw_q_id = NULL;
+      break;
+  }
+  if (val)
+  {
+    t_q_vbox[calc] = create_vbox(0);
+    add_box_child_start (GTK_ORIENTATION_VERTICAL, sktqw_delta[calc], t_q_vbox[calc], FALSE, FALSE, 0);
+    int delta_t;
+    double delta_q;
+    if (! calc)
     {
-      ahbox = create_hbox (5);
-      add_box_child_start (GTK_ORIENTATION_VERTICAL, avbox, ahbox, FALSE, FALSE, 5);
-      add_box_child_start (GTK_ORIENTATION_HORIZONTAL, ahbox, markup_label (adv_name[i], 175, -1, 0.0, 0.5), FALSE, FALSE, 5);
-      aentry = create_entry (G_CALLBACK(set_advanced_sq), 100, 15, FALSE, GINT_TO_POINTER(i));
-      update_entry_double (GTK_ENTRY(aentry), active_project -> sk_advanced[i]);
-      fixed = gtk_fixed_new ();
-      gtk_fixed_put (GTK_FIXED(fixed), aentry, 0.0, 0.0);
-      add_box_child_start (GTK_ORIENTATION_HORIZONTAL, ahbox, fixed, FALSE, FALSE, 10);
+      active_project -> skt_n_data_sets = min (val, active_project -> steps - active_project -> skt_corr_threshold);
+      delta_t = (active_project -> steps - active_project -> skt_corr_threshold) / active_project -> skt_n_data_sets;
+      active_project -> skt_step_id = allocint (active_project -> skt_n_data_sets);
     }
-    g_signal_connect (G_OBJECT(advanced_options), "activate", G_CALLBACK(expand_opt), GINT_TO_POINTER(1));
-    add_container_child (CONTAINER_EXP, advanced_options, avbox);
-    show_the_widgets (advanced_options);
-    widget_set_sensitive (advanced_options, 1);
+    else
+    {
+      active_project -> sqw_n_data_sets = val;
+      active_project -> sqw_q_id = allocdouble (active_project -> sqw_n_data_sets);
+      delta_q = (active_project -> analysis[SKT] -> max - active_project -> analysis[SKT] -> min)/active_project -> sqw_n_data_sets;
+
+    }
+    int i, j;
+    GtkWidget * hbox;
+    GtkWidget * entry;
+    j = (! calc) ? active_project -> skt_n_data_sets : active_project -> sqw_n_data_sets;
+    for (i=0; i<j; i++)
+    {
+      if (! calc)
+      {
+        active_project -> skt_step_id[i] = 1 + i*delta_t;
+      }
+      else
+      {
+        active_project -> sqw_q_id[i] = active_project -> analysis[SKT] -> min + i*delta_q;
+      }
+      hbox = create_hbox (0);
+      add_box_child_start (GTK_ORIENTATION_VERTICAL, t_q_vbox[calc], hbox, FALSE, FALSE, 0);
+      if (! calc)
+      {
+        add_box_child_start (GTK_ORIENTATION_HORIZONTAL, hbox, markup_label (g_strdup_printf("%d)\t&#x3b4;t= ", i+1), 150, -1, 0.75, 0.5), FALSE, FALSE, 10);
+        entry = create_entry (G_CALLBACK(set_skt_step_id), 100, 15, FALSE, GINT_TO_POINTER(i));
+        update_entry_int (GTK_ENTRY(entry), active_project -> skt_step_id[i]);
+      }
+      else
+      {
+        add_box_child_start (GTK_ORIENTATION_HORIZONTAL, hbox, markup_label (g_strdup_printf("%d)\tq= ", i+1), 150, -1, 0.75, 0.5), FALSE, FALSE, 10);
+        entry = create_entry (G_CALLBACK(set_sqw_q_id), 100, 15, FALSE, GINT_TO_POINTER(i));
+        update_entry_double (GTK_ENTRY(entry), active_project -> sqw_q_id[i]);
+      }
+      add_box_child_start (GTK_ORIENTATION_HORIZONTAL, hbox, entry, FALSE, FALSE, 10);
+    }
+    show_the_widgets (sktqw_delta[calc]);
+  }
+}
+
+/*!
+  \fn G_MODULE_EXPORT void set_t_q_spin (GtkSpinButton * res, gpointer data)
+
+  \brief set the number of t steps results to save - spin button
+
+  \param res the GtkSpinButton sending the signal
+  \param data the associated data pointer
+*/
+G_MODULE_EXPORT void set_t_q_spin (GtkSpinButton * res, gpointer data)
+{
+  if (! preferences) add_remove_t_steps_q_vectors (gtk_spin_button_get_value_as_int(res), GPOINTER_TO_INT(data));
+}
+
+/*!
+  \fn void add_correlations_options (int cid)
+
+  \brief add correlation(s) options to the S(k,t) calculation dialog
+
+  \param cid calculation ID: 0 = S(k,t), 1 = S(q,w)
+*/
+void add_correlations_options (int cid)
+{
+  sktqw_delta[cid] = create_vbox(0);
+  t_q_vbox[cid] = NULL;
+  add_box_child_start (GTK_ORIENTATION_VERTICAL, sktqw_vbox[cid], sktqw_delta[cid], FALSE, FALSE, 0);
+  gchar * val_a=(! cid) ? "Number of <b>&#x3b4;t</b> results to save" : "Number of <b>q</b> vectors to analyze";
+  GtkWidget * hbox = create_hbox (0);
+  add_box_child_start (GTK_ORIENTATION_VERTICAL, sktqw_delta[cid], hbox, FALSE, FALSE, 5);
+  add_box_child_start (GTK_ORIENTATION_HORIZONTAL, hbox, markup_label (val_a, 150, -1, 0.0, 0.5), FALSE, FALSE, 10);
+  int val, vbl;
+  if (! cid)
+  {
+    val = (preferences) ? tmp_skt_n_sets : active_project -> skt_n_data_sets;
+    vbl = (preferences) ? 100 : active_project -> steps-active_project -> skt_corr_threshold;
+  }
+  else
+  {
+    val = (preferences) ? tmp_sqw_n_sets : active_project -> sqw_n_data_sets;
+    vbl = 100;
+  }
+  GtkWidget * spin = spin_button (G_CALLBACK(set_t_q_spin), val, 1.0, vbl, 1.0, 0, 100, GINT_TO_POINTER(cid));
+  gtk_widget_set_size_request (spin, 25, -1);
+  add_box_child_start (GTK_ORIENTATION_HORIZONTAL, hbox, spin, FALSE, FALSE, 10);
+  show_the_widgets (sktqw_vbox[cid]);
+}
+
+/*!
+  \fn G_MODULE_EXPORT void set_correlations (GtkEntry * entry, gpointer data)
+
+  \brief set the minimum number of correlated configuration to compute S(k,t)
+
+  \param entry the GtkEntry sending the signal
+  \param data the associated data pointer
+*/
+G_MODULE_EXPORT void set_correlations (GtkEntry * entry, gpointer data)
+{
+  const gchar * m;
+  m = entry_get_text (entry);
+  int v = (int) string_to_double ((gpointer)m);
+  int pid = GPOINTER_TO_INT(data);
+  switch (pid)
+  {
+    case 0:
+      if (v <= 0 || v >= active_project -> steps-1)
+      {
+        show_warning ("This value must be &#62; 0 and &#60; number of steps", calc_win);
+      }
+      else
+      {
+        active_project -> skt_corr_threshold = v;
+        gchar * str = g_strdup_printf ("%d calculation results in total !", active_project -> analysis[SKD] -> numc * (active_project -> steps - active_project -> skt_corr_threshold));
+        skt_all_info = destroy_this_widget(skt_all_info);
+        skt_all_info = markup_label (str, -1, -1, 0.5, 0.5);
+        g_free (str);
+        add_box_child_start (GTK_ORIENTATION_HORIZONTAL, skt_res_info, skt_all_info, FALSE, FALSE, 5);
+        widget_set_sensitive (skt_all_info, active_project -> skt_all_sets);
+        add_remove_t_steps_q_vectors (active_project -> skt_n_data_sets, 0);
+        show_the_widgets (skt_res_info);
+      }
+      update_entry_int (entry, active_project -> skt_corr_threshold);
+      break;
+    case 1:
+      if (v <= 0)
+      {
+        show_warning ("This value must be > 0", calc_win);
+      }
+      else
+      {
+        if (preferences)
+        {
+          tmp_sqw_freq = v;
+        }
+        else
+        {
+          active_project -> sqw_freq = v;
+        }
+      }
+      update_entry_int (entry, (preferences) ? tmp_sqw_freq : active_project -> sqw_freq);
+      break;
+  }
+}
+
+#ifdef GTK4
+/*!
+  \fn G_MODULE_EXPORT void toggle_skt_all (GtkCheckButton * but, gpointer data)
+
+  \brief toggle the output of all s(k,t) data sets
+
+  \param but the GtkCheckButton sending the signal
+  \param data the associated data pointer
+*/
+G_MODULE_EXPORT void toggle_skt_all (GtkCheckButton * but, gpointer data)
+#else
+/*!
+  \fn G_MODULE_EXPORT void toggle_skt_all (GtkToggleButton * but, gpointer data)
+
+  \brief toggle the output of all s(k,t) data sets
+
+  \param but the GtkToggleButton sending the signal
+  \param data the associated data pointer
+*/
+G_MODULE_EXPORT void toggle_skt_all (GtkToggleButton * but, gpointer data)
+#endif
+{
+  gboolean status = button_get_status ((GtkWidget *)but);
+  if (! preferences)
+  {
+    active_project -> skt_all_sets = status;
+  }
+  else
+  {
+    tmp_skt_sets = status;
+  }
+  widget_set_sensitive (sktqw_delta[0], ! status);
+  if (! preferences)
+  {
+    widget_set_sensitive (skt_all_info, status);
+    if (status)
+    {
+      hide_the_widgets (sktqw_delta[0]);
+      if (active_project -> skt_step_id) g_free (active_project -> skt_step_id);
+      active_project -> skt_step_id = NULL;
+      active_project -> skt_n_data_sets = 1;
+      active_project -> skt_step_id = allocint (1);
+      active_project -> skt_step_id[0] = -1;
+    }
+    else
+    {
+      active_project -> skt_corr_threshold = (active_project -> steps < 20) ? 1 : 10;
+      active_project -> skt_n_data_sets = min (5, active_project -> steps);
+      add_remove_t_steps_q_vectors (active_project -> skt_n_data_sets, 0);
+      show_the_widgets (sktqw_delta[0]);
+    }
   }
 
-  GtkWidget * smooth_options = create_expander ("  Gaussian data smoothing", NULL);
-  gtk_widget_set_size_request (smooth_options, -1, 20);
-  add_box_child_start (GTK_ORIENTATION_VERTICAL, vbox, smooth_options, FALSE, TRUE, 10);
-  avbox = create_vbox (5);
-  smbox = create_hbox (0);
-  add_box_child_start (GTK_ORIENTATION_HORIZONTAL, smbox, gtk_label_new("Factor [0.0-1.0]"), FALSE, FALSE, 0);
-  aentry = create_entry (G_CALLBACK(set_sfact), 100, 15, FALSE, GINT_TO_POINTER(id));
-  update_entry_double (GTK_ENTRY(aentry), active_project -> fact[id]);
-  add_box_child_start (GTK_ORIENTATION_HORIZONTAL, smbox, aentry, FALSE, TRUE, 10);
-  GtkWidget * smooth = create_button ("Smooth", IMG_NONE, NULL, -1, -1, GTK_RELIEF_NORMAL, G_CALLBACK(on_smoother_released), GINT_TO_POINTER(id));
-  g_signal_connect (G_OBJECT(smooth_options), "activate", G_CALLBACK(expand_opt), GINT_TO_POINTER(0));
-  add_box_child_start (GTK_ORIENTATION_HORIZONTAL, smbox, smooth, FALSE, FALSE, 0);
-  add_box_child_start (GTK_ORIENTATION_VERTICAL, avbox, smbox, FALSE, FALSE, 5);
-  add_container_child (CONTAINER_EXP, smooth_options, avbox);
-  show_the_widgets (smooth_options);
-  widget_set_sensitive (smooth_options, 1);
+}
+
+/*!
+  \fn void calc_sk_t (GtkWidget * box)
+
+  \brief creation of the s(k,t) calculation widgets
+
+  \param box GtkWidget that will receive the data
+*/
+void calc_sk_t (GtkWidget * box)
+{
+  gchar * val_a="Number of &#x3b4;q steps";
+  gchar * val_b="Q<sub>max</sub> [&#xC5;<sup>-1</sup>]";
+  gchar * val_c="&#x3b4;t<sub>min</sub>";
+  gchar * val_d="&#969; points in [0.0, &#969;<sub>max</sub>]";
+
+  skadv[0].a = skadv[1].a = SKT;
+  skadv[0].b = 0;
+  skadv[1].b = 1;
+
+  GtkWidget * vbox = create_vbox (5);
+  add_box_child_start (GTK_ORIENTATION_VERTICAL, box, vbox, FALSE, FALSE, 0);
+  GtkWidget * hbox_skt = create_hbox (0);
+  add_box_child_start (GTK_ORIENTATION_VERTICAL, vbox, hbox_skt, FALSE, FALSE, 5);
+  GtkWidget * vbox_skt[2];
+
+  int i, j;
+  j = (preferences) ? 1 : 2;
+  for (i=0; i<j; i++)
+  {
+    vbox_skt[i] = create_vbox(BSEP);
+    add_box_child_start (GTK_ORIENTATION_HORIZONTAL, hbox_skt, vbox_skt[i], FALSE, FALSE, 10);
+  }
+
+  if (! preferences)
+  {
+    if (! active_project -> skt_step_id)
+    {
+      active_project -> skt_n_data_sets = default_skt_n_sets;
+    }
+    if (! active_project -> sqw_q_id)
+    {
+      active_project -> sqw_n_data_sets = default_sqw_n_sets;
+    }
+  }
+
+  GtkWidget * hbox = create_hbox (0);
+  add_box_child_start (GTK_ORIENTATION_VERTICAL, vbox_skt[0], hbox, FALSE, FALSE, 0);
+  add_box_child_start (GTK_ORIENTATION_HORIZONTAL, hbox, markup_label (val_a, 150, -1, 0.0, 0.5), FALSE, FALSE, 5);
+  GtkWidget * entry = create_entry (G_CALLBACK(set_delta), 100, 15, FALSE, GINT_TO_POINTER(SKT));
+  update_entry_int (GTK_ENTRY(entry), (preferences) ? tmp_num_delta[SKT-2] : active_project -> analysis[SKT] -> num_delta);
+  add_box_child_start (GTK_ORIENTATION_HORIZONTAL, hbox, entry, FALSE, FALSE, 10);
+
+  if (! preferences)
+  {
+    hbox = create_hbox (0);
+    add_box_child_start (GTK_ORIENTATION_VERTICAL, vbox_skt[0], hbox, FALSE, FALSE, 5);
+    add_box_child_start (GTK_ORIENTATION_HORIZONTAL, hbox, markup_label (val_b, 150, -1, 0.0, 0.5), FALSE, FALSE, 5);
+    entry= create_entry (G_CALLBACK(set_max), 100, 15, FALSE, GINT_TO_POINTER(SKT));
+    update_entry_double (GTK_ENTRY(entry), active_project -> analysis[SKT] -> max);
+    add_box_child_start (GTK_ORIENTATION_HORIZONTAL, hbox, entry, FALSE, FALSE, 10);
+
+    add_box_child_start (GTK_ORIENTATION_VERTICAL, vbox_skt[0], hbox_note (1, active_project -> analysis[SKT] -> min), FALSE, FALSE, 5);
+    hbox = create_hbox (0);
+    add_box_child_start (GTK_ORIENTATION_VERTICAL, vbox_skt[0], hbox, FALSE, FALSE, 0);
+    add_box_child_start (GTK_ORIENTATION_HORIZONTAL, hbox,
+                         markup_label ("Q<sub>min</sub> is the minimum wave vector for the model", -1, -1, 0.0, 0.5),
+                         FALSE, FALSE, 5);
+
+    hbox = create_hbox (0);
+    add_box_child_start (GTK_ORIENTATION_VERTICAL, vbox_skt[0], hbox, FALSE, FALSE, 5);
+    add_box_child_start (GTK_ORIENTATION_HORIZONTAL, hbox, markup_label (val_c, 150, -1, 0.0, 0.5), FALSE, FALSE, 5);
+    entry = create_entry (G_CALLBACK(set_correlations), 100, 15, FALSE, GINT_TO_POINTER(0));
+    update_entry_int (GTK_ENTRY(entry), active_project -> skt_corr_threshold);
+    add_box_child_start (GTK_ORIENTATION_HORIZONTAL, hbox, entry, FALSE, FALSE, 10);
+    hbox = create_hbox (0);
+    add_box_child_start (GTK_ORIENTATION_VERTICAL, vbox_skt[0], hbox, FALSE, FALSE, 0);
+    add_box_child_start (GTK_ORIENTATION_HORIZONTAL, hbox,
+                         markup_label ("&#x3b4;t<sub>min</sub> is the correlation threshold", -1, -1, 0.0, 0.5),
+                         FALSE, FALSE, 5);
+  }
+
+  if (! preferences)
+  {
+    calc_msd (vbox_skt[0], SKT);
+  }
+  else
+  {
+    dyna_parameters (vbox_skt[0], SKT-2);
+  }
+  hbox = create_hbox (0);
+  add_box_child_start (GTK_ORIENTATION_VERTICAL, vbox_skt[0], hbox, FALSE, FALSE, 5);
+  add_box_child_start (GTK_ORIENTATION_HORIZONTAL, hbox, markup_label (val_d, 150, -1, 0.0, 0.5), FALSE, FALSE, 5);
+  entry = create_entry (G_CALLBACK(set_correlations), 100, 15, FALSE, GINT_TO_POINTER(1));
+  update_entry_int (GTK_ENTRY(entry), (preferences) ? tmp_sqw_freq : active_project -> sqw_freq);
+  add_box_child_start (GTK_ORIENTATION_HORIZONTAL, hbox, entry, FALSE, FALSE, 10);
+  omega_max_hbox = create_hbox (0);
+  add_box_child_start (GTK_ORIENTATION_VERTICAL, vbox_skt[0], omega_max_hbox, FALSE, FALSE, 5);
+  update_omega_max ();
+  if (! preferences)
+  {
+    add_advanced_options (SKT, skadv, vbox_skt[0]);
+    add_smoothing_options (SKT, vbox_skt[0]);
+  }
+  add_box_child_start (GTK_ORIENTATION_VERTICAL, vbox_skt[(preferences) ? 0 : 1], markup_label ("<b>Results</b>", -1, -1, 0.0, 0.5), FALSE, FALSE, (preferences) ? 10 : 0);
+  GtkWidget * tbox = create_vbox(0);
+  add_box_child_start (GTK_ORIENTATION_VERTICAL, vbox_skt[(preferences) ? 0 : 1], tbox, FALSE, FALSE, 5);
+  add_box_child_start (GTK_ORIENTATION_VERTICAL, tbox, markup_label ("<b>atomes</b> cannot yet display 3D results,", -1, -1, 0.5, 0.5), FALSE, FALSE, 0);
+  add_box_child_start (GTK_ORIENTATION_VERTICAL, tbox, markup_label ("but we are working to add this feature !", -1, -1, 0.5, 0.5), FALSE, FALSE, 0);
+  add_box_child_start (GTK_ORIENTATION_VERTICAL, tbox, markup_label ("For the time being you need to select", -1, -1, 0.5, 0.5), FALSE, FALSE, 0);
+  add_box_child_start (GTK_ORIENTATION_VERTICAL, tbox, markup_label ("what to display using the 2D graph system:", -1, -1, 0.5, 0.5), FALSE, FALSE, 0);
+
+  GtkWidget * notebook = gtk_notebook_new ();
+#ifdef GTK4
+  gtk_widget_set_vexpand (notebook, TRUE);
+#endif
+  add_box_child_start (GTK_ORIENTATION_VERTICAL, vbox_skt[(preferences) ? 0 : 1], notebook, TRUE, TRUE, (preferences) ? 10 : 5);
+
+  GtkWidget * nbox;
+  GtkWidget * scroll;
+  gchar * str;
+  for (i=0; i<2; i++)
+  {
+    scroll = create_scroll (NULL, 200, (preferences) ? 100 : 350, GTK_SHADOW_NONE);
+    nbox = create_vbox(BSEP);
+    add_container_child (CONTAINER_SCR, scroll, nbox);
+    if (! i)
+    {
+      add_box_child_start (GTK_ORIENTATION_VERTICAL, nbox, check_button("All <b>&#x3b4;t</b> correlated calculations", -1, -1, FALSE, G_CALLBACK(toggle_skt_all), NULL), FALSE, FALSE, 5);
+      if (! preferences)
+      {
+        str = g_strdup_printf ("%d calculation results in total !", active_project -> analysis[SKD] -> numc * (active_project -> steps - active_project -> skt_corr_threshold));
+        skt_all_info = markup_label (str, -1, -1, 0.5, 0.5);
+        g_free (str);
+        skt_res_info = create_hbox (0);
+        add_box_child_start (GTK_ORIENTATION_VERTICAL, nbox, skt_res_info, FALSE, FALSE, 5);
+        add_box_child_start (GTK_ORIENTATION_HORIZONTAL, skt_res_info, skt_all_info, FALSE, FALSE, 5);
+      }
+    }
+    sktqw_vbox[i] = create_vbox(0);
+    add_box_child_start (GTK_ORIENTATION_VERTICAL, nbox, sktqw_vbox[i], FALSE, FALSE, 0);
+    if (! i) widget_set_sensitive (sktqw_vbox[i], (preferences) ? ! tmp_skt_sets : ! active_project -> skt_all_sets);
+    add_correlations_options (i);
+    if (! preferences)
+    {
+      if (! i && ! active_project -> skt_all_sets)
+      {
+        add_remove_t_steps_q_vectors (active_project -> skt_n_data_sets, 0);
+      }
+      else if (i)
+      {
+        add_remove_t_steps_q_vectors (active_project -> sqw_n_data_sets, 1);
+      }
+    }
+    if (! i) widget_set_sensitive(skt_all_info, (preferences) ? tmp_skt_sets : active_project -> skt_all_sets);
+    gtk_notebook_append_page (GTK_NOTEBOOK(notebook), scroll,
+                              markup_label((! i) ? "<b>Intermediate scattering</b>: F(q,&#x3b4;t)" : "<b>Dynamic calculations</b>: S(q,&#969;)", -1, -1, 0.0, 0.5));
+  }
 }
 
 /*!
@@ -1397,22 +1980,22 @@ G_MODULE_EXPORT void run_on_calc_activate (GtkDialog * dial, gint response_id, g
     case GTK_RESPONSE_APPLY:
       switch (id)
       {
-        case GR:
-          if (test_gr (GR)) on_calc_gr_released (calc_win, NULL);
+        case GDR:
+          if (test_gr (GDR)) on_calc_gr_released (calc_win, NULL);
           break;
-        case SQ:
-          if (test_sq (SQ)) on_calc_sq_released (calc_win, NULL);
+        case SQD:
+          if (test_sq (SQD)) on_calc_sq_released (calc_win, NULL);
           break;
-        case SK:
-          if (test_sq (SK)) on_calc_sk_released (calc_win, NULL);
+        case SKD:
+          if (test_sq (SKD)) on_calc_sk_released (calc_win, NULL);
           break;
-        case GK:
-          if (test_gr (GK)) on_calc_gq_released (calc_win, NULL);
+        case GDK:
+          if (test_gr (GDK)) on_calc_gq_released (calc_win, NULL);
           break;
-        case BD:
+        case BND:
           if (test_bonds ()) on_calc_bonds_released (calc_win, NULL);
           break;
-        case RI-1:
+        case RIN-1:
           if (test_rings ())
           {
             //show_the_widgets (spinner);
@@ -1423,7 +2006,7 @@ G_MODULE_EXPORT void run_on_calc_activate (GtkDialog * dial, gint response_id, g
             //hide_the_widgets (spinner);
           }
           break;
-        case CH-1:
+        case CHA-1:
           if (test_rings ())
           {
             //show_the_widgets (spinner);
@@ -1433,12 +2016,14 @@ G_MODULE_EXPORT void run_on_calc_activate (GtkDialog * dial, gint response_id, g
             //hide_the_widgets (spinner);
           }
           break;
-        case SP-1:
+        case SPH-1:
           if (test_sph ()) on_calc_sph_released (calc_win, NULL);
           break;
-        case MS-1:
+        case MSD-1:
           if (test_msd ()) on_calc_msd_released (calc_win, NULL);
           break;
+        case SKT-1:
+          if (test_skt ()) on_calc_skt_released (calc_win, NULL);
         default:
           break;
       }
@@ -1449,6 +2034,7 @@ G_MODULE_EXPORT void run_on_calc_activate (GtkDialog * dial, gint response_id, g
       destroy_this_dialog (dial);
       calc_win = destroy_this_widget (calc_win);
       avbox = NULL;
+      omega_max_hbox = destroy_this_widget (omega_max_hbox);
   }
 }
 
@@ -1468,25 +2054,25 @@ G_MODULE_EXPORT void on_calc_activate (GtkWidget * widg, gpointer data)
   gtk_box_set_homogeneous (GTK_BOX(box), FALSE);
   switch (id)
   {
-    case BD:
+    case BND:
       calc_bonds (box);
       break;
-    case RI-1:
+    case RIN-1:
       search_type = 0;
       calc_rings (box);
       break;
-    case CH-1:
+    case CHA-1:
       search_type = 1;
       calc_rings (box);
       break;
-    case SP-1:
+    case SPH-1:
       calc_sph (box);
       break;
-    case MS-1:
-      calc_msd (box);
+    case MSD-1:
+      calc_msd (box, MSD);
       break;
-    case 9:
-      // calc_valence (box);
+    case SKT-1:
+      calc_sk_t (box);
       break;
     default:
       calc_gr_sq (box, id);
@@ -1494,14 +2080,10 @@ G_MODULE_EXPORT void on_calc_activate (GtkWidget * widg, gpointer data)
   }
 
 #ifndef GTK4
-  gtk_window_set_icon (GTK_WINDOW (calc_win), gdk_pixbuf_new_from_file(calc_img[id], NULL));
+  gtk_window_set_icon (GTK_WINDOW (calc_win), gdk_pixbuf_new_from_file(graph_img[(id < ANG) ? id : id+1], NULL));
 #endif
   GtkWidget * vbox = create_vbox (BSEP);
   gtk_widget_set_size_request (vbox, -1, 30);
   add_box_child_start (GTK_ORIENTATION_VERTICAL, box, vbox, FALSE, FALSE, 0);
-  /*GtkWidget * spinner = gtk_spinner_new ();
-  add_box_child_start (GTK_ORIENTATION_VERTICAL, vbox, spinner, FALSE, FALSE, 0);
-  gtk_widget_set_size_request (spinner, -1, 30);
-  hide_the_widgets (spinner);*/
   run_this_gtk_dialog (calc_win, G_CALLBACK(run_on_calc_activate), data);
 }

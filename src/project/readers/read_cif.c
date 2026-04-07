@@ -11,7 +11,7 @@ See the GNU General Public License for more details.
 You should have received a copy of the GNU Affero General Public License along with 'atomes'.
 If not, see <https://www.gnu.org/licenses/>
 
-Copyright (C) 2022-2025 by CNRS and University of Strasbourg */
+Copyright (C) 2022-2026 by CNRS and University of Strasbourg */
 
 /*!
 * @file read_cif.c
@@ -959,7 +959,7 @@ void check_for_to_lab (int ato, gchar * stlab)
     }
     else
     {
-      this_reader -> label = g_malloc0 (1*sizeof*this_reader -> label);
+      this_reader -> label = g_malloc0(1*sizeof*this_reader -> label);
     }
     this_reader -> label[this_reader -> object_to_insert] = g_strdup_printf ("%s", stlab);
     this_reader -> object_to_insert ++;
@@ -972,8 +972,8 @@ void check_for_to_lab (int ato, gchar * stlab)
   }
   else
   {
-    this_reader -> object_list = g_malloc0 (1*sizeof*this_reader -> object_list);
-    this_reader -> u_atom_list = g_malloc0 (1*sizeof*this_reader -> u_atom_list);
+    this_reader -> object_list = g_malloc0(1*sizeof*this_reader -> object_list);
+    this_reader -> u_atom_list = g_malloc0(1*sizeof*this_reader -> u_atom_list);
   }
   this_reader -> object_list[this_reader -> atom_unlabelled] = j;
   this_reader -> u_atom_list[this_reader -> atom_unlabelled] = ato;
@@ -2360,14 +2360,14 @@ int open_cif_configuration (int linec, int conf)
       }
       double prob;
       gboolean pick_it;
-      gboolean ** taken_pos = g_malloc0 (num_pos*sizeof*taken_pos);
-      int ** site_lot = g_malloc0 (num_pos*sizeof*site_lot);
+      gboolean ** taken_pos = g_malloc0(num_pos*sizeof*taken_pos);
+      int ** site_lot = g_malloc0(num_pos*sizeof*site_lot);
       clock_t CPU_time;
       int tot_pos = 0;
       for (i=0; i<num_pos; i++)
       {
         taken_pos[i] = allocbool(all_id[i]);
-        site_lot[i] = allocint(all_id[i]);
+        site_lot[i] = allocint (all_id[i]);
         for (j=0; j<cif_pos[i]; j++)
         {
           u = occ_pos[i][j]*all_id[i];
@@ -2492,7 +2492,7 @@ int open_cif_configuration (int linec, int conf)
       for (i=0; i<this_reader -> nspec; i++) this_reader -> nsps[i] = tmp_nsps[i];
       g_free (tmp_nsps);
       g_free (this_reader -> z);
-      this_reader -> z = allocdouble(i);
+      this_reader -> z = allocdouble (i);
       i = 0;
       for (j=0; j<120; j++)
       {

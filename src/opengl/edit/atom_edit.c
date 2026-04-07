@@ -11,7 +11,7 @@ See the GNU General Public License for more details.
 You should have received a copy of the GNU Affero General Public License along with 'atomes'.
 If not, see <https://www.gnu.org/licenses/>
 
-Copyright (C) 2022-2025 by CNRS and University of Strasbourg */
+Copyright (C) 2022-2026 by CNRS and University of Strasbourg */
 
 /*!
 * @file atom_edit.c
@@ -325,7 +325,7 @@ G_MODULE_EXPORT void apply_edit (GtkButton * but, gpointer data)
   this_proj -> modelgl -> mode = ANALYZE;
   image * last = this_proj -> modelgl -> anim -> last -> img;
   vec4_t q = last -> rotation_quaternion;
-  init_camera (this_proj, TRUE);
+  init_camera (this_proj);
   last -> rotation_quaternion = q;
   this_proj -> modelgl -> mode = i;
   for (h=0; h<3; h++)
@@ -385,7 +385,7 @@ GtkWidget * create_atom_notebook (project * this_proj, GtkWidget * vbox)
 */
 atom_search * allocate_atom_search (int proj, int action, int searchid, int tsize)
 {
-  atom_search * asearch = g_malloc0 (sizeof*asearch);
+  atom_search * asearch = g_malloc0(sizeof*asearch);
   asearch -> search_digit = -1;
   asearch -> proj = proj;
   asearch -> action = action;
@@ -457,7 +457,7 @@ void prepare_atom_edition (gpointer data, gboolean visible)
   int i;
   if (this_proj -> modelgl -> atom_win == NULL)
   {
-    this_proj -> modelgl -> atom_win = g_malloc0 (sizeof*this_proj -> modelgl -> atom_win);
+    this_proj -> modelgl -> atom_win = g_malloc0(sizeof*this_proj -> modelgl -> atom_win);
     for (i=0; i<2; i++) this_proj -> modelgl -> atom_win -> adv_bonding[i] = this_proj -> modelgl -> adv_bonding[i];
     if (this_proj -> modelgl -> anim)
     {
@@ -481,7 +481,7 @@ void prepare_atom_edition (gpointer data, gboolean visible)
     {
       if (i != 3)
       {
-        if (this_proj -> modelgl -> search_widg[i+2] -> todo_size < 10000)
+        if (this_proj -> modelgl -> search_widg[i+2] -> todo_size < GTK_LIMIT)
         {
           hide_the_widgets (this_proj -> modelgl -> search_widg[i+2] -> info[1]);
         }

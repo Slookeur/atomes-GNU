@@ -11,7 +11,7 @@ See the GNU General Public License for more details.
 You should have received a copy of the GNU Affero General Public License along with 'atomes'.
 If not, see <https://www.gnu.org/licenses/>
 
-Copyright (C) 2022-2025 by CNRS and University of Strasbourg */
+Copyright (C) 2022-2026 by CNRS and University of Strasbourg */
 
 /*!
 * @file dlp_field.c
@@ -1269,7 +1269,7 @@ void fill_field_model (GtkTreeStore * store, int f, int m)
 
   tmp_fmol = tmp_field -> first_molecule;
 
-  //if (get_active_field_elements(f) > 10000 &&  ! tmp_field -> show_all[f])
+  //if (get_active_field_elements(f) >= GTK_LIMIT &&  ! tmp_field -> show_all[f])
   {
 
   }
@@ -1813,10 +1813,10 @@ void get_is_energy (int i, int l)
 {
   int j, k;
   j = (i > 1 && i < 8) ? (i-1)/2 + 1 - i/7 : i;
-  is_energy = g_malloc (fetypes[activef][i+1]*sizeof*is_energy);
+  is_energy = g_malloc0(fetypes[activef][i+1]*sizeof*is_energy);
   if (l)
   {
-    is_var = g_malloc (fetypes[activef][i+1]*sizeof*is_var);
+    is_var = g_malloc0(fetypes[activef][i+1]*sizeof*is_var);
   }
   switch (j)
   {
@@ -1916,7 +1916,7 @@ void get_is_energy (int i, int l)
 gboolean field_file_has_energy_parameters (gboolean scale, int sca, int scb)
 {
   int i, j, k, l;
-  is_param = allocdint(15, 21);
+  is_param = allocdint (15, 21);
   has_energy = allocint (15);
   i = 0;
   tmp_fmol = tmp_field -> first_molecule;
@@ -3184,10 +3184,7 @@ void field_set_color (GtkTreeViewColumn * col, GtkCellRenderer * renderer, GtkTr
 void field_set_markup_box (GtkTreeViewColumn * col, GtkCellRenderer * renderer, GtkTreeModel * mod, GtkTreeIter * iter, gpointer data)
 {
   int tree = GPOINTER_TO_INT(data);
-  gchar * str = NULL;
-  gtk_tree_model_get (mod, iter, field_v[tree]-1, & str, -1);
-  g_object_set (renderer, "markup", str, NULL, NULL);
-  g_free (str);
+  set_renderer_markup (mod, iter, renderer, field_v[tree]-1);
 }
 
 /*!
@@ -3208,10 +3205,7 @@ void field_set_markup (GtkTreeViewColumn * col, GtkCellRenderer * renderer, GtkT
   i = (tree > 5) ? 1 : 0;
   if (i)
   {
-    gchar * str = NULL;
-    gtk_tree_model_get (mod, iter, field_v[tree], & str, -1);
-    g_object_set (renderer, "markup", str, NULL, NULL);
-    g_free (str);
+    set_renderer_markup (mod, iter, renderer, field_v[tree]);
   }
   else
   {
@@ -4080,10 +4074,10 @@ G_MODULE_EXPORT void on_assistant_prepare (GtkAssistant * assistant, GtkWidget *
   switch (i)
   {
     case 0:
-      // if (is_the_widget_visible(preview_but)) hide_the_widgets (preview_but);
+      // hide_the_widgets (preview_but);
       break;
     case 1:
-      // if (! is_the_widget_visible(preview_but)) show_the_widgets (preview_but);
+      // show_the_widgets (preview_but);
       break;
     case MAXDATC+MAXDATA+2:
       break;
@@ -4660,7 +4654,7 @@ void create_classical_force_field (int p, int f)
   tmp_coord = tmp_proj -> coord;
   tmp_view = tmp_proj -> modelgl;
   tmp_fmol = NULL;
-  tmp_fmol = g_malloc0 (sizeof*tmp_fmol);
+  tmp_fmol = g_malloc0(sizeof*tmp_fmol);
   gchar * field_type[2] = {"DL-POLY 4", "LAMMPS"};
 
   // Preparing data structure and pointers
@@ -4668,7 +4662,7 @@ void create_classical_force_field (int p, int f)
   if (tmp_proj -> force_field[activef] == NULL)
   {
     assist_init = FALSE;
-    tmp_proj -> force_field[activef] = g_malloc0 (sizeof*tmp_proj -> force_field[activef]);
+    tmp_proj -> force_field[activef] = g_malloc0(sizeof*tmp_proj -> force_field[activef]);
     tmp_proj -> force_field[activef] -> type = -1;
     tmp_proj -> force_field[activef] -> atom_init = -1;
     for (i=0; i<2; i++) tmp_proj -> force_field[activef] -> prepare_file[i] = TRUE;

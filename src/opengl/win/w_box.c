@@ -11,7 +11,7 @@ See the GNU General Public License for more details.
 You should have received a copy of the GNU Affero General Public License along with 'atomes'.
 If not, see <https://www.gnu.org/licenses/>
 
-Copyright (C) 2022-2025 by CNRS and University of Strasbourg */
+Copyright (C) 2022-2026 by CNRS and University of Strasbourg */
 
 /*!
 * @file w_box.c
@@ -163,8 +163,8 @@ G_MODULE_EXPORT void set_box_combo_style (GtkWidget * widg, gpointer data)
 #endif
   if (i == 1)
   {
-    if (is_the_widget_visible(box_win -> width_box)) hide_the_widgets (box_win -> width_box);
-    if (! is_the_widget_visible(box_win -> radius_box)) show_the_widgets (box_win -> radius_box);
+    hide_the_widgets (box_win -> width_box);
+    show_the_widgets (box_win -> radius_box);
     if (! preferences)
     {
 #ifdef GTK3
@@ -179,8 +179,8 @@ G_MODULE_EXPORT void set_box_combo_style (GtkWidget * widg, gpointer data)
   }
   else if (i == 0)
   {
-    if (is_the_widget_visible(box_win -> radius_box)) hide_the_widgets (box_win -> radius_box);
-    if (! is_the_widget_visible(box_win -> width_box)) show_the_widgets (box_win -> width_box);
+    hide_the_widgets (box_win -> radius_box);
+    show_the_widgets (box_win -> width_box);
     if (! preferences)
     {
 #ifdef GTK3
@@ -431,7 +431,7 @@ G_MODULE_EXPORT void box_advanced (GtkWidget * widg, gpointer data)
     show_the_widgets (the_box -> win);
     if (box_type)
     {
-     hide_the_widgets (the_box -> width_box);
+      hide_the_widgets (the_box -> width_box);
     }
     else
     {

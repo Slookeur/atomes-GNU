@@ -11,7 +11,7 @@ See the GNU General Public License for more details.
 You should have received a copy of the GNU Affero General Public License along with 'atomes'.
 If not, see <https://www.gnu.org/licenses/>
 
-Copyright (C) 2022-2025 by CNRS and University of Strasbourg */
+Copyright (C) 2022-2026 by CNRS and University of Strasbourg */
 
 /*!
 * @file atom_move.c
@@ -334,7 +334,7 @@ void random_move_this_atom (project * this_proj, int aid)
   i = (int)begin;
   for (j=0; j<3; j++)
   {
-    k = (j+1)*i*aid*(3*this_proj -> numwid);
+    k = (j+1)*i*aid*(3*(this_proj -> id+27));
     prob= random3_(& k);
     k *= k;
     l = (prob <= 0.5) ? 1 : -1;
@@ -381,7 +381,7 @@ void random_rotate_this_object (project * this_proj, atomic_object * object, dou
   i = (int)begin;
   for (j=0; j<3; j++)
   {
-    k = (j+1)*i*(3*this_proj -> numwid);
+    k = (j+1)*i*(3*(this_proj -> id+27));
     prob=random3_(& k);
     k *= k;
     l = (prob <= 0.5) ? 1 : -1;
@@ -426,7 +426,7 @@ void random_translate_this_object (project * this_proj, atomic_object * object, 
   i = (int)begin;
   for (j=0; j<3; j++)
   {
-    k = (j+1)*i*(3*this_proj -> numwid);
+    k = (j+1)*i*(3*(this_proj -> id+27));
     prob=random3_(& k);
     k *= k;
     l = (prob <= 0.5) ? 1 : -1;
@@ -485,7 +485,7 @@ void random_move_this_object (project * this_proj, atomic_object * object, int m
       random_rotate_this_object (this_proj, object, 1.0, msd);
       break;
     case 3:
-      j = object -> species*i*object -> atoms*(3*this_proj -> numwid);
+      j = object -> species*i*object -> atoms*(3*(this_proj -> id+27));
       prob = random3_(& j);
       random_translate_this_object (this_proj, object, prob, msd);
       random_rotate_this_object (this_proj, object, 1.0-prob, msd);

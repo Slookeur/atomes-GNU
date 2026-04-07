@@ -11,7 +11,7 @@ See the GNU General Public License for more details.
 You should have received a copy of the GNU Affero General Public License along with 'atomes'.
 If not, see <https://www.gnu.org/licenses/>
 
-Copyright (C) 2022-2025 by CNRS and University of Strasbourg */
+Copyright (C) 2022-2026 by CNRS and University of Strasbourg */
 
 /*!
 * @file w_sequencer.c
@@ -457,7 +457,7 @@ G_MODULE_EXPORT void window_sequencer (GtkWidget * widg, gpointer data)
   if (view -> player == NULL)
   {
     //p = view -> proj;
-    view -> player = g_malloc0 (sizeof*view -> player);
+    view -> player = g_malloc0(sizeof*view -> player);
     view -> player -> win = create_win (" ", view -> win, FALSE, FALSE);
     set_player_title (view);
     GtkWidget * vbox = create_vbox (BSEP);

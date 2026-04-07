@@ -11,7 +11,7 @@ See the GNU General Public License for more details.
 You should have received a copy of the GNU Affero General Public License along with 'atomes'.
 If not, see <https://www.gnu.org/licenses/>
 
-Copyright (C) 2022-2025 by CNRS and University of Strasbourg */
+Copyright (C) 2022-2026 by CNRS and University of Strasbourg */
 
 /*!
 * @file image.c
@@ -31,6 +31,7 @@ Copyright (C) 2022-2025 by CNRS and University of Strasbourg */
 * List of functions:
 
   void render_image (glwin * view, video_options * iopts);
+  void simple_image_render ();
 
   G_MODULE_EXPORT void run_render_image (GtkNativeDialog * info, gint response_id, gpointer data);
   G_MODULE_EXPORT void run_render_image (GtkDialog * info, gint response_id, gpointer data);
@@ -43,6 +44,7 @@ Copyright (C) 2022-2025 by CNRS and University of Strasbourg */
 #include "glwindow.h"
 #include "glview.h"
 #include "movie.h"
+#include "preferences.h"
 
 #include <libavformat/avformat.h>
 
@@ -93,17 +95,26 @@ G_MODULE_EXPORT void run_render_image (GtkNativeDialog * info, gint response_id,
 */
 G_MODULE_EXPORT void run_render_image (GtkDialog * info, gint response_id, gpointer data)
 {
-  GtkFileChooser * chooser = GTK_FILE_CHOOSER((GtkWidget *)info);
 #endif
   if (response_id == GTK_RESPONSE_ACCEPT)
   {
     video_options * iopts = (video_options *)data;
-    gchar * videofile = file_chooser_get_file_name (chooser);
+    GtkFileChooser * chooser;
+    gchar * videofile;
+    if (atomes_render_image)
+    {
+      videofile = g_strdup_printf ("%s", atomes_image_output);
+    }
+    else
+    {
+      chooser = GTK_FILE_CHOOSER((GtkWidget *)info);
+      videofile = file_chooser_get_file_name (chooser);
 #ifdef GTK4
-    destroy_this_native_dialog (info);
+      destroy_this_native_dialog (info);
 #else
-    destroy_this_dialog (info);
+      destroy_this_dialog (info);
 #endif
+    }
     init_frame_buffer (iopts -> video_res[0], iopts -> video_res[1]);
     project * this_proj = get_project_by_id (iopts -> proj);
     glwin * view = this_proj -> modelgl;
@@ -128,20 +139,23 @@ G_MODULE_EXPORT void run_render_image (GtkDialog * info, gint response_id, gpoin
     fill_image (NULL, iopts -> video_res[0], iopts -> video_res[1], view);
     GError * error = NULL;
     gboolean res = gdk_pixbuf_savev (pixbuf, videofile, image_list[iopts -> codec], NULL, NULL, & error);
-    if (! res)
+    if (! res && ! atomes_from_libreoffice)
     {
       show_warning ("An error occurred when exporting an image\nyou might want to try again\nsorry for the trouble", view -> win);
     }
     close_frame_buffer ();
     in_movie_encoding = FALSE;
-    if (iopts -> oglquality != 0) view -> anim -> last -> img -> quality = q;
-    for (i=0; i<NGLOBAL_SHADERS; i++)
+    if (! atomes_render_image)
     {
-      if (in_md_shaders (this_proj, i)) view -> n_shaders[i][step] = -1;
+      if (iopts -> oglquality != 0) view -> anim -> last -> img -> quality = q;
+      for (i=0; i<NGLOBAL_SHADERS; i++)
+      {
+        if (in_md_shaders (this_proj, i)) view -> n_shaders[i][step] = -1;
+      }
+      recreate_all_shaders (view);
+      reshape (view, x, y, TRUE);
+      update (view);
     }
-    recreate_all_shaders (view);
-    reshape (view, x, y, TRUE);
-    update (view);
   }
   else
   {
@@ -195,4 +209,45 @@ void render_image (glwin * view, video_options * iopts)
 #else
   run_this_gtk_dialog (info, G_CALLBACK(run_render_image), iopts);
 #endif
+}
+
+/*!
+  \fn void simple_image_render ()
+
+  \brief simple direct rendering from command line
+*/
+void simple_image_render ()
+{
+  video_options * vopts = g_malloc0(sizeof*vopts);
+  vopts -> proj = activep;
+  vopts -> oglquality = 0;
+  vopts -> video_res = duplicate_int (2, atomes_image_pixels);
+  int h, i, j, k, l, m;
+  for (i=0; i<2; i++) active_glwin -> pixels[i] = vopts -> video_res[i];
+  vopts -> codec = atomes_image_format;
+  if (atomes_image_style != NONE)
+  {
+    if (atomes_image_style < OGL_STYLES)
+    {
+      active_glwin -> anim -> last -> img -> style = atomes_image_style;
+    }
+    else
+    {
+      active_glwin -> anim -> last -> img -> style = SPACEFILL;
+      h = atomes_image_style - OGL_STYLES;
+      active_glwin -> anim -> last -> img -> filled_type = h;
+      j = active_project -> nspec;
+      k = (h) ? 9 + h : 2;
+      l = (h) ? 12 + h : 7;
+      for (i=0; i<j; i++)
+      {
+        m = (int)active_project -> chemistry -> chem_prop[CHEM_Z][i];
+        active_glwin -> anim -> last -> img -> atomicrad[i] = (default_o_at_rs[2]) ? default_at_rs[2] : get_radius (2, h, m, default_atomic_rad[k]);
+        active_glwin -> anim -> last -> img -> atomicrad[i+j] = (default_o_at_rs[7]) ? default_at_rs[7] : get_radius (7, h, m, default_atomic_rad[l]);
+      }
+    }
+  }
+  run_render_image (NULL, GTK_RESPONSE_ACCEPT, vopts);
+  g_free (vopts);
+  to_close_this_project (0, active_project);
 }

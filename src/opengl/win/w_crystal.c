@@ -11,7 +11,7 @@ See the GNU General Public License for more details.
 You should have received a copy of the GNU Affero General Public License along with 'atomes'.
 If not, see <https://www.gnu.org/licenses/>
 
-Copyright (C) 2022-2025 by CNRS and University of Strasbourg */
+Copyright (C) 2022-2026 by CNRS and University of Strasbourg */
 
 /*!
 * @file w_crystal.c
@@ -83,7 +83,7 @@ extern void gtk_window_change_gdk_visual (GtkWidget * win);
 #endif // GTK3
 extern gboolean create_3d_model (int p, gboolean load);
 extern G_MODULE_EXPORT void on_realize (GtkGLArea * area, gpointer data);
-extern void init_camera (project * this_proj, gboolean get_depth);
+extern void init_camera (project * this_proj);
 extern void alloc_proj_data (project * this_proj, int cid);
 extern int action_atoms_from_project (project * this_proj, atom_search * asearch, int status, gboolean visible);
 extern void to_insert_in_project (int stat, int orig, project * this_proj, atom_search * asearch, gboolean visible);
@@ -781,7 +781,6 @@ int build_crystal_from_cif_database (project * this_proj)
   gtk_box_pack_start (GTK_BOX(vbox), hbox, FALSE, FALSE, 0);
   cif_file_name = cif_name = NULL;
 
-
   database_store = gtk_list_store_new (3, G_TYPE_INT, G_TYPE_INT, G_TYPE_STRING);
   gtk_box_pack_start (GTK_BOX(hbox), cif_tree (database_store, 0, "Database"), FALSE, FALSE, 0);
   group_store = gtk_list_store_new (3,  G_TYPE_INT, G_TYPE_INT,G_TYPE_STRING);
@@ -810,8 +809,6 @@ int build_crystal_from_cif_database (project * this_proj)
       gtk_widget_set_sensitive (vbox, 0);
       this_proj -> modelgl -> other_status = 2;
       create_object_from_library (cif_proj -> id);
-
-
       gtk_widget_set_sensitive (vbox, 1);
       break;
     default:

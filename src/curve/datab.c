@@ -11,7 +11,7 @@ See the GNU General Public License for more details.
 You should have received a copy of the GNU Affero General Public License along with 'atomes'.
 If not, see <https://www.gnu.org/licenses/>
 
-Copyright (C) 2022-2025 by CNRS and University of Strasbourg */
+Copyright (C) 2022-2026 by CNRS and University of Strasbourg */
 
 /*!
 * @file datab.c
@@ -130,12 +130,10 @@ void get_tree_data (GtkWidget * tree)
 void save_row (gpointer data, gpointer user_data)
 {
   path = data;
-  tint * id = (tint *)user_data;
+  Curve * this_curve = get_curve_from_pointer (user_data);
   if (gtk_tree_model_get_iter (curve_model, & row, path))
   {
-
-    gtk_tree_model_get (curve_model, & row, 1, & get_project_by_id(id -> a) -> curves[id -> b][id -> c] -> data[0][nrows],
-                                            2, & get_project_by_id(id -> a) -> curves[id -> b][id -> c] -> data[1][nrows], -1);
+    gtk_tree_model_get (curve_model, & row, 1, & this_curve -> data[0][nrows], 2, & this_curve -> data[1][nrows], -1);
   }
   nrows = nrows + 1;
 }
@@ -204,11 +202,12 @@ void add_to_last_row (gpointer data, gpointer user_data)
 void add_to_last_col (double cte, gpointer data)
 {
   qint * dat = (qint *)data;
-  project * this_proj = get_project_by_id(dat -> a);
-  curve_model = gtk_tree_view_get_model (GTK_TREE_VIEW(this_proj -> curves[dat -> b][dat -> c] -> datatree));
-  sel = gtk_tree_view_get_selection (GTK_TREE_VIEW(this_proj -> curves[dat -> b][dat -> c] -> datatree));
+  Curve * this_curve;
+  this_curve = get_project_by_id (((tint *)data) -> a) -> analysis[dat -> b] -> curves[dat -> c];
+  curve_model = gtk_tree_view_get_model (GTK_TREE_VIEW(this_curve -> datatree));
+  sel = gtk_tree_view_get_selection (GTK_TREE_VIEW(this_curve -> datatree));
   gtk_tree_selection_select_all (sel);
-  get_tree_data (this_proj -> curves[dat -> b][dat -> c] -> datatree);
+  get_tree_data (this_curve -> datatree);
   g_list_foreach (lrows, (GFunc)add_to_last_row, & cte);
   gtk_tree_selection_unselect_all (sel);
 }
@@ -244,11 +243,12 @@ void multiply_last_row (gpointer data, gpointer user_data)
 void multiply_last_col (double cte, gpointer data)
 {
   qint * dat = (qint *)data;
-  project * this_proj = get_project_by_id(dat -> a);
-  curve_model = gtk_tree_view_get_model (GTK_TREE_VIEW(this_proj -> curves[dat -> b][dat -> c] -> datatree));
-  sel = gtk_tree_view_get_selection (GTK_TREE_VIEW(this_proj -> curves[dat -> b][dat -> c] -> datatree));
+  Curve * this_curve;
+  this_curve = get_project_by_id (dat -> a) -> analysis[dat -> b] -> curves[dat -> c];
+  curve_model = gtk_tree_view_get_model (GTK_TREE_VIEW(this_curve -> datatree));
+  sel = gtk_tree_view_get_selection (GTK_TREE_VIEW(this_curve -> datatree));
   gtk_tree_selection_select_all (sel);
-  get_tree_data (this_proj -> curves[dat -> b][dat -> c] -> datatree);
+  get_tree_data (this_curve -> datatree);
   g_list_foreach (lrows, (GFunc)multiply_last_row, & cte);
   gtk_tree_selection_unselect_all (sel);
 }
@@ -410,7 +410,7 @@ G_MODULE_EXPORT void edit_cell (GtkCellRendererText * cell, gchar * path_string,
 {
   qint * id = (qint *)user_data;
   project * this_proj = get_project_by_id (id -> a);
-  curve_model = gtk_tree_view_get_model(GTK_TREE_VIEW(this_proj -> curves[id -> b][id -> c] -> datatree));
+  curve_model = gtk_tree_view_get_model(GTK_TREE_VIEW(this_proj -> analysis[id -> b] -> curves[id -> c] -> datatree));
   gtk_tree_model_get_iter_from_string (curve_model, & row, path_string);
   double val = string_to_double ((gpointer)new_text);
   gtk_list_store_set (GTK_LIST_STORE(curve_model), & row, id -> d, val, -1);
@@ -469,7 +469,7 @@ void add_to_column (gpointer data)
   GtkWidget * lab;
   gchar * str;
   qint * dat = (qint *)data;
-  wind = dialogmodal ("Add constant to column", GTK_WINDOW(get_project_by_id(dat -> a) -> curves[dat -> b][dat -> c] -> window));
+  wind = dialogmodal ("Add constant to column", GTK_WINDOW(get_project_by_id(dat -> a) -> analysis[dat -> b] -> curves[dat -> c] -> window));
   gtk_dialog_add_button (GTK_DIALOG (wind), "Apply", GTK_RESPONSE_APPLY);
   box = dialog_get_content_area (wind);
   hbox = create_hbox (0);
@@ -522,7 +522,7 @@ void multiply_column (gpointer data)
   GtkWidget * lab;
   gchar * str;
   qint * dat = (qint *)data;
-  wind = dialogmodal ("Multiply Column by Constant", GTK_WINDOW(get_project_by_id(dat -> a) -> curves[dat -> b][dat -> c] -> window));
+  wind = dialogmodal ("Multiply Column by Constant", GTK_WINDOW(get_project_by_id(dat -> a) -> analysis[dat -> b] -> curves[dat -> c] -> window));
   gtk_dialog_add_button (GTK_DIALOG (wind), "Apply", GTK_RESPONSE_APPLY);
   box = dialog_get_content_area (wind);
   hbox = create_hbox (0);
@@ -855,13 +855,13 @@ static void fill_data_model (GtkListStore * store, project * this_proj, int b, i
 {
   GtkTreeIter datalevel;
   int i;
-  for (i=0; i<this_proj -> curves[b][c] -> ndata; i++)
+  for (i=0; i<this_proj -> analysis[b] -> curves[c] -> ndata; i++)
   {
     gtk_list_store_append (store, & datalevel);
     gtk_list_store_set (store, & datalevel,
                         0, i+1,
-                        1, this_proj -> curves[b][c] -> data[0][i],
-                        2, this_proj -> curves[b][c] -> data[1][i], -1);
+                        1, this_proj -> analysis[b] -> curves[c] -> data[0][i],
+                        2, this_proj -> analysis[b] -> curves[c] -> data[1][i], -1);
   }
 }
 
@@ -885,9 +885,10 @@ GtkWidget * setview (project * this_proj, int b, int c)
 //  ColRGBA col[3];
   gchar * name[3];
   int i;
+  Curve * this_curve = this_proj -> analysis[b] -> curves[c];
   name[0]=g_strdup_printf (" ");
-  name[1]=g_strdup_printf ("%s", this_proj -> curves[b][c] -> axis_title[0]);
-  name[2]=g_strdup_printf ("%s\n%s", prepare_for_title(this_proj -> name), this_proj -> curves[b][c] -> name);
+  name[1]=g_strdup_printf ("%s", this_curve -> axis_title[0]);
+  name[2]=g_strdup_printf ("%s\n%s", prepare_for_title(this_proj -> name), this_curve -> name);
   datamodel = gtk_list_store_newv (3, type);
   fill_data_model (datamodel, this_proj, b, c);
   dataview = gtk_tree_view_new_with_model (GTK_TREE_MODEL(datamodel));
@@ -896,7 +897,6 @@ GtkWidget * setview (project * this_proj, int b, int c)
   {
     datacel[i] = gtk_cell_renderer_text_new();
  /*   if (i == 1)
-  \param 890: /afs /bin /boot /data /dev /etc /home /lib /lib64 /lost+found /media /mnt /opt /proc /root /run /sbin /share /srv /sys /tmp /usr /var if (i == 1) 890: /afs /bin /boot /data /dev /etc /home /lib /lib64 /lost+found /media /mnt /opt /proc /root /run /sbin /share /srv /sys /tmp /usr /var if (i == 1)
     {
       col[i].red = 62965;
       col[i].green = 62965;
@@ -913,11 +913,11 @@ GtkWidget * setview (project * this_proj, int b, int c)
     {
       g_object_set (datacel[i], "editable", TRUE, NULL);
       gtk_cell_renderer_set_alignment (datacel[i], 0.5, 0.5);
-      this_proj -> curves[b][c] -> idcol[i-1].a = this_proj -> id;
-      this_proj -> curves[b][c] -> idcol[i-1].b = b;
-      this_proj -> curves[b][c] -> idcol[i-1].c = c;
-      this_proj -> curves[b][c] -> idcol[i-1].d = i;
-      g_signal_connect (G_OBJECT(datacel[i]), "edited", G_CALLBACK(edit_cell), & this_proj -> curves[b][c] -> idcol[i-1]);
+      this_curve -> idcol[i-1].a = this_proj -> id;
+      this_curve -> idcol[i-1].b = b;
+      this_curve -> idcol[i-1].c = c;
+      this_curve -> idcol[i-1].d = i;
+      g_signal_connect (G_OBJECT(datacel[i]), "edited", G_CALLBACK(edit_cell), & this_curve -> idcol[i-1]);
     }
     datacol[i] = gtk_tree_view_column_new_with_attributes(name[i], datacel[i], "text", i, NULL);
     gtk_tree_view_column_set_alignment (datacol[i], 0.5);
@@ -932,10 +932,10 @@ GtkWidget * setview (project * this_proj, int b, int c)
   dataselect = gtk_tree_view_get_selection (GTK_TREE_VIEW(dataview));
   gtk_tree_selection_set_mode (dataselect, GTK_SELECTION_MULTIPLE);
 #ifdef GTK3
-  g_signal_connect (G_OBJECT(dataview), "button_press_event", G_CALLBACK(on_data_button_event), & this_proj -> curves[b][c] -> idcol[1]);
+  g_signal_connect (G_OBJECT(dataview), "button_press_event", G_CALLBACK(on_data_button_event), & this_curve -> idcol[1]);
 #else
-  add_widget_gesture_and_key_action (dataview, "datab-context-click", G_CALLBACK(on_data_button_pressed), & this_proj -> curves[b][c] -> idcol[1],
-                                               "datab-context-release", G_CALLBACK(on_data_button_released), & this_proj -> curves[b][c] -> idcol[1],
+  add_widget_gesture_and_key_action (dataview, "datab-context-click", G_CALLBACK(on_data_button_pressed), & this_curve -> idcol[1],
+                                               "datab-context-release", G_CALLBACK(on_data_button_released), & this_curve -> idcol[1],
                                                 NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL);
 #endif
   gtk_tree_view_expand_all (GTK_TREE_VIEW(dataview));
@@ -952,9 +952,8 @@ GtkWidget * setview (project * this_proj, int b, int c)
 */
 void cancel_changes (GtkWidget * widg, gpointer data)
 {
-  tint * id = (tint *)data;
   destroy_this_widget (widg);
-  get_project_by_id(id -> a) -> curves[id -> b][id -> c] -> datatree = NULL;
+  get_curve_from_pointer (data) -> datatree = NULL;
 }
 
 /*!
@@ -1009,17 +1008,18 @@ G_MODULE_EXPORT void validate_changes (GtkButton * but, gpointer data)
 {
   tint * id = (tint *)data;
   project * this_proj = get_project_by_id(id -> a);
-  curve_model = gtk_tree_view_get_model(GTK_TREE_VIEW(this_proj -> curves[id -> b][id -> c] -> datatree));
-  sel = gtk_tree_view_get_selection (GTK_TREE_VIEW(this_proj -> curves[id -> b][id -> c] -> datatree));
+  Curve * this_curve = this_proj -> analysis[id -> b] -> curves[id -> c];
+  curve_model = gtk_tree_view_get_model(GTK_TREE_VIEW(this_curve -> datatree));
+  sel = gtk_tree_view_get_selection (GTK_TREE_VIEW(this_curve -> datatree));
   gtk_tree_selection_select_all (sel);
-  get_tree_data (this_proj -> curves[id -> b][id -> c] -> datatree);
-  if (nrows != this_proj -> curves[id -> b][id -> c] -> ndata)
+  get_tree_data (this_curve -> datatree);
+  if (nrows != this_curve -> ndata)
   {
-    this_proj -> curves[id -> b][id -> c] -> ndata = nrows;
-    g_free (this_proj -> curves[id -> b][id -> c] -> data[0]);
-    this_proj -> curves[id -> b][id -> c] -> data[0] = g_malloc0 (nrows*sizeof*this_proj -> curves[id -> b][id -> c] -> data[0]);
-    g_free (this_proj -> curves[id -> b][id -> c] -> data[1]);
-    this_proj -> curves[id -> b][id -> c] -> data[1] = g_malloc0 (nrows*sizeof*this_proj -> curves[id -> b][id -> c] -> data[1]);
+    this_curve -> ndata = nrows;
+    g_free (this_curve -> data[0]);
+    this_curve -> data[0] = allocdouble (nrows);
+    g_free (this_curve -> data[1]);
+    this_curve -> data[1] = allocdouble (nrows);
   }
   nrows = 0;
   g_list_foreach (lrows, (GFunc)save_row, data);
@@ -1039,20 +1039,22 @@ void edit_data (gpointer data)
   GtkWidget * win;
   tint * id = (tint *)data;
   project * this_proj = get_project_by_id(id -> a);
-  if (this_proj -> curves[id -> b][id -> c] -> datatree != NULL)
+  Curve * this_curve = this_proj -> analysis[id -> b] -> curves[id -> c];
+
+  if (this_curve -> datatree != NULL)
   {
-    win = get_top_level(GTK_WIDGET(this_proj -> curves[id -> b][id -> c] -> datatree));
+    win = get_top_level(GTK_WIDGET(this_curve -> datatree));
   }
   else
   {
-    gchar * str = g_strdup_printf ("%s - %s", prepare_for_title (this_proj -> name), this_proj -> curves[id -> b][id -> c] -> name);
+    gchar * str = g_strdup_printf ("%s - %s", prepare_for_title (this_proj -> name), this_curve -> name);
     win = create_win (str, MainWindow, FALSE, TRUE);
     g_free (str);
     gtk_window_set_default_size (GTK_WINDOW(win), 300, 600);
     GtkWidget * vbox = create_vbox (BSEP);
-    this_proj -> curves[id -> b][id -> c] -> datatree = setview (this_proj, id -> b, id -> c);
+    this_curve -> datatree = setview (this_proj, id -> b, id -> c);
     GtkWidget * scrol = create_scroll (vbox, -1, 570, GTK_SHADOW_ETCHED_IN);
-    add_container_child (CONTAINER_SCR, scrol, this_proj -> curves[id -> b][id -> c] -> datatree);
+    add_container_child (CONTAINER_SCR, scrol, this_curve -> datatree);
     GtkWidget * hbox = create_hbox (0);
     GtkWidget * butc = create_button ("Cancel", IMG_STOCK, CANCEL, -1, -1, GTK_RELIEF_NORMAL, G_CALLBACK(cancel_but), data);
     GtkWidget * butv = create_button ("Apply", IMG_STOCK, EXECUTE, -1, -1, GTK_RELIEF_NORMAL, G_CALLBACK(validate_changes), data);
