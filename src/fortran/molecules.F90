@@ -376,6 +376,7 @@ do i=1, NS
           deallocate (TMPAT)
         endif
       enddo
+      nullify(TMPMOL%FIRST_AT)
 
       call send_mol_details (TMPMOL%STEP, TMPMOL%MID, TMPMOL%ATOMES, NSP, TMPMOL%BSP, ATMOL)
       if (TMPMOL%ATOMES .gt. 1) then
