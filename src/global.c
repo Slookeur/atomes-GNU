@@ -61,6 +61,13 @@ Copyright (C) 2022-2026 by CNRS and University of Strasbourg */
 
 */
 
+#include <glib.h>
+#include <glib/gi18n.h>
+#include <locale.h>
+#ifdef OSX
+#include <xlocale.h>
+#endif
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <sys/types.h>

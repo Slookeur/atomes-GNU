@@ -595,7 +595,7 @@ void calc_rings (GtkWidget * vbox)
   gchar * val_d[3]={"<i><b>n</b><sub>max</sub></i> in total number of nodes (or atoms)",
                     "value used for memory allocation = f(<i><b>n</b><sub>max</sub></i>, system studied)",
                     "but homopolar bonds can shorten the rings"};
-  gchar * val_e={"\n<sub>[1] S. V. King. <i>Nature</i>, <b>213</b>:1112 (1967).</sub>\n"
+  gchar * val_e={"<sub>[1] S. V. King. <i>Nature</i>, <b>213</b>:1112 (1967).</sub>\n"
                  "<sub>[2] L. Guttman. <i>J. Non-Cryst. Solids.</i>, <b>116</b>:145-147 (1990).</sub>\n"
                  "<sub>[3] D. S. Franzblau. <i>Phys. Rev. B</i>, <b>44</b>(10):4925-4930 (1991).</sub>\n"
                  "<sub>[4] K. Goetzke and H. J. Klein. <i>J. Non-Cryst. Solids.</i>, <b>127</b>:215-220 (1991).</sub>\n"
@@ -678,7 +678,7 @@ void calc_rings (GtkWidget * vbox)
   }
   if (! search_type)
   {
-    add_box_child_start (GTK_ORIENTATION_VERTICAL, vbox, markup_label (val_e, -1, -1, 0.0, 0.5), FALSE, FALSE, 0);
+    add_box_child_start (GTK_ORIENTATION_VERTICAL, vbox, markup_label (val_e, -1, -1, 0.0, 0.5), FALSE, FALSE, 5);
     i = 0;
     g_signal_connect(G_OBJECT(rings_box[0]), "changed", G_CALLBACK(combox_rings_changed), GINT_TO_POINTER(0));
     combo_set_active (rings_box[0], (preferences) ? tmp_rsparam[0] : active_project -> rsearch[0]);
@@ -773,9 +773,8 @@ G_MODULE_EXPORT void toggle_bond (GtkToggleButton * Button, gpointer data)
     if (status)
     {
       // To add = do not annoy me with that again !
-      show_info ("Activate this option and the result of the nearest neighbors\n"
-                 "analysis will be saved during the search in a file that you may\n"
-                 "use afterwards.\n", 0, MainWindow);
+      show_info ("The result of the nearest neighbors analysis\n"
+                 "will be saved in a file that you may use afterwards.\n", 0, MainWindow);
 #ifdef GTK4
       GtkFileChooserNative * info;
 #else
