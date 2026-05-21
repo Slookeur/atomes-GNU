@@ -962,7 +962,7 @@ GtkWidget * create_frag_mol_search (project * this_proj, int geo)
                                    "... instead you can look for %s(s) individually:\n"), _(obj[geo-2]), _(obj[geo-2]));
   add_box_child_start (GTK_ORIENTATION_VERTICAL, frag_mol_search, markup_label(str, 200, -1, 0.5, 0.5), FALSE, FALSE, 10);
   g_free (str);
-  gchar * search_item[2]={i18n("Fragment ID:"), i18n("Molecule ID:")};
+  gchar * search_item[2]={i18n("Fragment Id.:"), i18n("Molecule Id.:")};
   GtkWidget * hbox;
   GtkWidget * entry;
   GtkWidget * label;
@@ -1321,7 +1321,7 @@ GtkWidget * advanced_coord_properties (glwin * view, int page)
     {
       if (view -> ring_max[i])
       {
-        str = (i) ? g_strdup_printf (_("%s ring(s) <b>[%s]</b>"), _(rings_type[i]), rings_short[i]) :  g_strdup_printf (_("All ring(s) (No Rule) <b>[%s]</b>"), rings_short[i]);
+        str = (i) ? g_strdup_printf (_("%s ring(s) <b>[%s]</b>"), _(rings_type[i]), rings_short[i]) :  g_strdup_printf (_("All ring(s) (no rule) <b>[%s]</b>"), rings_short[i]);
         gtk_notebook_append_page (GTK_NOTEBOOK(view -> coord_win -> notebook), coord_tab (view, i+4, 0), markup_label(str, -1, -1, 0.0, 0.5));
         g_free (str);
       }

@@ -138,13 +138,13 @@ shortcuts opengl_shortcuts[] = {
 //
   { i18n("Atom(s) color map"), i18n("change atom(s) color map"), GDK_KEY_a, "a" },
   { i18n("Polyhedra color map"), i18n("change polyhedra color map"), GDK_KEY_p, "p" },
-  { i18n("Balls and Sticks"), i18n("change global style to ball and stick"), GDK_KEY_b, "b" },
-  { i18n("Cylinders"), i18n("change global style to cylinder"), GDK_KEY_c, "c" },
-  { i18n("Spheres"), i18n("change global style to sphere"), GDK_KEY_s, "s" },
+  { i18n("Balls and Sticks"), i18n("change global style to balls and sticks"), GDK_KEY_b, "b" },
+  { i18n("Cylinders"), i18n("change global style to cylinders"), GDK_KEY_c, "c" },
+  { i18n("Spheres"), i18n("change global style to spheres"), GDK_KEY_s, "s" },
   { i18n("Covalent Radii"), i18n("change global style to covalent radii"), GDK_KEY_o, "o" },
   { i18n("Ionic Radii"), i18n("change global style to ionic radii"), GDK_KEY_i, "i" },
   { i18n("van der Waals Radii"), i18n("change global style to van der Waals radii"), GDK_KEY_v, "v" },
-  { i18n("In crystal Radii"), i18n("change global style to in crystal radii"), GDK_KEY_r, "r" },
+  { i18n("In Crystal Radii"), i18n("change global style to in crystal radii"), GDK_KEY_r, "r" },
   { i18n("Wireframes"), i18n("change global style to wireframes"), GDK_KEY_w, "w" },
 //
   { i18n("All measures for the selection, pressed:\n\n"

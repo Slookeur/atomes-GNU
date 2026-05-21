@@ -250,7 +250,7 @@ void init_atomes_analysis (project * this_proj, gboolean apply_defaults)
   comp_list = allocint (1);
   // Bond length  distribution(s)
   comp_list[0] = BND;
-  this_proj -> analysis[BND] = setup_analysis (pid, _("Bonds Properties"), BND, FALSE, TRUE, i*i, 1, comp_list, "D<sub>ij</sub> [Å]");
+  this_proj -> analysis[BND] = setup_analysis (pid, _("Bond Properties"), BND, FALSE, TRUE, i*i, 1, comp_list, "D<sub>ij</sub> [Å]");
 
   // Angle distribution(s)
   comp_list[0] = ANG;
@@ -335,7 +335,7 @@ void initialize_this_analysis (project * this_proj, int ana)
       // Bond length  distribution(s)
       comp_list = allocint (1);
       comp_list[0] = BND;
-      this_proj -> analysis[BND] = setup_analysis (this_proj -> id, _("Bonds properties"), BND, FALSE, TRUE, i*i, 1, comp_list, "D<sub>ij</sub> [Å]");
+      this_proj -> analysis[BND] = setup_analysis (this_proj -> id, _("Bond properties"), BND, FALSE, TRUE, i*i, 1, comp_list, "D<sub>ij</sub> [Å]");
       break;
     case ANG:
       // Angle distribution(s)

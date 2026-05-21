@@ -485,7 +485,7 @@ int save_preferences_to_xml_file ()
                                i18n("Atom(s) color map"),
                                i18n("Polyhedra color map"),
                                i18n("Quality"),
-                               i18n("Ray tracing")};
+                               i18n("Ray Tracing")};
   gchar * xml_material_leg[8] = {i18n("Predefine material"),
                                  i18n("Lightning model"),
                                  i18n("Metallic"),
@@ -3839,7 +3839,7 @@ GtkWidget * opengl_preferences ()
   g_signal_connect (G_OBJECT(combo), "changed", G_CALLBACK(set_default_style), NULL);
   add_box_child_start (GTK_ORIENTATION_HORIZONTAL, hbox, combo, FALSE, FALSE, 0);
   add_box_child_start (GTK_ORIENTATION_VERTICAL, vbox, hbox, FALSE, FALSE, 10);
-  append_comments (vbox, "<sup>*</sup>", _("if 10 000 atoms or more: <b>Wireframe</b>, otherwise: <b>Ball and stick</b>"));
+  append_comments (vbox, "<sup>*</sup>", _("if 10 000 atoms or more: <b>Wireframes</b>, otherwise: <b>Balls and sticks</b>"));
 
   hbox = create_hbox (BSEP);
   add_box_child_start (GTK_ORIENTATION_HORIZONTAL, hbox, markup_label (_("<b>Color maps</b>"), 250, -1, 0.0, 0.5), FALSE, FALSE, 15);
