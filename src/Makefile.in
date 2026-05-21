@@ -511,7 +511,6 @@ FCFLAGS_f90 = @FCFLAGS_f90@
 FCLIBS = @FCLIBS@
 FFMPEG_CFLAGS = @FFMPEG_CFLAGS@
 FFMPEG_LIBS = @FFMPEG_LIBS@
-GETTEXT_PACKAGE = @GETTEXT_PACKAGE@
 GLU_CFLAGS = @GLU_CFLAGS@
 GLU_LIBS = @GLU_LIBS@
 INSTALL = @INSTALL@
@@ -610,8 +609,7 @@ top_srcdir = @top_srcdir@
 # To prepare the OpenGL testing utility:
 SUBDIRS = startup-testing
 atomes_LDADD = $(LGTK_LIBS) $(LIBXML2_LIBS) $(PANGOFT2_LIBS) \
-	$(FFMPEG_LIBS) $(GLU_LIBS) $(EPOXY_LIBS) $(INTLLIBS) \
-	$(am__append_1)
+	$(FFMPEG_LIBS) $(GLU_LIBS) $(EPOXY_LIBS) $(am__append_1)
 
 # Create a variable to store the CFLAGS for all the required libraries
 LIBS_CFLAGS = $(LGTK_CFLAGS) $(LIBXML2_CFLAGS) $(PANGOFT2_CFLAGS) $(FFMPEG_CFLAGS) $(GLU_CFLAGS) $(EPOXY_CFLAGS)
@@ -624,12 +622,13 @@ LIBS_CFLAGS = $(LGTK_CFLAGS) $(LIBXML2_CFLAGS) $(PANGOFT2_CFLAGS) $(FFMPEG_CFLAG
 AM_LDFLAGS = $(OpenMP_FLAGS)
 @GTK3_FALSE@GTK_VERSION = -DGTK4
 @GTK3_TRUE@GTK_VERSION = -DGTK3
-@LINUX_FALSE@@WINDOWS_FALSE@AM_CPPFLAGS = -DOSX $(GTK_VERSION) -DGTKGLAREA -DMENU_ICONS $(OpenMP_FLAGS) $(PACKAGE_CPPFLAGS)
-@LINUX_TRUE@@WINDOWS_FALSE@AM_CPPFLAGS = -DLINUX $(GTK_VERSION) -DGTKGLAREA -DMENU_ICONS $(OpenMP_FLAGS) $(PACKAGE_CPPFLAGS)
+atomes_locale = $(DESTDIR)$(localedir)
+@LINUX_FALSE@@WINDOWS_FALSE@AM_CPPFLAGS = -DOSX $(GTK_VERSION) -DGTKGLAREA -DMENU_ICONS $(OpenMP_FLAGS) $(PACKAGE_CPPFLAGS) -DPACKAGE_LOCALE=\""$(atomes_locale)"\"
+@LINUX_TRUE@@WINDOWS_FALSE@AM_CPPFLAGS = -DLINUX $(GTK_VERSION) -DGTKGLAREA -DMENU_ICONS $(OpenMP_FLAGS) $(PACKAGE_CPPFLAGS) -DPACKAGE_LOCALE=\""$(atomes_locale)"\"
 
 # Use AM_CPPFLAGS to define additional preprocessor flags:
-@WINDOWS_TRUE@AM_CPPFLAGS = $(GTK_VERSION) -DGTKGLAREA -DMENU_ICONS $(OpenMP_FLAGS) 
-@WINDOWS_FALSE@PACKAGE_CPPFLAGS = -DPACKAGE_PREFIX=\""$(datadir)/atomes"\" -DPACKAGE_LIBEXEC=\""$(libexecdir)"\"
+@WINDOWS_TRUE@AM_CPPFLAGS = $(GTK_VERSION) -DGTKGLAREA -DMENU_ICONS $(OpenMP_FLAGS) -DPACKAGE_LOCALE=\""$(atomes_locale)"\"
+@WINDOWS_FALSE@PACKAGE_CPPFLAGS = -DPACKAGE_PREFIX=\""$(datadir)/atomes"\" -DPACKAGE_LIBEXEC=\""$(libexecdir)"\" -DPACKAGE_LOCALE=\""$(atomes_locale)"\"
 
 # Use AM_FFLAGS to define additional Fortran 90 flags:
 AM_FFLAGS = $(OpenMP_FLAGS)
@@ -653,7 +652,7 @@ inc = -I$(gui) -I$(work) -I$(proj) -I$(read) -I$(calc) -I$(dlpoly) -I$(lammps) -
 includes = $(inc) -DGTK_DISABLE_DEPRECATED
 
 # Use AM_CFLAGS to define additional C flags:
-AM_CFLAGS = $(includes) $(OpenMP_FLAGS) $(LIBS_CFLAGS)
+AM_CFLAGS = $(includes) $(OpenMP_FLAGS) $(LIBS_CFLAGS) -std=gnu99
 atomes_fortran_modules = $(for)parameters.F90 \
 			 $(for)mendeleiev.F90
 

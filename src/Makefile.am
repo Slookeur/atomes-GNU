@@ -5,7 +5,7 @@ SUBDIRS = startup-testing
 # Setup the name of the program to be generated, using:
 bin_PROGRAMS = atomes
 
-atomes_LDADD = $(LGTK_LIBS) $(LIBXML2_LIBS) $(PANGOFT2_LIBS) $(FFMPEG_LIBS) $(GLU_LIBS) $(EPOXY_LIBS) $(INTLLIBS)
+atomes_LDADD = $(LGTK_LIBS) $(LIBXML2_LIBS) $(PANGOFT2_LIBS) $(FFMPEG_LIBS) $(GLU_LIBS) $(EPOXY_LIBS)
 if WINDOWS
   atomes_LDADD += win_atomes.o
 
@@ -32,15 +32,17 @@ else
   GTK_VERSION=-DGTK4
 endif
 
+atomes_locale = $(DESTDIR)$(localedir)
+
 # Use AM_CPPFLAGS to define additional preprocessor flags:
 if WINDOWS
-AM_CPPFLAGS = $(GTK_VERSION) -DGTKGLAREA -DMENU_ICONS $(OpenMP_FLAGS) 
+AM_CPPFLAGS = $(GTK_VERSION) -DGTKGLAREA -DMENU_ICONS $(OpenMP_FLAGS) -DPACKAGE_LOCALE=\""$(atomes_locale)"\"
 else
-PACKAGE_CPPFLAGS = -DPACKAGE_PREFIX=\""$(datadir)/atomes"\" -DPACKAGE_LIBEXEC=\""$(libexecdir)"\"
+PACKAGE_CPPFLAGS = -DPACKAGE_PREFIX=\""$(datadir)/atomes"\" -DPACKAGE_LIBEXEC=\""$(libexecdir)"\" -DPACKAGE_LOCALE=\""$(atomes_locale)"\"
 if LINUX
-AM_CPPFLAGS = -DLINUX $(GTK_VERSION) -DGTKGLAREA -DMENU_ICONS $(OpenMP_FLAGS) $(PACKAGE_CPPFLAGS)
+AM_CPPFLAGS = -DLINUX $(GTK_VERSION) -DGTKGLAREA -DMENU_ICONS $(OpenMP_FLAGS) $(PACKAGE_CPPFLAGS) -DPACKAGE_LOCALE=\""$(atomes_locale)"\"
 else
-AM_CPPFLAGS = -DOSX $(GTK_VERSION) -DGTKGLAREA -DMENU_ICONS $(OpenMP_FLAGS) $(PACKAGE_CPPFLAGS)
+AM_CPPFLAGS = -DOSX $(GTK_VERSION) -DGTKGLAREA -DMENU_ICONS $(OpenMP_FLAGS) $(PACKAGE_CPPFLAGS) -DPACKAGE_LOCALE=\""$(atomes_locale)"\"
 endif
 endif
 

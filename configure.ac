@@ -25,9 +25,11 @@ dnl ***************************************************************************
 dnl Internatinalization
 dnl ***************************************************************************
 
-GETTEXT_PACKAGE=atomes
-AC_SUBST(GETTEXT_PACKAGE)
-AC_DEFINE_UNQUOTED(GETTEXT_PACKAGE,"$GETTEXT_PACKAGE", [GETTEXT package name])
+dnl GETTEXT_PACKAGE=atomes
+dnl AC_SUBST(GETTEXT_PACKAGE)
+dnl AC_DEFINE_UNQUOTED([GETTEXT_PACKAGE], ["$GETTEXT_PACKAGE"], [GETTEXT package name])
+AC_PROG_CC
+AC_CHECK_HEADERS([libintl.h locale.h])
 
 dnl ***************************************************************************
 dnl Check for the operating system
@@ -175,6 +177,7 @@ fi
 AC_CONFIG_FILES([
  Makefile
  data/Makefile
+ locale/Makefile
  src/Makefile
  src/startup-testing/Makefile 
 ])
