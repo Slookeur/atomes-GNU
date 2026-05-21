@@ -322,7 +322,7 @@ void initialize_this_analysis (project * this_proj, int ana)
       comp_list = allocint (2);
       comp_list[0] = SQD;
       comp_list[1] = SKD;
-      this_proj -> analysis[SKD] = setup_analysis (this_proj -> id, _("S(q) from Debye equation"), SKD, FALSE, TRUE, 8+4*i*i + ((i ==2) ? 8 : 0), 2, comp_list, "q [Å<sup>-1</sup>]");
+      this_proj -> analysis[SKD] = setup_analysis (this_proj -> id, _("S(q) from Debye Equation"), SKD, FALSE, TRUE, 8+4*i*i + ((i ==2) ? 8 : 0), 2, comp_list, "q [Å<sup>-1</sup>]");
       break;
     case GDK:
       // g(r) FFT S(q)
@@ -335,31 +335,31 @@ void initialize_this_analysis (project * this_proj, int ana)
       // Bond length  distribution(s)
       comp_list = allocint (1);
       comp_list[0] = BND;
-      this_proj -> analysis[BND] = setup_analysis (this_proj -> id, _("Bond properties"), BND, FALSE, TRUE, i*i, 1, comp_list, "D<sub>ij</sub> [Å]");
+      this_proj -> analysis[BND] = setup_analysis (this_proj -> id, _("Bond Properties"), BND, FALSE, TRUE, i*i, 1, comp_list, "D<sub>ij</sub> [Å]");
       break;
     case ANG:
       // Angle distribution(s)
       comp_list = allocint (1);
       comp_list[0] = ANG;
-      this_proj -> analysis[ANG] = setup_analysis (this_proj -> id, _("Angle distributions"), ANG, FALSE, TRUE, i*i*i + i*i*i*i, 1, comp_list, "θ [°]");
+      this_proj -> analysis[ANG] = setup_analysis (this_proj -> id, _("Angle Distributions"), ANG, FALSE, TRUE, i*i*i + i*i*i*i, 1, comp_list, "θ [°]");
       break;
     case RIN:
       // Ring statistics
       comp_list = allocint (1);
       comp_list[0] = RIN;
-      this_proj -> analysis[RIN] = setup_analysis (this_proj -> id, _("Ring statistics"), RIN, FALSE, TRUE, 20*(i+1), 1, comp_list, _("Size <i>n</i> of the ring [total number of nodes]"));
+      this_proj -> analysis[RIN] = setup_analysis (this_proj -> id, _("Ring Statistics"), RIN, FALSE, TRUE, 20*(i+1), 1, comp_list, _("Size <i>n</i> of the ring [total number of nodes]"));
       break;
     case CHA:
       // Chain statistics
       comp_list = allocint (1);
       comp_list[0] = CHA;
-      this_proj -> analysis[CHA] = setup_analysis (this_proj -> id, _("Chain statistics"), CHA, FALSE, TRUE, i+1, 1, comp_list, _("Size <i>n</i> of the chain [total number of nodes]"));
+      this_proj -> analysis[CHA] = setup_analysis (this_proj -> id, _("Chain Statistics"), CHA, FALSE, TRUE, i+1, 1, comp_list, _("Size <i>n</i> of the chain [total number of nodes]"));
       break;
     case SPH:
       // Spherical harmonics as order parameters
       comp_list = allocint (1);
       comp_list[0] = SPH;
-      this_proj -> analysis[SPH] = setup_analysis (this_proj -> id, _("Spherical harmonics"), SPH, FALSE, TRUE, 0, 1, comp_list, "Q<sub>l</sub>");
+      this_proj -> analysis[SPH] = setup_analysis (this_proj -> id, _("Spherical Harmonics"), SPH, FALSE, TRUE, 0, 1, comp_list, "Q<sub>l</sub>");
       break;
     case MSD:
       // Mean square displacement
@@ -371,7 +371,7 @@ void initialize_this_analysis (project * this_proj, int ana)
       comp_list = allocint (1);
       comp_list[0] = SKT;
       // Total number of graphs depends on the number of correlation states, not appearing here
-      if (this_proj -> steps > 1) this_proj -> analysis[SKT] = setup_analysis (this_proj -> id, _("Dynamic structure factor"), SKT, TRUE, TRUE, 0, 2, comp_list, NULL);
+      if (this_proj -> steps > 1) this_proj -> analysis[SKT] = setup_analysis (this_proj -> id, _("Dynamic Structure Factor"), SKT, TRUE, TRUE, 0, 2, comp_list, NULL);
       break;
   }
   g_free (comp_list);

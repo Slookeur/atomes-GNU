@@ -125,7 +125,7 @@ gchar * default_opts[MAXDATAQM-1][NSECOP]= {{i18n("Fictitious electronic mass:")
                                             {" ", " ", " ", " ", " ", " "},
                                             {" ", " ", " ", " ", " ", " "},
                                             {i18n("Use Angströms (default a.u.)"), i18n("Lattice:"), i18n("Symmetry:"), i18n("Parameters:"), i18n("Angles:"), i18n("Cutoff for the plane wave basis:")},
-                                            {i18n("Use constraints"), i18n("Fix:"), i18n("Use dummy atoms:"), i18n("Atom type:"), i18n("Maximum angular momentum <i>l</i>:"), i18n("Local angular momentum <i>l</i>:")}};
+                                            {i18n("Use constraints"), i18n("Freeze:"), i18n("Use dummy atoms:"), i18n("Atom type:"), i18n("Maximum angular momentum <i>l</i>:"), i18n("Local angular momentum <i>l</i>:")}};
 
 // 0 = None, 1 = Entry, 2 = Combo, 3 = yes/no
 int default_opts_type[MAXDATAQM-1][NSECOP] = {{1, 3, 3, 0, 0, 0},
@@ -155,7 +155,7 @@ gchar * default_text[9][NDFT] = {{i18n("Slater Exchange Only"), i18n("Local Dens
                                   i18n("Tetragonal"), i18n("Body Centered Tetragonal (BCT)"), i18n("Orthorombic"), i18n("Monoclinic"), i18n("Triclinic"),  " ", " ", " ", " ", " ", " ", " ", " "},
                                  {i18n("Default (a, b/a, c/a)"), i18n("Absolute (a, b, c)"), " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " "},
                                  {i18n("Default (cos α, cos β, cos γ)"), i18n("Degrees (α, β, γ)"), " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " "},
-                                 {i18n("All atoms"), i18n("Some atoms"), i18n("Some coordinates"), " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " "},
+                                 {i18n("All Atoms"), i18n("Some Atoms"), i18n("Some Coordinates"), " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " "},
                                  {" ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " "},
                                  {"s", "p", "d", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " "},
                                  {"s", "p", "d", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " "}};

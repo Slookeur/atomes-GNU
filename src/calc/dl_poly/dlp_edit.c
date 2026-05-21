@@ -2463,8 +2463,8 @@ void edit_parameters (int f, int id)
               }
               break;
             case 1:
-              combo_text_append (shell_cbox[k], _("All atoms"));
-              combo_text_append (shell_cbox[k], _("Selected atoms"));
+              combo_text_append (shell_cbox[k], _("All Atoms"));
+              combo_text_append (shell_cbox[k], _("Selected Atoms"));
               break;
           }
           l = (! k) ? tmp_fshell -> ia[k]+1 : (tmp_fshell -> ia[k] < 1) ? tmp_fshell -> ia[k]+1 : 2;

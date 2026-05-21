@@ -442,7 +442,7 @@ msgid "Save neighbors analysis in file"
 msgstr "Enregistrer l'analyse des voisins dans un fichier"
 
 # File: calc/cpmd/cpmd_init.c, Line: 1542
-# File: calc/dl_poly/dlp_field.c, Line: 4664
+# File: calc/dl_poly/dlp_field.c, Line: 4753
 # File: curve/w_data.c, Line: 181
 # File: curve/w_img.c, Line: 250
 # File: gui/calc_menu.c, Line: 782
@@ -1175,9 +1175,7 @@ msgstr "Boite et périodicité"
 msgid "Bond cutoffs"
 msgstr "Rayons de coupure"
 
-# File: calc/cp2k/cp2k_init.c, Line: 136
-# File: calc/cpmd/cpmd_init.c, Line: 153
-# File: gui/edit_menu.c, Line: 76
+# File: gui/edit_menu.c, Line: 76,310
 msgid "Lattice vectors"
 msgstr "Vecteurs de maille"
 
@@ -1188,10 +1186,6 @@ msgstr "Appliquer les <b>C</b>onditions aux <b>L</b>imites <b>P</b>ériodiques"
 # File: gui/edit_menu.c, Line: 282
 msgid "Fractional coordinates"
 msgstr "Coordonnées fractionnaires"
-
-# File: gui/edit_menu.c, Line: 310
-msgid "Lattice Vectors"
-msgstr "Vecteurs de maille"
 
 # File: gui/edit_menu.c, Line: 714
 msgid "To define the existence of a bond between 2 atoms i (&#x3B1;) and j (&#x3B2;), "
@@ -1338,7 +1332,7 @@ msgid "S(q) from FFT[g(r)]"
 msgstr "S(q) par FFT[g(r)]"
 
 # File: gui/gui.c, Line: 114,125
-# File: gui/initc.c, Line: 246
+# File: gui/initc.c, Line: 246,325
 msgid "S(q) from Debye Equation"
 msgstr "S(q) par l'Équation de Debye"
 
@@ -1352,17 +1346,17 @@ msgid "Bonds and Angles"
 msgstr "Liaisons et Angles"
 
 # File: gui/gui.c, Line: 117,129
-# File: gui/initc.c, Line: 261
+# File: gui/initc.c, Line: 261,350
 msgid "Ring Statistics"
 msgstr "Statistiques d'Anneaux"
 
 # File: gui/gui.c, Line: 118,130
-# File: gui/initc.c, Line: 265
+# File: gui/initc.c, Line: 265,356
 msgid "Chain Statistics"
 msgstr "Statistiques de Chaînes"
 
 # File: gui/gui.c, Line: 119,131
-# File: gui/initc.c, Line: 269
+# File: gui/initc.c, Line: 269,362
 msgid "Spherical Harmonics"
 msgstr "Harmoniques Sphériques"
 
@@ -1372,17 +1366,17 @@ msgid "Mean Squared Displacement"
 msgstr "Déplacement Carré Moyen"
 
 # File: gui/gui.c, Line: 121,133
-# File: gui/initc.c, Line: 280
+# File: gui/initc.c, Line: 280,374
 msgid "Dynamic Structure Factor"
 msgstr "Facteur de Structure Dynamique"
 
 # File: gui/gui.c, Line: 127
-# File: gui/initc.c, Line: 253
+# File: gui/initc.c, Line: 253,338
 msgid "Bond Properties"
-msgstr "Propriétés des liaisons"
+msgstr "Propriétés des Liaisons"
 
 # File: gui/gui.c, Line: 128
-# File: gui/initc.c, Line: 257
+# File: gui/initc.c, Line: 257,344
 msgid "Angle Distributions"
 msgstr "Distribution des Angles"
 
@@ -1593,34 +1587,6 @@ msgstr "Taille <i>n</i> de l'anneau [nombre total de nœuds]"
 # File: gui/initc.c, Line: 265,356
 msgid "Size <i>n</i> of the chain [total number of nodes]"
 msgstr "Taille <i>n</i> de la chaîne [nombre total de nœuds]"
-
-#File: gui/initc.c, Line: 325
-msgid "S(q) from Debye equation"
-msgstr "S(q) d'après l'équation de Debye"
-
-# File: gui/initc.c, Line: 338
-msgid "Bond properties"
-msgstr "Propriétés des liaisons"
-
-# File: gui/initc.c, Line: 344
-msgid "Angle distributions"
-msgstr "Distributions des angles"
-
-# File: gui/initc.c, Line: 350
-msgid "Ring statistics"
-msgstr "Statistiques d'anneaux"
-
-# File: gui/initc.c, Line: 356
-msgid "Chain statistics"
-msgstr "Statistiques de chaînes"
-
-# File: gui/initc.c, Line: 362
-msgid "Spherical harmonics"
-msgstr "Harmoniques sphériques"
-
-# File: gui/initc.c, Line: 374
-msgid "Dynamic structure factor"
-msgstr "Facteur de structure dynamique"
 
 # File: gui/interface.c, Line: 339
 msgid "\n\tError %s %s, at:\n"
@@ -2456,7 +2422,7 @@ msgstr "Mode édition"
 msgid "<b>Select selection type</b>"
 msgstr "<b>Sélectionner le type de sélection</b>"
 
-# File: calc/dl_poly/dlp_field.c, Line: 165
+# File: calc/dl_poly/dlp_field.c, Line: 188
 # File: gui/preferences.c, Line: 3221,3336,3341
 msgid "atom"
 msgstr "atome"
@@ -2522,7 +2488,7 @@ msgstr "Sélectionnez la couleur %s"
 msgid "Select %s label color"
 msgstr "Sélectionnez la couleur du label %s"
 
-# File: calc/dl_poly/dlp_field.c, Line: 836
+# File: calc/dl_poly/dlp_field.c, Line: 925
 # File: gui/preferences.c, Line: 3425
 # File: opengl/win/m_map.c, Line: 679
 msgid "Element"
@@ -2611,7 +2577,7 @@ msgstr "Sphère(s)"
 msgid "atom(s) "
 msgstr "atome(s) "
 
-# File: calc/dl_poly/dlp_field.c, Line: 842
+# File: calc/dl_poly/dlp_field.c, Line: 346
 # File: gui/preferences.c, Line: 3586
 # File: opengl/win/glwindow.c, Line: 526
 # File: opengl/win/m_clones.c, Line: 125
@@ -2748,6 +2714,16 @@ msgstr "f(atomes) <sup>*</sup>"
 # File: opengl/win/w_coord.c, Line: 90
 msgid "Atomic Species"
 msgstr "Espèces Chimiques"
+
+# File: gui/preferences.c, Line: 3790
+# File: opengl/win/m_poly.c, Line: 333,493
+msgid "Total Coordination(s)"
+msgstr "Coordination(s) Totale(s)"
+
+# File: gui/preferences.c, Line: 3791
+# File: opengl/win/m_poly.c, Line: 334,494
+msgid "Partial Coordination(s)"
+msgstr "Coordination(s) Partielle(s)"
 
 # File: gui/preferences.c, Line: 3820
 msgid "The <b>OpenGL</b> tab regroups rendering options"
@@ -3228,7 +3204,7 @@ msgid "\n\n\t between "
 msgstr "\n\n\t entre "
 
 # File: gui/sqcall.c, Line: 155,175
-# File: calc/dl_poly/dlp_field.c, Line: 2143
+# File: calc/dl_poly/dlp_field.c, Line: 3
 msgid "and"
 msgstr "et"
 
@@ -3249,7 +3225,7 @@ msgid "Logo"
 msgstr "Logo"
 
 # File: calc/dl_poly/dlp_atom.c, Line: 744
-# File: calc/dl_poly/dlp_field.c, Line: 835
+# File: calc/dl_poly/dlp_field.c, Line: 924
 # File: calc/dl_poly/dlp_mol.c, Line: 761
 # File: gui/tools.c, Line: 302
 # File: opengl/win/w_search.c, Line: 3577
@@ -3334,6 +3310,7 @@ msgstr "Fragment(s)"
 # File: opengl/win/w_coord.c, Line: 94,1355
 # File: opengl/win/w_volumes.c, Line: 1140
 # File: project/read_mol.c, Line: 150
+# File: calc/dl_poly/dlp_field.c, Line: 142
 msgid "Molecule(s)"
 msgstr "Molécule(s)"
 
@@ -3925,22 +3902,22 @@ msgid "Insert"
 msgstr "Insérer"
 
 # File: opengl/edit/atom_edit.c, Line: 60
-msgid "Random move"
-msgstr "Déplacement aléatoire"
+msgid "Random Move"
+msgstr "Déplacement Aléatoire"
 
 # File: opengl/edit/atom_edit.c, Line: 61
-msgid "All non-selected atoms"
-msgstr "Tous les atomes non-sélectionnés"
+msgid "All Non-selected Atoms"
+msgstr "Tous les Atomes Non-sélectionnés"
 
 # File: opengl/edit/atom_edit.c, Line: 61
-msgid "All selected atoms"
-msgstr "Tous les atomes sélectionnés"
+msgid "All Selected Atoms"
+msgstr "Tous les Atomes Sélectionnés"
 
 # File: calc/cpmd/cpmd_init.c, Line: 158
 # File: calc/dl_poly/dlp_edit.c, Line: 2466
 # File: opengl/edit/atom_edit.c, Line: 61
-msgid "All atoms"
-msgstr "Tous les atomes"
+msgid "All Atoms"
+msgstr "Tous les Atomes"
 
 # File: opengl/edit/atom_edit.c, Line: 206
 msgid "Leaving without saving ?"
@@ -4016,7 +3993,7 @@ msgstr "Tous les %s - atome(s)"
 msgid "Fragment N°%d"
 msgstr "Fragment N°%d"
 
-# File: calc/dl_poly/dlp_field.c, Line: 2551
+# File: calc/dl_poly/dlp_field.c, Line: 2640
 # File: opengl/edit/atom_object.c, Line: 938
 # File: opengl/win/initcoord.c, Line: 538
 # File: opengl/win/w_search.c, Line: 879,1069
@@ -4106,7 +4083,7 @@ msgstr "Normalement"
 
 # File: opengl/edit/atom_search.c, Line: 314
 msgid "Randomly"
-msgstr "Au hasard"
+msgstr "Au Hasard"
 
 # File: opengl/edit/atom_search.c, Line: 320
 msgid "Replace: "
@@ -4409,7 +4386,7 @@ msgid "Id."
 msgstr "Id."
 
 # File: calc/cp2k/cp2k_init.c, Line: 173
-# File: calc/dl_poly/dlp_field.c, Line: 835
+# File: calc/dl_poly/dlp_field.c, Line: 924
 # File: calc/dl_poly/dlp_mol.c, Line: 761
 # File: opengl/edit/cbuild_info.c, Line: 366
 msgid "Multiplicity"
@@ -4495,7 +4472,7 @@ msgstr "- Angles parallélépipédiques: "
 msgid "- Slab rotation: "
 msgstr "- Rotation du volume: "
 
-# File: calc/dl_poly/dlp_field.c, Line: 410
+# File: calc/dl_poly/dlp_field.c, Line: 279
 # File: opengl/edit/cell_cut.c, Line: 307
 # File: opengl/win/w_measures.c, Line: 752
 msgid "Angles"
@@ -4630,31 +4607,31 @@ msgstr "** Conservez les rapports entre les vecteurs de maille A, B et C comme c
 
 # File: opengl/edit/cell_edit.c, Line: 48
 msgid "Wrap All Atoms in"
-msgstr "Replacer les atomes dans la boîte"
+msgstr "Replacer les Atomes dans la Boîte"
 
 # File: opengl/edit/cell_edit.c, Line: 49
 msgid "Shift Center"
-msgstr "Déplacer le centre de la cellule"
+msgstr "Déplacer le Centre de la Cellule"
 
 # File: opengl/edit/cell_edit.c, Line: 50
 msgid "Add Extra(s)"
-msgstr "Ajouter des extras"
+msgstr "Ajouter des Extras"
 
 # File: opengl/edit/cell_edit.c, Line: 51
 msgid "Create Super-Cell"
-msgstr "Créer une super-cellule"
+msgstr "Créer une Super-Cellule"
 
 # File: opengl/edit/cell_edit.c, Line: 52
 msgid "Adjust Density"
-msgstr "Ajuster la densité"
+msgstr "Ajuster la Densité"
 
 # File: opengl/edit/cell_edit.c, Line: 53
 msgid "Cut Slab"
-msgstr "Découper un volume"
+msgstr "Découper un Volume"
 
 # File: opengl/edit/cell_edit.c, Line: 54
 msgid "PBC Pixels Debug"
-msgstr "Débogage des pixels CLP"
+msgstr "Débogage des Pixels CLP"
 
 # File: opengl/edit/cell_edit.c, Line: 190
 # File: workspace/workspace.c, Line: 388
@@ -5147,13 +5124,14 @@ msgstr "Générer Une Image"
 
 # File: calc/cpmd/cpmd_atoms.c, Line: 448
 # File: calc/cpmd/cpmd_nose.c, Line: 468
-# File: calc/dl_poly/dlp_field.c, Line: 835
+# File: calc/dl_poly/dlp_field.c, Line: 143
 # File: opengl/win/glwindow.c, Line: 525
 # File: opengl/win/m_clones.c, Line: 122,185
 # File: opengl/win/m_edit.c, Line: 360
 # File: opengl/win/menu_bar.c, Line: 186
 # File: opengl/win/popup.c, Line: 4227
 # File: opengl/win/w_search.c, Line: 4000,4141
+# File: calc/dl_poly/dlp_field.c, Line: 143
 msgid "Atom(s)"
 msgstr "Atome(s)"
 
@@ -5189,7 +5167,7 @@ msgstr "Centrer la molécule"
 msgid "Fullscreen"
 msgstr "Plein écran"
 
-# File: calc/dl_poly/dlp_field.c, Line: 835
+# File: calc/dl_poly/dlp_field.c, Line: 924
 # File: opengl/win/glwindow.c, Line: 623
 # File: opengl/win/menu_bar.c, Line: 271,276
 msgid "Chemistry"
@@ -5279,11 +5257,11 @@ msgstr "Bas"
 
 # File: opengl/win/m_axis.c, Line: 135,285
 msgid "Right Corner"
-msgstr "Coin droit"
+msgstr "Coin Droit"
 
 # File: opengl/win/m_axis.c, Line: 135,285
 msgid "Left Corner"
-msgstr "Coin gauche"
+msgstr "Coin Gauche"
 
 # File: opengl/win/m_axis.c, Line: 163,169,315
 # File: opengl/win/w_colors.c, Line: 484
@@ -5532,14 +5510,6 @@ msgstr "Coordinations atomiques"
 msgid "Atoms &amp; Bonds"
 msgstr "Atomes et &amp; Liaisons"
 
-# File: opengl/win/m_poly.c, Line: 333,493
-msgid "Total Coordination(s)"
-msgstr "Coordination(s) Totale(s)"
-
-# File: opengl/win/m_poly.c, Line: 334,494
-msgid "Partial Coordination(s)"
-msgstr "Coordination(s) Partielle(s)"
-
 # File: opengl/win/m_poly.c, Line: 339,347,503
 msgid "Cloned Polyhedra"
 msgstr "Polyèdres Clonés"
@@ -5660,11 +5630,11 @@ msgstr "Classique: LAMMPS"
 
 # File: opengl/win/m_tools.c, Line: 73
 msgid "First-Principles: CPMD"
-msgstr "Premiers principes: CPMD"
+msgstr "Premiers Principes: CPMD"
 
 # File: opengl/win/m_tools.c, Line: 74
 msgid "First-Principles: CP2K"
-msgstr "Premiers principes: CP2K"
+msgstr "Premiers Principes: CP2K"
 
 # File: opengl/win/m_tools.c, Line: 75
 msgid "QM-MM: CPMD - [Soon]"
@@ -5720,6 +5690,7 @@ msgid "Selection Mode"
 msgstr "Mode de Sélection"
 
 # File: opengl/win/m_tools.c, Line: 412,785
+# File: calc/cp2k/cp2k_init.c, Line: 119
 msgid "Molecular Dynamics"
 msgstr "Dynamique Moléculaire"
 
@@ -5749,6 +5720,7 @@ msgid "%d atom(s) inserted !"
 msgstr "%d atome(s) inséré(s) !"
 
 # File: opengl/win/popup.c, Line: 3036,3167
+# File: opengl/win/w_search.c, Line: 2658
 msgid "Import From Project"
 msgstr "Importer Depuis le Projet"
 
@@ -5851,11 +5823,11 @@ msgstr "Copier"
 
 # File: opengl/win/popup.c, Line: 3829
 msgid "Total Coordination:  <b>%d</b>"
-msgstr "Coordination totale: <b>%d</b>"
+msgstr "Coordination Totale: <b>%d</b>"
 
 # File: opengl/win/popup.c, Line: 3838
 msgid "Partial Coordination: <b>%s</b>"
-msgstr "Coordination partielle: <b>%s</b>"
+msgstr "Coordination Partielle: <b>%s</b>"
 
 # File: opengl/win/popup.c, Line: 4022
 msgid "Center crystal atom(s)"
@@ -5877,7 +5849,7 @@ msgstr "Erreur de palette de couleurs: %s - spec= %d - coord= %d, custom= %s"
 msgid "Color palette error: %s - %d, custom= %s"
 msgstr "Erreur de palette de couleurs: %s - %d, personnalisé= %s"
 
-# File: calc/dl_poly/dlp_field.c, Line: 164
+# File: calc/dl_poly/dlp_field.c, Line: 187
 # File: opengl/win/w_coord.c, Line: 959
 # File: opengl/win/w_search.c, Line: 999
 # File: opengl/win/w_volumes.c, Line: 706,870
@@ -5894,7 +5866,7 @@ msgstr "Réinitialiser le(s) Déplacement(s)"
 
 # File: opengl/win/popup.c, Line: 4268
 msgid "Reset View"
-msgstr "Réinitialiser la vue"
+msgstr "Réinitialiser la Vue"
 
 # File: opengl/win/popup.c, Line: 4269
 msgid "Center Molecule"
@@ -5909,12 +5881,12 @@ msgid "Opaque"
 msgstr "Opaque"
 
 # File: opengl/win/w_advance.c, Line: 1392
-msgid "Brushed metal"
-msgstr "Métal brossé"
+msgid "Brushed Metal"
+msgstr "Métal Brossé"
 
 # File: opengl/win/w_advance.c, Line: 1393
-msgid "Shiny metal"
-msgstr "Métal brillant"
+msgid "Shiny Metal"
+msgstr "Métal Brillant"
 
 # File: opengl/win/w_advance.c, Line: 1394
 msgid "Plastic"
@@ -6080,12 +6052,12 @@ msgid "<b>Fog type</b> "
 msgstr "<b>Type de brouillard</b> "
 
 # File: opengl/win/w_advance.c, Line: 1649
-msgid "Plane based"
-msgstr "Basé sur un plan"
+msgid "Plane Based"
+msgstr "Basé sur un Plan"
 
 # File: opengl/win/w_advance.c, Line: 1650
-msgid "Range based"
-msgstr "Basé sur une échelle"
+msgid "Range Based"
+msgstr "Basé sur une Échelle"
 
 # File: opengl/win/w_advance.c, Line: 1657
 msgid "<b>Fog density</b>"
@@ -6223,19 +6195,19 @@ msgstr "Afficher/Masquer les axes"
 
 # File: opengl/win/w_axis.c, Line: 883
 msgid "Top Right Corner <sup>*</sup>"
-msgstr "Coin supérieur droit <sup>*</sup>"
+msgstr "Coin Supérieur Droit <sup>*</sup>"
 
 # File: opengl/win/w_axis.c, Line: 884
 msgid "Top Left Corner <sup>*</sup>"
-msgstr "Coin supérieur gauche <sup>*</sup>"
+msgstr "Coin Supérieur Gauche <sup>*</sup>"
 
 # File: opengl/win/w_axis.c, Line: 885
 msgid "Bottom Right Corner <sup>*</sup>"
-msgstr "Coin inférieur droit <sup>*</sup>"
+msgstr "Coin Inférieur Droit <sup>*</sup>"
 
 # File: opengl/win/w_axis.c, Line: 886
 msgid "Bottom Left Corner <sup>*</sup>"
-msgstr "Coin inférieur gauche <sup>*</sup>"
+msgstr "Coin Inférieur Gauche <sup>*</sup>"
 
 # File: opengl/win/w_axis.c, Line: 887
 msgid "Center <sup>**</sup>"
@@ -6336,7 +6308,7 @@ msgstr "liaison"
 msgid "clone bond"
 msgstr "liaison clonée"
 
-# File: calc/dl_poly/dlp_field.c, Line: 936
+# File: calc/dl_poly/dlp_field.c, Line: 932
 # File: opengl/win/w_bonds.c, Line: 411
 msgid "Bond"
 msgstr "Liaison"
@@ -6494,44 +6466,44 @@ msgid "Gradient direction"
 msgstr "Direction du dégradé"
 
 # File: opengl/win/w_colors.c, Line: 488
-msgid "No gradient"
-msgstr "Pas de dégradé"
+msgid "No Gradient"
+msgstr "Pas de Dégradé"
 
 # File: opengl/win/w_colors.c, Line: 490
 msgid "Circular"
 msgstr "Circulaire"
 
 # File: opengl/win/w_colors.c, Line: 483
-msgid "Top to bottom"
-msgstr "De haut en bas"
+msgid "Top to Bottom"
+msgstr "De Haut en Bas"
 
 # File: opengl/win/w_colors.c, Line: 483
-msgid "Right to left"
-msgstr "De droite à gauche"
+msgid "Right to Left"
+msgstr "De Droite à Gauche"
 
 # File: opengl/win/w_colors.c, Line: 484
-msgid "Bottom right to top left"
-msgstr "Du bas à droite vers le haut à gauche"
+msgid "Bottom Right to Top Left"
+msgstr "Du Bas à Droite vers le Haut à Gauche"
 
 # File: opengl/win/w_colors.c, Line: 484
-msgid "Top right to bottom left"
-msgstr "Du haut à droite vers le bas à gauche"
+msgid "Top Right to Bottom Left"
+msgstr "Du Haut à Droite vers le Bas à Gauche"
 
 # File: opengl/win/w_colors.c, Line: 483
-msgid "Left to right"
-msgstr "De gauche à droite"
+msgid "Left to Right"
+msgstr "De Gauche à Droite"
 
 # File: opengl/win/w_colors.c, Line: 483
-msgid "Bottom to top"
-msgstr "De bas en haut"
+msgid "Bottom to Top"
+msgstr "De Bas en Haut"
 
 # File: opengl/win/w_colors.c, Line: 484
-msgid "Bottom left to top right"
-msgstr "Du bas à gauche vers le haut à droite"
+msgid "Bottom Left to Top Right"
+msgstr "Du Bas à Gauche vers le Haut à Droite"
 
 # File: opengl/win/w_colors.c, Line: 484
-msgid "Top left to bottom right"
-msgstr "Du haut à gauche vers le bas à droite"
+msgid "Top Left to Bottom Right"
+msgstr "Du Haut à Gauche vers le Bas à Droite"
 
 # File: opengl/win/w_colors.c, Line: 527
 msgid "Single color"
@@ -6838,11 +6810,11 @@ msgstr "Symbole Atomique"
 
 # File: opengl/win/w_labels.c, Line: 73
 msgid "Atomic Symbol + Id. Number"
-msgstr "Symbole Atom. + Numéro Id."
+msgstr "Symbole Atom. + Num. Id."
 
 # File: opengl/win/w_labels.c, Line: 73
 msgid "Sym. + Id. Num. Subscript"
-msgstr "Sym. + Numéro d'Id. en Indice"
+msgstr "Sym. + Num. Id. en Indice"
 
 # File: opengl/win/w_labels.c, Line: 73
 msgid "Id. Number"
@@ -7550,12 +7522,12 @@ msgstr "%s - mesures - style"
 msgid "%s - measures"
 msgstr "%s - mesures"
 
-# File: calc/dl_poly/dlp_field.c, Line: 338
+# File: calc/dl_poly/dlp_field.c, Line: 427
 # File: opengl/win/w_measures.c, Line: 751
 msgid "Distances"
 msgstr "Distances"
 
-# File: calc/dl_poly/dlp_field.c, Line: 477
+# File: calc/dl_poly/dlp_field.c, Line: 566
 # File: opengl/win/w_measures.c, Line: 753
 msgid "Dihedrals"
 msgstr "Dièdres"
@@ -7769,10 +7741,6 @@ msgstr "Sélectionnez pour tous ..."
 msgid "Copied data"
 msgstr "Données copiées"
 
-# File: opengl/win/w_search.c, Line: 2658
-msgid "Import from project"
-msgstr "Importer depuis le projet"
-
 # File: opengl/win/w_search.c, Line: 2832,3273
 msgid "MSD<sub>max</sub> must be > 0.0 !"
 msgstr "DCM<sub>max</sub> doit être > 0,0 !"
@@ -7968,7 +7936,7 @@ msgstr "Espèces "
 
 # File: opengl/win/w_search.c, Line: 4169
 # File: calc/dl_poly/dlp_edit.c, Line: 1184
-# File: calc/dl_poly/dlp_field.c, Line: 841
+# File: calc/dl_poly/dlp_field.c, Line: 930
 msgid "Atom Id."
 msgstr "Id. de l'Atome"
 
@@ -8337,7 +8305,7 @@ msgid "<sup><tt>\t   - BASIS_MOLOPT\t\t(CP2K v9.1, released: <b>2021-12-31</b>)<
 "<sup><tt>\t   - GTH_BASIS_SETS\t\t(CP2K v9.1, released: <b>2021-12-31</b>)</tt></sup>\n"
 "<sup><tt>\t   - BASIS_SET\t\t(CP2K v9.1, released: <b>2021-12-31</b>)</tt></sup>\n"
 "<sup><tt>\t   - POTENTIAL\t\t(CP2K v9.1, released: <b>2021-12-31</b>)</tt></sup>"
-msgstr "<sup><tt>\t - BASIS_MOLOPT (CP2K v9.1, sortie: <b>2021-12-31</b>)</tt></sup>\n"
+msgstr "<sup><tt>\t   - BASIS_MOLOPT (CP2K v9.1, sortie: <b>2021-12-31</b>)</tt></sup>\n"
 "<sup><tt>\t   - GTH_BASIS_SETS (CP2K v9.1, sortie: <b>2021-12-31</b>)</tt></sup>\n"
 "<sup><tt>\t   - BASIS_SET (CP2K v9.1, sortie: <b>2021-12-31</b>)</tt></sup>\n"
 "<sup><tt>\t   - POTENTIEL (CP2K v9.1, sortie: <b>2021-12-31</b>)</tt></sup>"
@@ -8348,7 +8316,7 @@ msgid " Following your selection the files that contains the parameters for your
 msgstr " Suite à votre sélection, les fichiers contenant les paramètres de votre calcul seront générés automatiquement.\n"
 " Alternativement, il est possible de définir et d'utiliser votre propre ensemble de paramètres."
 
-# File: calc/cp2k/cp2k_init.c, Line: 1100
+# File: calc/cp2k/cp2k_init.c, Line: 1104
 msgid "The CP2K input system offers to have the information gathered in a single, rather long, file\n"
 "or separated in several files each of them dedicated to a particular section of the input: "
 msgstr "Le système de saisie CP2K propose de regrouper les informations dans un seul fichier, assez long.\n"
@@ -8360,34 +8328,29 @@ msgid "steps"
 msgstr "pas"
 
 # File: calc/cp2k/cp2k_init.c, Line: 117
-msgid "Single point energy calculation"
-msgstr "Calcul d'énergie point unique"
+msgid "Single Point Energy Calculation"
+msgstr "Calcul d'Énergie Point Unique"
 
 # File: calc/cp2k/cp2k_init.c, Line: 118
-msgid "Single point energy and forces calculation"
-msgstr "Calcul de l'énergie et des forces point unique"
+msgid "Single Point Energy and Forces Calculation"
+msgstr "Calcul d'Énergie et des Forces Point Unique"
 
 # File: calc/cp2k/cp2k_init.c, Line: 119
 # File: calc/cpmd/cpmd_init.c, Line: 193
-msgid "Geometry optimization"
-msgstr "Optimisation de la géométrie"
-
-# File: calc/cp2k/cp2k_init.c, Line: 119
-# File: calc/dl_poly/dlp_control.c, Line: 117
-msgid "Molecular dynamics"
-msgstr "Dynamique moléculaire"
+msgid "Geometry Optimization"
+msgstr "Optimisation de la Géométrie"
 
 # File: calc/cp2k/cp2k_init.c, Line: 120
 # File: calc/cpmd/cpmd_init.c, Line: 197
-msgid "Vibrational analysis"
-msgstr "Analyse vibratoire"
+msgid "Vibrational Analysis"
+msgstr "Analyse Vibratoire"
 
 # File: calc/cp2k/cp2k_init.c, Line: 120
-msgid "Linear response calculation"
-msgstr "Calcul de réponse linéaire"
+msgid "Linear Response Calculation"
+msgstr "Calcul de Réponse Linéaire"
 
 # File: calc/cp2k/cp2k_init.c, Line: 120
-msgid "Ehrenfest dynamics"
+msgid "Ehrenfest Dynamics"
 msgstr "Dynamique d'Ehrenfest"
 
 # File: calc/cp2k/cp2k_init.c, Line: 121
@@ -8403,100 +8366,105 @@ msgid "High"
 msgstr "Haut"
 
 # File: calc/cp2k/cp2k_init.c, Line: 122
-msgid "Gaussian and plane waves method"
-msgstr "Méthode Gaussiennes et ondes planes"
+msgid "Gaussian and Plane Waves Method"
+msgstr "Méthode Gaussiennes et Ondes Planes"
 
 # File: calc/cp2k/cp2k_init.c, Line: 123
-msgid "Gaussian and augmented plane waves method"
-msgstr "Méthode Gaussiennes et ondes planes augmentées"
+msgid "Gaussian and Augmented Plane Waves Method"
+msgstr "Méthode Gaussiennes et Ondes Planes Augmentées"
 
 # File: calc/cp2k/cp2k_init.c, Line: 124
-msgid "Gaussian and augmented plane waves method only for XC"
-msgstr "Méthode Gaussiennes et ondes planes augmentées uniquement pour XC"
+msgid "Gaussian and Augmented Plane Waves Method Only for XC"
+msgstr "Méthode Gaussiennes et Ondes Planes Augmentées Uniquement pour XC"
 
 # File: calc/cp2k/cp2k_init.c, Line: 125
-msgid "Generate an atomic density using the atomic code"
-msgstr "Générer une densité atomique à l'aide du code atomique"
+msgid "Generate an Atomic Density Using the Atomic Code"
+msgstr "Générer une Densité Atomique à l'Aide du Code Atomique"
 
 # File: calc/cp2k/cp2k_init.c, Line: 126
-msgid "Diagonalize the core Hamiltonian"
-msgstr "Diagonaliser le noyau Hamiltonien"
+msgid "Diagonalize the Core Hamiltonian"
+msgstr "Diagonaliser le Noyau Hamiltonien"
 
 # File: calc/cp2k/cp2k_init.c, Line: 127
-msgid "Use random wave-function coefficients"
-msgstr "Utiliser des coefficients de fonction d'onde aléatoires"
+msgid "Use Random Wave-function Coefficients"
+msgstr "Utiliser des Coefficients de Fonction d'Onde Aléatoires"
 
 # File: calc/cp2k/cp2k_init.c, Line: 128
-msgid "Use the RESTART file"
-msgstr "Utiliser le fichier RESTART"
+msgid "Use the RESTART File"
+msgstr "Utiliser le Fichier RESTART"
 
 # File: calc/cp2k/cp2k_init.c, Line: 129
-msgid "Broyden mixing approximating the inverse Hessian"
-msgstr "Mélange de Broyden se rapprochant du Hessien inversé"
+msgid "Broyden Mixing Approximating the Inverse Hessian"
+msgstr "Mélange de Broyden Approximant le Hessien inversé"
 
 # File: calc/cp2k/cp2k_init.c, Line: 130
 msgid "Conjugate Gradients"
-msgstr "Gradients conjugués"
+msgstr "Gradients Conjugués"
 
 # File: calc/cp2k/cp2k_init.c, Line: 130
-msgid "Direct inversion in the iterative subspace"
-msgstr "Inversion directe dans le sous-espace itératif"
+msgid "Direct Inversion in the Iterative Subspace"
+msgstr "Inversion Directe dans le Sous-espace Itératif"
 
 # File: calc/cp2k/cp2k_init.c, Line: 131
 # File: calc/cpmd/cpmd_init.c, Line: 152
-msgid "Becke three-parameters hybrid + LYP"
-msgstr "Becke + LYP hybride à trois paramètres"
+msgid "Becke Three-parameters Hybrid + LYP"
+msgstr "Becke Hybride à Trois Paramètres + LYP"
 
 # File: calc/cp2k/cp2k_init.c, Line: 131
-msgid "Bayesian error estimation + van der Walls"
-msgstr "Estimation de l'erreur bayésienne + van der Walls"
+msgid "Bayesian Error Estimation + van der Walls"
+msgstr "Estimation de l'Erreur Bayésienne + van der Walls"
 
 # File: calc/cp2k/cp2k_init.c, Line: 132
 # File: calc/cpmd/cpmd_init.c, Line: 150
 msgid "Local Density Approximation"
-msgstr "Approximation de la densité locale"
+msgstr "Approximation de la Densité Locale"
 
 # File: calc/cp2k/cp2k_init.c, Line: 133
 # File: calc/cpmd/cpmd_init.c, Line: 152
 msgid "Parameter-free PBE"
-msgstr "PBE sans paramètres"
+msgstr "PBE sans Paramètres"
 
 # File: calc/cp2k/cp2k_init.c, Line: 134
-msgid "3 dimensional (XYZ)"
-msgstr "3 dimensions (XYZ)"
+msgid "3 Dimensional (XYZ)"
+msgstr "3 Dimensions (XYZ)"
 
 # File: calc/cp2k/cp2k_init.c, Line: 134
-msgid "2 dimensional (XY)"
-msgstr "2 dimensions (XY)"
+msgid "2 Dimensional (XY)"
+msgstr "2 Dimensions (XY)"
 
 # File: calc/cp2k/cp2k_init.c, Line: 134
-msgid "2 dimensional (XZ)"
-msgstr "2 dimensions (XZ)"
+msgid "2 Dimensional (XZ)"
+msgstr "2 Dimensions (XZ)"
 
 # File: calc/cp2k/cp2k_init.c, Line: 134
-msgid "2 dimensional (YZ)"
-msgstr "2 dimensions (YZ)"
+msgid "2 Dimensional (YZ)"
+msgstr "2 Dimensions (YZ)"
 
 # File: calc/cp2k/cp2k_init.c, Line: 135
-msgid "1 dimensional (X)"
-msgstr "1 dimension (X)"
+msgid "1 Dimensional (X)"
+msgstr "1 Dimension (X)"
 
 # File: calc/cp2k/cp2k_init.c, Line: 135
-msgid "1 dimensional (Y)"
-msgstr "1 dimension (Y)"
+msgid "1 Dimensional (Y)"
+msgstr "1 Dimension (Y)"
 
 # File: calc/cp2k/cp2k_init.c, Line: 135
-msgid "1 dimensional (Z)"
-msgstr "1 dimension (Z)"
+msgid "1 Dimensional (Z)"
+msgstr "1 Dimension (Z)"
 
 # File: calc/cp2k/cp2k_init.c, Line: 135
-msgid "Isolated system"
-msgstr "Système isolé"
+msgid "Isolated System"
+msgstr "Système Isolé"
 
 # File: calc/cp2k/cp2k_init.c, Line: 136
 # File: calc/cpmd/cpmd_init.c, Line: 153
-msgid "Box parameters (a,b,c and α,β,γ)"
-msgstr "Paramètres de la boîte (a,b,c et α,β,γ)"
+msgid "Lattice Vectors"
+msgstr "Vecteurs de Maille"
+
+# File: calc/cp2k/cp2k_init.c, Line: 136
+# File: calc/cpmd/cpmd_init.c, Line: 153
+msgid "Box Parameters (a,b,c and α,β,γ)"
+msgstr "Paramètres de la Boîte (a,b,c et α,β,γ)"
 
 # File: calc/cp2k/cp2k_init.c, Line: 137
 msgid "Cubic (a = b = c, α = β = γ = 90°)"
@@ -8535,8 +8503,8 @@ msgid "Triclinic (a ≠ b ≠ c ≠ a, α ≠ β ≠ γ ≠ α ≠ 90°)"
 msgstr "Triclinique (a ≠ b ≠ c ≠ a, α ≠ β ≠ γ ≠ α ≠ 90°)"
 
 # File: calc/cp2k/cp2k_init.c, Line: 140
-msgid "No cell symmetry"
-msgstr "Pas de symétrie"
+msgid "No Cell Symmetry"
+msgstr "Pas de Symétrie"
 
 # File: calc/cp2k/cp2k_init.c, Line: 141
 msgid "Constant kinetic energy"
@@ -8584,15 +8552,15 @@ msgstr "Gradients conjugués"
 
 # File: calc/cp2k/cp2k_init.c, Line: 147
 msgid "Dion-Rydberg-Schroeder-Langreth-Lundqvist non-local van der Waals density functional"
-msgstr "Fonctionnelle de la densité de Van der Waals non locale de Dion-Rydberg-Schroeder-Langreth-Lundqvist"
+msgstr "Fonctionnelle de la densité de van der Waals non-locale de Dion-Rydberg-Schroeder-Langreth-Lundqvist"
 
 # File: calc/cp2k/cp2k_init.c, Line: 148
 msgid "Lee-Murray-Kong-Lundqvist-Langreth non-local van der Waals density functional"
-msgstr "Fonctionnelle de la densité de Van der Waals non locale de Lee-Murray-Kong-Lundqvist-Langreth"
+msgstr "Fonctionnelle de la densité de van der Waals non-locale de Lee-Murray-Kong-Lundqvist-Langreth"
 
 # File: calc/cp2k/cp2k_init.c, Line: 149
 msgid "Revised Vydrov-van Voorhis non-local van der Waals density functional"
-msgstr "Fonctionnelle de la densité de Van der Waals non locale de Vydrov-van Voorhis révisée"
+msgstr "Fonctionnelle de la densité de van der Waals non-locale de Vydrov-van Voorhis révisée"
 
 # File: calc/cp2k/cp2k_init.c, Line: 150
 msgid "Grimme D2 method"
@@ -8686,7 +8654,7 @@ msgstr "Calcul sans restriction de spin"
 
 # File: calc/cp2k/cp2k_init.c, Line: 174
 msgid "Use van der Waals interactions"
-msgstr "Utiliser les interactions de Van der Waals"
+msgstr "Utiliser les interactions de van der Waals"
 
 # File: calc/cp2k/cp2k_init.c, Line: 175
 msgid "Restricted Open Kohn-Sham 'ROKS'"
@@ -8760,7 +8728,7 @@ msgstr "Enregistrez les informations tous les:"
 msgid "Add constraint(s)"
 msgstr "Ajouter une(des) contrainte(s)"
 
-# File: calc/cp2k/cp2k_init.c, Line: 194,1152
+# File: calc/cp2k/cp2k_init.c, Line: 194,1156
 msgid "The CP2K input structure"
 msgstr "Structure d'entrée de CP2K"
 
@@ -8803,7 +8771,7 @@ msgstr "Appliquer les corrections à longue portée"
 
 # File: calc/cp2k/cp2k_init.c, Line: 483
 msgid "Non-local potential"
-msgstr "Potentiel non local"
+msgstr "Potentiel non-local"
 
 # File: calc/cp2k/cp2k_init.c, Line: 484
 msgid "Pair potential"
@@ -8882,50 +8850,50 @@ msgstr "\t\t\t\tEspèces chimiques"
 msgid "Details of the <b>%s</b> section that %s"
 msgstr "Détails de la section <b>%s</b> qui %s"
 
-# File: calc/cp2k/cp2k_init.c, Line: 1029
+# File: calc/cp2k/cp2k_init.c, Line: 1033
 msgid "CP2K main input file '*.inp'"
 msgstr "Fichier d'entrée principal de CP2K '*.inp'"
 
-# File: calc/cp2k/cp2k_init.c, Line: 1042
+# File: calc/cp2k/cp2k_init.c, Line: 1046
 msgid "CP2K input file '*.inp'"
 msgstr "Fichier d'entrée CP2K '*.inp'"
 
-# File: calc/cp2k/cp2k_init.c, Line: 1051
+# File: calc/cp2k/cp2k_init.c, Line: 1055
 msgid "! Information"
 msgstr "! Information"
 
-# File: calc/cp2k/cp2k_init.c, Line: 1106
+# File: calc/cp2k/cp2k_init.c, Line: 1110
 msgid "Single input file"
 msgstr "Fichier d'entrée unique"
 
-# File: calc/cp2k/cp2k_init.c, Line: 1106
+# File: calc/cp2k/cp2k_init.c, Line: 1110
 msgid "Multiple files"
 msgstr "Fichiers multiples"
 
-# File: calc/cp2k/cp2k_init.c, Line: 1156
+# File: calc/cp2k/cp2k_init.c, Line: 1160
 # File: calc/cpmd/cpmd_init.c, Line: 984
 msgid "The %s section"
 msgstr "La section %s"
 
-# File: calc/cp2k/cp2k_init.c, Line: 1160
+# File: calc/cp2k/cp2k_init.c, Line: 1164
 msgid "The MOTION section - thermostat(s)"
 msgstr "La section MOUVEMENT - thermostat(s)"
 
-# File: calc/cp2k/cp2k_init.c, Line: 1164
+# File: calc/cp2k/cp2k_init.c, Line: 1168
 msgid "The MOTION section - restart(s)"
 msgstr "La section MOTION - redémarrage(s)"
 
-# File: calc/cp2k/cp2k_init.c, Line: 1224
+# File: calc/cp2k/cp2k_init.c, Line: 1228
 msgid "<b>   Finalize the creation of the CP2K input files now !</b>"
 msgstr "<b> Finalisez dès maintenant la création des fichiers d'entrée de CP2K !</b>"
 
-# File: calc/cp2k/cp2k_init.c, Line: 1227
+# File: calc/cp2k/cp2k_init.c, Line: 1231
 # File: calc/cpmd/cpmd_init.c, Line: 1697
-# File: calc/dl_poly/dlp_field.c, Line: 4358
-msgid "\n\t<b>Note: </b>You can re-open this assistant later if required to adjust your choices\n"
-msgstr "\n \t<b>Remarque : </b>Vous pourrez rouvrir cet assistant plus tard si nécessaire pour ajuster vos choix.\n"
+# File: calc/dl_poly/dlp_field.c, Line: 4447
+msgid "\n \t<b>Note: </b>You can re-open this assistant later if required to adjust your choices\n"
+msgstr "\n \t<b>Remarque: </b>Au besoin vous pourrez rouvrir cet assistant plus tard pour ajuster vos choix.\n"
 
-# File: calc/cp2k/cp2k_init.c, Line: 1229
+# File: calc/cp2k/cp2k_init.c, Line: 1233
 msgid "Create the input files now !"
 msgstr "Créez les fichiers d'entrée maintenant !"
 
@@ -8997,7 +8965,7 @@ msgid "\n"
 msgstr "\n"
 "! Accéder à la section Multi-grilles\n"
 "    &MGRID\n"
-"      CUTOFF "
+"      COUPE "
 
 # File: calc/cp2k/cp2k_print.c, Line: 142
 msgid "                      ! => Cutoff of the finest grid level\n"
@@ -9431,7 +9399,7 @@ msgstr "Densité de Spin Locale"
 
 # File: calc/cpmd/cpmd_init.c, Line: 123
 msgid "van der Walls interactions"
-msgstr "interactions avec Van der Walls"
+msgstr "interactions avec van der Walls"
 
 # File: calc/cpmd/cpmd_init.c, Line: 124
 msgid "Density cutoff<sup>*</sup>:"
@@ -9463,8 +9431,8 @@ msgid "Use constraints"
 msgstr "Utiliser des contraintes"
 
 # File: calc/cpmd/cpmd_init.c, Line: 128
-msgid "Fix:"
-msgstr "Réparer:"
+msgid "Freeze:"
+msgstr "Figer:"
 
 # File: calc/cpmd/cpmd_init.c, Line: 128
 msgid "Use dummy atoms:"
@@ -9483,16 +9451,16 @@ msgid "Local angular momentum <i>l</i>:"
 msgstr "Moment cinétique local <i>l</i>:"
 
 # File: calc/cpmd/cpmd_init.c, Line: 150
-msgid "Slater exchange only"
-msgstr "Échange Slater uniquement"
+msgid "Slater Exchange Only"
+msgstr "Échange Slater Uniquement"
 
 # File: calc/cpmd/cpmd_init.c, Line: 150
 msgid "Extended B88+PW91+LYP88"
-msgstr "B88 étendu + PW91 + LYP88"
+msgstr "B88 Étendue + PW91 + LYP88"
 
 # File: calc/cpmd/cpmd_init.c, Line: 151
-msgid "PBE revised for solids"
-msgstr "PBE révisé pour les solides"
+msgid "PBE Revised for Solids"
+msgstr "PBE Révisé pour les Solides"
 
 # File: calc/cpmd/cpmd_init.c, Line: 151
 msgid "Revised - PBE"
@@ -9500,27 +9468,27 @@ msgstr "PBE - Révisé"
 
 # File: calc/cpmd/cpmd_init.c, Line: 151
 msgid "Optimized Becke 88"
-msgstr "Becke 88 optimisé"
+msgstr "Becke 88 Optimisé"
 
 # File: calc/cpmd/cpmd_init.c, Line: 152
-msgid "Becke one-parameter hybrid + LYP"
-msgstr "Becke hybride à un paramètre + LYP"
+msgid "Becke One-parameter Hybrid + LYP"
+msgstr "Becke Hybride à un Paramètre + LYP"
 
 # File: calc/cpmd/cpmd_init.c, Line: 152
-msgid "Extend hybrid + LYP"
-msgstr "Hybride étendue + LYP"
+msgid "Extended Hybrid + LYP"
+msgstr "Hybride Étendue + LYP"
 
 # File: calc/cpmd/cpmd_init.c, Line: 154
-msgid "Face centered cubic (FCC)"
-msgstr "Cubique à faces centrées (FCC)"
+msgid "Face Centered Cubic (FCC)"
+msgstr "Cubique Faces Centrées (FCC)"
 
 # File: calc/cpmd/cpmd_init.c, Line: 154
-msgid "Body centered cubic (BCC)"
-msgstr "Cubique corps centré (BCC)"
+msgid "Body Centered Cubic (BCC)"
+msgstr "Cubique Corps Centré (BCC)"
 
 # File: calc/cpmd/cpmd_init.c, Line: 155
-msgid "Body centered tetragonal (BCT)"
-msgstr "Tétragonal coprs centré (BCT)"
+msgid "Body Centered Tetragonal (BCT)"
+msgstr "Tétragonal Coprs Centré (BCT)"
 
 # File: calc/cpmd/cpmd_init.c, Line: 155
 msgid "Orthorombic"
@@ -9528,7 +9496,7 @@ msgstr "Orthorombique"
 
 # File: calc/cpmd/cpmd_init.c, Line: 156
 msgid "Default (a, b/a, c/a)"
-msgstr "Par défaut (a, b/a, c/a)"
+msgstr "Par Défaut (a, b/a, c/a)"
 
 # File: calc/cpmd/cpmd_init.c, Line: 156
 msgid "Absolute (a, b, c)"
@@ -9536,19 +9504,19 @@ msgstr "Absolu (a, b, c)"
 
 # File: calc/cpmd/cpmd_init.c, Line: 157
 msgid "Default (cos α, cos β, cos γ)"
-msgstr "Par défaut (cos α, cos β, cos γ)"
+msgstr "Par Défaut (cos α, cos β, cos γ)"
 
 # File: calc/cpmd/cpmd_init.c, Line: 157
 msgid "Degrees (α, β, γ)"
 msgstr "Degrés (α, β, γ)"
 
 # File: calc/cpmd/cpmd_init.c, Line: 158
-msgid "Some atoms"
-msgstr "Quelques atomes"
+msgid "Some Atoms"
+msgstr "Quelques Atomes"
 
 # File: calc/cpmd/cpmd_init.c, Line: 158
-msgid "Some coordinates"
-msgstr "Quelques coordonnées"
+msgid "Some Coordinates"
+msgstr "Quelques Coordonnées"
 
 # File: calc/cpmd/cpmd_init.c, Line: 169,170
 msgid "Convergence criteria<sup>*</sup>:"
@@ -9607,8 +9575,8 @@ msgid "Property to compute:"
 msgstr "Propriété à calculer:"
 
 # File: calc/cpmd/cpmd_init.c, Line: 192
-msgid "Wavefunction optimization"
-msgstr "Optimisation de la fonction d'onde"
+msgid "Wavefunction Optimization"
+msgstr "Optimisation de la Fonction d'Onde"
 
 # File: calc/cpmd/cpmd_init.c, Line: 194
 msgid "CPMD Molecular Dynamics"
@@ -9619,20 +9587,20 @@ msgid "Born-Oppenheimer Molecular Dynamics"
 msgstr "Dynamique Moléculaire Born-Oppenheimer"
 
 # File: calc/cpmd/cpmd_init.c, Line: 196
-msgid "Kohn-Sham eigen values"
-msgstr "Valeurs propres de Kohn-Sham"
+msgid "Kohn-Sham Eigen Values"
+msgstr "Valeurs Propres de Kohn-Sham"
 
 # File: calc/cpmd/cpmd_init.c, Line: 198
-msgid "Calculation of physical properties"
-msgstr "Calcul des propriétés physiques"
+msgid "Calculation of Physical Properties"
+msgstr "Calcul des Propriétés Physiques"
 
 # File: calc/cpmd/cpmd_init.c, Line: 202
 msgid "Preconditioned Gradient"
-msgstr "Gradient préconditionné"
+msgstr "Gradient Préconditionné"
 
 # File: calc/cpmd/cpmd_init.c, Line: 202,203
 msgid "Direct Inversion of Iterative Subspace"
-msgstr "Inversion directe du sous-espace itératif"
+msgstr "Inversion Directe du Sous-Espace Itératif"
 
 # File: calc/cpmd/cpmd_init.c, Line: 203
 msgid "Quasi-Newton method"
@@ -9684,7 +9652,7 @@ msgstr "Configuration de(s) atome(s) factice(s)"
 
 # File: calc/cpmd/cpmd_init.c, Line: 500
 msgid "%s atom(s)"
-msgstr "%s atome(s)"
+msgstr "atome(s) de %s"
 
 # File: calc/cpmd/cpmd_init.c, Line: 684
 msgid "Annealing:"
@@ -9739,7 +9707,7 @@ msgid " input files preview"
 msgstr " aperçu des fichiers d'entrée"
 
 # File: calc/cpmd/cpmd_init.c, Line: 1417
-# File: calc/dl_poly/dlp_field.c, Line: 4626
+# File: calc/dl_poly/dlp_field.c, Line: 4715
 msgid "Error while saving input file: %s\n Error: %s"
 msgstr "Erreur lors de l'enregistrement du fichier d'entrée: %s\n Erreur : %s"
 
@@ -9756,7 +9724,7 @@ msgid "CP2K input file (*.inp)"
 msgstr "Fichier d'entrée CP2K (*.inp)"
 
 # File: calc/cpmd/cpmd_init.c, Line: 1538
-# File: calc/dl_poly/dlp_field.c, Line: 4660
+# File: calc/dl_poly/dlp_field.c, Line: 4749
 msgid "Saving %s input file(s)"
 msgstr "Enregistrement de(s) %s fichier(s) d'entrée"
 
@@ -9769,7 +9737,7 @@ msgid "Basic %s - %s - calculation assistant"
 msgstr "Assistant simple pour le calcul %s - %s"
 
 # File: calc/cpmd/cpmd_init.c, Line: 1714
-# File: calc/dl_poly/dlp_field.c, Line: 4803
+# File: calc/dl_poly/dlp_field.c, Line: 4892
 msgid "Preview"
 msgstr "Aperçu"
 
@@ -9866,7 +9834,7 @@ msgstr "%s\nest-ce exact ?"
 
 # File: calc/cpmd/cpmd_nose.c, Line: 1216
 # File: calc/dl_poly/dlp_ff_match.c, Line: 927
-# File: calc/dl_poly/dlp_field.c, Line: 835
+# File: calc/dl_poly/dlp_field.c, Line: 924
 msgid "Species"
 msgstr "Espèces"
 
@@ -9896,7 +9864,7 @@ msgstr " <b>(*)</b> Ordre d'apparition dans le fichier d'entrée"
 
 # File: calc/cpmd/cpmd_nose.c, Line: 1342
 msgid "All non-thermostated atom(s)"
-msgstr "Tous les atomes non thermostatés"
+msgstr "Tous les atomes non-thermostatés"
 
 # File: calc/cpmd/cpmd_nose.c, Line: 1342
 msgid "All atom(s)"
@@ -9981,12 +9949,12 @@ msgid "Random"
 msgstr "Aléatoire"
 
 # File: calc/cpmd/cpmd_restart.c, Line: 144
-msgid "Atomic pseudo wavefunctions"
-msgstr "Fonctions d'ondes pseudo-atomiques"
+msgid "Atomic Pseudo Wavefunctions"
+msgstr "Fonctions d'Ondes Pseudo-Atomiques"
 
 # File: calc/cpmd/cpmd_restart.c, Line: 145
-msgid "Use a RESTART.* file"
-msgstr "Utiliser un fichier RESTART.*"
+msgid "Use a RESTART.* File"
+msgstr "Utiliser un Fichier RESTART.*"
 
 # File: calc/cpmd/cpmd_restart.c, Line: 151
 msgid "Save the information required for a restart every:"
@@ -10061,6 +10029,10 @@ msgstr "Sélectionnez l'atome de champ avec lequel fusionner l'atome \"%s\""
 msgid "Viz.3D & Merge with"
 msgstr "Viz.3D et fusionner avec"
 
+# File: calc/dl_poly/dlp_control.c, Line: 117
+msgid "Molecular dynamics"
+msgstr "Dynamique moléculaire"
+
 # File: calc/dl_poly/dlp_control.c, Line: 216
 msgid "Target temperature for the pseudo bath must be &#8805; 1.0 K,\n"
 "Alternatively set value to 0.0 K to system temperature."
@@ -10083,7 +10055,7 @@ msgstr "Détails du calcul"
 
 # File: calc/dl_poly/dlp_control.c, Line: 114
 msgid "Non-bonded interactions"
-msgstr "Interactions non liées"
+msgstr "Interactions non-liées"
 
 # File: calc/dl_poly/dlp_control.c, Line: 115
 msgid "Equilibration"
@@ -10511,11 +10483,11 @@ msgstr "%s° dans [0 : 180]"
 
 # File: calc/dl_poly/dlp_control.c, Line: 1547
 msgid "Set job time:"
-msgstr "Définir l'heure du début du calcul:"
+msgstr "Durée du calcul:"
 
 # File: calc/dl_poly/dlp_control.c, Line: 1547
 msgid "Set job closure time:"
-msgstr "Définir l'heure de fin du calcul:"
+msgstr "Heure de fin du calcul:"
 
 # File: calc/dl_poly/dlp_control.c, Line: 1548
 msgid "Traditional master I/O"
@@ -10688,7 +10660,7 @@ msgstr "Seuil d’interaction à courte portée:"
 
 # File: calc/dl_poly/dlp_control.c, Line: 2257
 msgid "Enforce direct calculation of van der Waals interactions"
-msgstr "Appliquer le calcul direct des interactions de Van der Waals"
+msgstr "Appliquer le calcul direct des interactions de van der Waals"
 
 # File: calc/dl_poly/dlp_control.c, Line: 2261
 msgid "Apply force-shifting (contributions smoothly fall to zero near r<sub>cut</sub>)"
@@ -10784,11 +10756,11 @@ msgstr "<b>Analyse globale:</b>"
 
 # File: calc/dl_poly/dlp_control.c, Line: 2551
 msgid "<b>van der Waals (Non-bonded short range):</b>"
-msgstr "<b>van der Waals (courte portée non liée):</b>"
+msgstr "<b>van der Waals (courte portée non-liée):</b>"
 
 # File: calc/dl_poly/dlp_control.c, Line: 2553
 msgid "<b>Electrostatics (Non-bonded long range):</b>"
-msgstr "<b>Électrostatique (longue portée non liée):</b>"
+msgstr "<b>Électrostatique (longue portée non-liée):</b>"
 
 # File: calc/dl_poly/dlp_control.c, Line: 2555
 msgid "<b>Metallic interactions:</b>"
@@ -10831,16 +10803,20 @@ msgid "<b>Other options:</b>"
 msgstr "<b>Autres options:</b>"
 
 # File: calc/dl_poly/dlp_edit.c, Line: 610
-msgid "In %s, 12-6 non-bonded interactions are evaluated using: \n%s\n<i><b>A</b></i> and <i><b>B</b></i>"
-" are calculated using Ɛ<sub>i/j</sub> and r0<sub>i/j</sub> provided by the force field parameters."
-msgstr "En %s, 12 à 6 interactions non-liées sont évaluées à l'aide de : \n%s\n<i><b>A</b></i> et <i><b>B</b></i>"
-" sont calculés à l'aide de Ɛ<sub>i/j</sub> et r0<sub>i/j</sub> fournis par les paramètres du champ de force."
+msgid "In %s, 12-6 non-bonded interactions are evaluated using: \n"
+"%s\n"
+"<i><b>A</b></i> and <i><b>B</b></i> are calculated using Ɛ<sub>i/j</sub> and r0<sub>i/j</sub> provided by the force field parameters."
+msgstr "En %s, 12 à 6 interactions non-liées sont évaluées à l'aide de : \n"
+"%s\n"
+"<i><b>A</b></i> et <i><b>B</b></i> sont calculés à l'aide de Ɛ<sub>i/j</sub> et r0<sub>i/j</sub> fournis par les paramètres du champ de force."
 
 # File: calc/dl_poly/dlp_edit.c, Line: 619
-msgid "In %s, 12-6 non-bonded interactions are evaluated using: \n%s\n<i><b>A</b></i> and <i><b>B</b></i>"
-" are calculated using A<sub>i/j</sub> and B<sub>i/j</sub> provided by the force field parameters."
-msgstr "En %s, 12 à 6 interactions non-liées sont évaluées à l'aide de : \n%s\n<i><b>A</b></i> et <i><b>B</b></i>"
-" sont calculés à l'aide de A<sub>i/j</sub> et B<sub>i/j</sub> fournis par les paramètres du champ de force."
+msgid "In %s, 12-6 non-bonded interactions are evaluated using: \n"
+"%s\n"
+"<i><b>A</b></i> and <i><b>B</b></i> are calculated using A<sub>i/j</sub> and B<sub>i/j</sub> provided by the force field parameters."
+msgstr "En %s, 12 à 6 interactions non-liées sont évaluées à l'aide de : \n"
+"%s\n"
+"<i><b>A</b></i> et <i><b>B</b></i> sont calculés à l'aide de A<sub>i/j</sub> et B<sub>i/j</sub> fournis par les paramètres du champ de force."
 
 # File: calc/dl_poly/dlp_edit.c, Line: 686
 msgid "Are you sure to change the type of Tersoff potential ?\n"
@@ -10887,7 +10863,7 @@ msgid "<u><i>Cross terms with atom:</i></u>"
 msgstr "<u><i>Termes croisés avec atome:</i></u>"
 
 # File: calc/dl_poly/dlp_edit.c, Line: 609
-# File: calc/dl_poly/dlp_field.c, Line: 1110
+# File: calc/dl_poly/dlp_field.c, Line: 1199
 msgid "<i>Tabulated</i>"
 msgstr "<i>Tableau</i>"
 
@@ -11074,7 +11050,7 @@ msgstr "Figé:   "
 
 # File: calc/dl_poly/dlp_edit.c, Line: 2404
 msgid "\tCore-Shell N°<b>%d</b>"
-msgstr "\tNoyau-Coquille N°<b>%d</b>"
+msgstr "\tCœur-Coquille N°<b>%d</b>"
 
 # File: calc/dl_poly/dlp_edit.c, Line: 2443
 msgid "Selected !"
@@ -11085,8 +11061,8 @@ msgid "%d atom(s) selected !"
 msgstr "%d atome(s) sélectionné(s) !"
 
 # File: calc/dl_poly/dlp_edit.c, Line: 2467
-msgid "Selected atoms"
-msgstr "Atomes sélectionnés"
+msgid "Selected Atoms"
+msgstr "Atomes Sélectionnés"
 
 # File: calc/dl_poly/dlp_edit.c, Line: 2511
 msgid "Use non-bonded: "
@@ -11150,7 +11126,7 @@ msgstr "Utiliser pour créer un champ de force : "
 
 # File: calc/dl_poly/dlp_edit.c, Line: 2827
 # File: calc/dl_poly/dlp_ff_match.c, Line: 1012
-# File: calc/dl_poly/dlp_field.c, Line: 219
+# File: calc/dl_poly/dlp_field.c, Line: 308
 msgid "DL_POLY internal units"
 msgstr "Unités internes DL_POLY"
 
@@ -11248,893 +11224,1173 @@ msgid "\t <b>(2)</b> Quartic (anharmonic) force constant of the core-shell sprin
 msgstr "\t <b>(2)</b> Constante de force quartique (anharmonique) du ressort cœur-coquille en [<b>%s &#xC5;<sup>-4</sup></b>] "
 " généralement <i>k<sub>2</sub></i> >> <i>k<sub>4</sub></i>"
 
-# File: calc/dl_poly/dlp_field.c, Line: 3873
+# File: calc/dl_poly/dlp_field.c, Line: 3962
 msgid "\t <b>*</b> in the FIELD file %s(s) appear in the %s section.\n"
 "\t They are presented separately in this assistant for clarity purposes only."
 msgstr "\t <b>*</b> dans le fichier FIELD %s(s) apparaissent dans la section %s.\n"
 "\t Ils sont présentés séparément dans cet assistant uniquement à des fins de clarté."
 
-# File: calc/dl_poly/dlp_field.c, Line: 4270
+# File: calc/dl_poly/dlp_field.c, Line: 4359
 msgid "Providing that the force field information was already saved once\n"
 "the previous data could still be retrieved by canceling the assistant."
-msgstr "À condition que les informations sur le champ de force aient déjà été enregistrées une fois\n"
-"les données précédentes pourraient toujours être récupérées en annulant l'assistant."
+msgstr "À condition que les informations sur le champ de force aient déjà été enregistrées\n"
+"les données précédentes sauvegardées pourront toujours être récupérées en annulant l'assistant."
 
-# File: calc/dl_poly/dlp_field.c, Line: 4729
+# File: calc/dl_poly/dlp_field.c, Line: 4818
 msgid "<b>   This assistant will help you to setup a %s \n"
 "calculation using <i>%s</i> 3D model as starting point</b>"
 msgstr "<b> Cet assistant vous aidera à configurer un %s \n"
 "calcul en utilisant le modèle 3D <i>%s</i> comme point de départ</b>"
 
-# File: calc/dl_poly/dlp_field.c, Line: 141
+# File: calc/dl_poly/dlp_field.c, Line: 141,164
 msgid "Energy unit"
 msgstr "Unité d'énergie"
 
 # File: calc/dl_poly/dlp_field.c, Line: 144
-msgid "Core-shell unit"
-msgstr "Unité noyau-coque"
+msgid "Core-shell unit(s)"
+msgstr "Unité(s) cœur-coquille"
 
 # File: calc/dl_poly/dlp_field.c, Line: 145
-msgid "Constraint bond"
-msgstr "Lien de contrainte"
+msgid "Constraint bond(s)"
+msgstr "Contrainte(s) de liaison(s)"
 
 # File: calc/dl_poly/dlp_field.c, Line: 146
+msgid "Mean force potential(s)"
+msgstr "Potentiel(s) de force moyen(s)"
+
+# File: calc/dl_poly/dlp_field.c, Line: 147
+msgid "Rigid unit(s)"
+msgstr "Unité(s) rigide(s)"
+
+# File: calc/dl_poly/dlp_field.c, Line: 148
+msgid "Tethering potential(s)"
+msgstr "Potentiel(s) de connexion(s)"
+
+# File: calc/dl_poly/dlp_field.c, Line: 149
+msgid "Flexible chemical bond(s)"
+msgstr "Liaison(s) chimique(s) flexible(s)"
+
+# File: calc/dl_poly/dlp_field.c, Line: 150,932
+msgid "Bond restraint(s)"
+msgstr "Contrainte(s) de liaison(s)"
+
+# File: calc/dl_poly/dlp_field.c, Line: 151
+msgid "Bond angle(s)"
+msgstr "Angle(s) de liaison(s)"
+
+# File: calc/dl_poly/dlp_field.c, Line: 152
+msgid "Angular restraint(s)"
+msgstr "Contrainte(s) angulaire(s)"
+
+# File: calc/dl_poly/dlp_field.c, Line: 153
+msgid "Dihedral angle(s)"
+msgstr "Angle(s) dièdre(s)"
+
+# File: calc/dl_poly/dlp_field.c, Line: 154,936
+msgid "Torsional restraint(s)"
+msgstr "Contrainte(s) de torsion"
+
+# File: calc/dl_poly/dlp_field.c, Line: 155
+msgid "Improper angle(s)"
+msgstr "Angle(s) impropre"
+
+# File: calc/dl_poly/dlp_field.c, Line: 156
+msgid "Inversion angle(s)"
+msgstr "Angle(s) d'inversion"
+
+# File: calc/dl_poly/dlp_field.c, Line: 157
+msgid "van der Waals potential(s)"
+msgstr "potentiel(s) de van der Waals"
+
+# File: calc/dl_poly/dlp_field.c, Line: 158
+msgid "Metal potential(s)"
+msgstr "Potentiel(s) métallique(s)"
+
+# File: calc/dl_poly/dlp_field.c, Line: 159
+msgid "Tersoff Potential(s)"
+msgstr "Potentiel(s) de Tersoff"
+
+# File: calc/dl_poly/dlp_field.c, Line: 160
+msgid "Three-body potential(s)"
+msgstr "Potentiel(s) à trois corps"
+
+# File: calc/dl_poly/dlp_field.c, Line: 161
+msgid "Four-body potential(s)"
+msgstr "Potentiel(s) à quatre corps"
+
+# File: calc/dl_poly/dlp_field.c, Line: 167
+msgid "Core-shell unit"
+msgstr "Unité cœur-coquille"
+
+# File: calc/dl_poly/dlp_field.c, Line: 168
+msgid "Constraint bond"
+msgstr "Contrainte de liaison"
+
+# File: calc/dl_poly/dlp_field.c, Line: 169
 msgid "Mean force potential"
 msgstr "Potentiel de force moyen"
 
-# File: calc/dl_poly/dlp_field.c, Line: 147
+# File: calc/dl_poly/dlp_field.c, Line: 170
 msgid "Rigid unit"
 msgstr "Unité rigide"
 
-# File: calc/dl_poly/dlp_field.c, Line: 148
+# File: calc/dl_poly/dlp_field.c, Line: 171
 msgid "Tethering potential"
 msgstr "Potentiel de connexion"
 
-# File: calc/dl_poly/dlp_field.c, Line: 149
+# File: calc/dl_poly/dlp_field.c, Line: 172
 msgid "Flexible chemical bond"
 msgstr "Liaison chimique flexible"
 
-# File: calc/dl_poly/dlp_field.c, Line: 150,936
+# File: calc/dl_poly/dlp_field.c, Line: 173,932
 msgid "Bond restraint"
 msgstr "Contrainte de liaison"
 
-# File: calc/dl_poly/dlp_field.c, Line: 151
+# File: calc/dl_poly/dlp_field.c, Line: 174
 msgid "Bond angle"
 msgstr "Angle de liaison"
 
-# File: calc/dl_poly/dlp_field.c, Line: 152
+# File: calc/dl_poly/dlp_field.c, Line: 175
 msgid "Angular restraint"
-msgstr "Retenue angulaire"
+msgstr "Contrainte angulaire"
 
-# File: calc/dl_poly/dlp_field.c, Line: 153
+# File: calc/dl_poly/dlp_field.c, Line: 176
 msgid "Dihedral angle"
 msgstr "Angle dièdre"
 
-# File: calc/dl_poly/dlp_field.c, Line: 154,936
+# File: calc/dl_poly/dlp_field.c, Line: 177,936
 msgid "Torsional restraint"
-msgstr "Maintien en torsion"
+msgstr "Contrainte de torsion"
 
-# File: calc/dl_poly/dlp_field.c, Line: 155
+# File: calc/dl_poly/dlp_field.c, Line: 178
 msgid "Improper angle"
-msgstr "Mauvais angle"
+msgstr "Angle impropre"
 
-# File: calc/dl_poly/dlp_field.c, Line: 156
+# File: calc/dl_poly/dlp_field.c, Line: 179
 msgid "Inversion angle"
 msgstr "Angle d'inversion"
 
-# File: calc/dl_poly/dlp_field.c, Line: 157,179
+# File: calc/dl_poly/dlp_field.c, Line: 180,202
 msgid "van der Waals potential"
-msgstr "Potentiel de Van der Waals"
+msgstr "potentiel de van der Waals"
 
-# File: calc/dl_poly/dlp_field.c, Line: 158,851
+# File: calc/dl_poly/dlp_field.c, Line: 158,181
 msgid "Metal potential"
 msgstr "Potentiel métallique"
 
-# File: calc/dl_poly/dlp_field.c, Line: 159,181
+# File: calc/dl_poly/dlp_field.c, Line: 182,204
 msgid "Tersoff Potential"
 msgstr "Potentiel de Tersoff"
 
-# File: calc/dl_poly/dlp_field.c, Line: 160
+# File: calc/dl_poly/dlp_field.c, Line: 183
 msgid "Three-body potential"
 msgstr "Potentiel à trois corps"
 
-# File: calc/dl_poly/dlp_field.c, Line: 161
+# File: calc/dl_poly/dlp_field.c, Line: 184
 msgid "Four-body potential"
 msgstr "Potentiel à quatre corps"
 
-# File: calc/dl_poly/dlp_field.c, Line: 166
+# File: calc/dl_poly/dlp_field.c, Line: 189
+msgid "core-shell unit(s)"
+msgstr "unité(s) cœur-coquille"
+
+# File: calc/dl_poly/dlp_field.c, Line: 190
+msgid "constraint bond(s)"
+msgstr "contrainte(s) de liaison(s)"
+
+# File: calc/dl_poly/dlp_field.c, Line: 191
+msgid "mean force potential(s)"
+msgstr "potentiel(s) de force moyen"
+
+# File: calc/dl_poly/dlp_field.c, Line: 192
+msgid "rigid unit(s)"
+msgstr "unité(s) rigide(s)"
+
+# File: calc/dl_poly/dlp_field.c, Line: 193
+msgid "tethering potential(s)"
+msgstr "potentiel(s) d'attache"
+
+# File: calc/dl_poly/dlp_field.c, Line: 194
+msgid "flexible chemical bond(s)"
+msgstr "liaison(s) chimique(s) flexible(s)"
+
+# File: calc/dl_poly/dlp_field.c, Line: 195
+msgid "bond restraint(s)"
+msgstr "contrainte(s) de liaison(s)"
+
+# File: calc/dl_poly/dlp_field.c, Line: 196
+msgid "bond angle(s)"
+msgstr "angle(s) de liaison(s)"
+
+# File: calc/dl_poly/dlp_field.c, Line: 197
+msgid "angular restraint(s)"
+msgstr "contrainte(s) angulaire(s)"
+
+# File: calc/dl_poly/dlp_field.c, Line: 198
+msgid "dihedral angle(s)"
+msgstr "angle(s) dièdre(s)"
+
+# File: calc/dl_poly/dlp_field.c, Line: 199
+msgid "torsional restraint(s)"
+msgstr "contrainte(s) de torsion(s)"
+
+# File: calc/dl_poly/dlp_field.c, Line: 200
+msgid "improper angle(s)"
+msgstr "angle(s) impropre(s)"
+
+# File: calc/dl_poly/dlp_field.c, Line: 201
+msgid "inversion angle(s)"
+msgstr "angle(s) d'inversion"
+
+# File: calc/dl_poly/dlp_field.c, Line: 203
+msgid "metal potential(s)"
+msgstr "potentiel métallique(s)"
+
+# File: calc/dl_poly/dlp_field.c, Line: 205
+msgid "three-body potential(s)"
+msgstr "potentiel(s) à trois corps"
+
+# File: calc/dl_poly/dlp_field.c, Line: 206
+msgid "four-body potential(s)"
+msgstr "potentiel(s) à quatre corps"
+
+# File: calc/dl_poly/dlp_field.c, Line: 207
+msgid "external field(s)"
+msgstr "champ(s) externe(s)"
+
+# File: calc/dl_poly/dlp_field.c, Line: 189
 msgid "core-shell unit"
 msgstr "unité cœur-coquille"
 
-# File: calc/dl_poly/dlp_field.c, Line: 167
+# File: calc/dl_poly/dlp_field.c, Line: 190
 msgid "constraint bond"
-msgstr "lien de contrainte"
+msgstr "contrainte de liaison"
 
-# File: calc/dl_poly/dlp_field.c, Line: 168
+# File: calc/dl_poly/dlp_field.c, Line: 191
 msgid "mean force potential"
 msgstr "potentiel de force moyen"
 
-# File: calc/dl_poly/dlp_field.c, Line: 169
+# File: calc/dl_poly/dlp_field.c, Line: 192
 msgid "rigid unit"
 msgstr "unité rigide"
 
-# File: calc/dl_poly/dlp_field.c, Line: 170
+# File: calc/dl_poly/dlp_field.c, Line: 193
 msgid "tethering potential"
 msgstr "potentiel d'attache"
 
-# File: calc/dl_poly/dlp_field.c, Line: 171
+# File: calc/dl_poly/dlp_field.c, Line: 194
 msgid "flexible chemical bond"
 msgstr "liaison chimique flexible"
 
-# File: calc/dl_poly/dlp_field.c, Line: 172
+# File: calc/dl_poly/dlp_field.c, Line: 195
 msgid "bond restraint"
-msgstr "retenue de caution"
+msgstr "contrainte de liaison"
 
-# File: calc/dl_poly/dlp_field.c, Line: 173
+# File: calc/dl_poly/dlp_field.c, Line: 196
 msgid "bond angle"
 msgstr "angle de liaison"
 
-# File: calc/dl_poly/dlp_field.c, Line: 174
+# File: calc/dl_poly/dlp_field.c, Line: 197
 msgid "angular restraint"
-msgstr "retenue angulaire"
+msgstr "contrainte angulaire"
 
-# File: calc/dl_poly/dlp_field.c, Line: 175
+# File: calc/dl_poly/dlp_field.c, Line: 198
 msgid "dihedral angle"
 msgstr "angle dièdre"
 
-# File: calc/dl_poly/dlp_field.c, Line: 176
+# File: calc/dl_poly/dlp_field.c, Line: 199
 msgid "torsional restraint"
-msgstr "retenue en torsion"
+msgstr "contrainte de torsion"
 
-# File: calc/dl_poly/dlp_field.c, Line: 177
+# File: calc/dl_poly/dlp_field.c, Line: 200
 msgid "improper angle"
-msgstr "angle inapproprié"
+msgstr "angle impropre"
 
-# File: calc/dl_poly/dlp_field.c, Line: 178
+# File: calc/dl_poly/dlp_field.c, Line: 201
 msgid "inversion angle"
 msgstr "angle d'inversion"
 
-# File: calc/dl_poly/dlp_field.c, Line: 180
+# File: calc/dl_poly/dlp_field.c, Line: 203
 msgid "metal potential"
 msgstr "potentiel métallique"
 
-# File: calc/dl_poly/dlp_field.c, Line: 182
+# File: calc/dl_poly/dlp_field.c, Line: 205
 msgid "three-body potential"
 msgstr "potentiel à trois corps"
 
-# File: calc/dl_poly/dlp_field.c, Line: 183
+# File: calc/dl_poly/dlp_field.c, Line: 206
 msgid "four-body potential"
 msgstr "potentiel à quatre corps"
 
-# File: calc/dl_poly/dlp_field.c, Line: 184
+# File: calc/dl_poly/dlp_field.c, Line: 207
 msgid "external field"
-msgstr "champ externe"
+msgstr "champ externe" 
 
-# File: calc/dl_poly/dlp_field.c, Line: 219,236
+# File: calc/dl_poly/dlp_field.c, Line: 231
+msgid "of molecule(s)"
+msgstr "de molécule(s)"
+
+# File: calc/dl_poly/dlp_field.c, Line: 232
+msgid "of atom(s)"
+msgstr "d'atome(s)"
+
+# File: calc/dl_poly/dlp_field.c, Line: 233
+msgid "of core-shell unit(s)"
+msgstr "d'unité(s) cœur-coquille"
+
+# File: calc/dl_poly/dlp_field.c, Line: 234
+msgid "of constraint bond(s)"
+msgstr "de contrainte(s) de liaison(s)"
+
+# File: calc/dl_poly/dlp_field.c, Line: 235
+msgid "of mean force potential(s)"
+msgstr "de potentiel(s) de force moyen"
+
+# File: calc/dl_poly/dlp_field.c, Line: 236
+msgid "of rigid unit(s)"
+msgstr "d'unité(s) rigide(s)"
+
+# File: calc/dl_poly/dlp_field.c, Line: 237
+msgid "of tethering potential(s)"
+msgstr "de potentiel(s) d'attache"
+
+# File: calc/dl_poly/dlp_field.c, Line: 238
+msgid "of flexible chemical bond(s)"
+msgstr "de liaison(s) chimique(s) flexible(s)"
+
+# File: calc/dl_poly/dlp_field.c, Line: 239
+msgid "of bond restraint(s)"
+msgstr "de contrainte(s) de liaison(s)"
+
+# File: calc/dl_poly/dlp_field.c, Line: 240
+msgid "of bond angle(s)"
+msgstr "d'angle(s) de liaison(s)"
+
+# File: calc/dl_poly/dlp_field.c, Line: 241
+msgid "of angular restraint(s)"
+msgstr "de contrainte(s) angulaire(s)"
+
+# File: calc/dl_poly/dlp_field.c, Line: 242
+msgid "of dihedral angle(s)"
+msgstr "d'angle(s) dièdre(s)"
+
+# File: calc/dl_poly/dlp_field.c, Line: 243
+msgid "of torsional restraint(s)"
+msgstr "de contrainte(s) de torsion(s)"
+
+# File: calc/dl_poly/dlp_field.c, Line: 244
+msgid "of improper angle(s)"
+msgstr "d'angle(s) impropre(s)"
+
+# File: calc/dl_poly/dlp_field.c, Line: 245
+msgid "of inversion angle(s)"
+msgstr "d'angle(s) d'inversion"
+
+# File: calc/dl_poly/dlp_field.c, Line: 247
+msgid "of metal potential(s)"
+msgstr "de potentiel métallique(s)"
+
+# File: calc/dl_poly/dlp_field.c, Line: 249
+msgid "of three-body potential(s)"
+msgstr "de potentiel(s) à trois corps"
+
+# File: calc/dl_poly/dlp_field.c, Line: 250
+msgid "of four-body potential(s)"
+msgstr "de potentiel(s) à quatre corps"
+
+# File: calc/dl_poly/dlp_field.c, Line: 251
+msgid "of external field(s)"
+msgstr "de champ(s) externe(s)"
+
+# File: calc/dl_poly/dlp_field.c, Line: 253
+msgid "of the molecule"
+msgstr "de la molécule"
+
+# File: calc/dl_poly/dlp_field.c, Line: 254
+msgid "of the atom"
+msgstr "de l'atome"
+
+# File: calc/dl_poly/dlp_field.c, Line: 255
+msgid "of the core-shell unit"
+msgstr "de l'unité cœur-coquille"
+
+# File: calc/dl_poly/dlp_field.c, Line: 256
+msgid "of the constraint bond"
+msgstr "de la contrainte de liaison"
+
+# File: calc/dl_poly/dlp_field.c, Line: 257
+msgid "of the mean force potential"
+msgstr "du potentiel de force moyen"
+
+# File: calc/dl_poly/dlp_field.c, Line: 258
+msgid "of the rigid unit"
+msgstr "de l'unité rigide"
+
+# File: calc/dl_poly/dlp_field.c, Line: 259
+msgid "of the tethering potential"
+msgstr "du potentiel d'attache"
+
+# File: calc/dl_poly/dlp_field.c, Line: 260
+msgid "of the flexible chemical bond"
+msgstr "de la liaison chimique flexible"
+
+# File: calc/dl_poly/dlp_field.c, Line: 261
+msgid "of the bond restraint"
+msgstr "de la contrainte de liaison"
+
+# File: calc/dl_poly/dlp_field.c, Line: 262
+msgid "of the bond angle"
+msgstr "de l'angle de liaison"
+
+# File: calc/dl_poly/dlp_field.c, Line: 263
+msgid "of the angular restraint"
+msgstr "de la contrainte angulaire"
+
+# File: calc/dl_poly/dlp_field.c, Line: 264
+msgid "of the dihedral angle"
+msgstr "de l'angle dièdre"
+
+# File: calc/dl_poly/dlp_field.c, Line: 265
+msgid "of the torsional restraint"
+msgstr "de la contrainte de torsion"
+
+# File: calc/dl_poly/dlp_field.c, Line: 266
+msgid "of the improper angle"
+msgstr "de l'angle impropre"
+
+# File: calc/dl_poly/dlp_field.c, Line: 267
+msgid "of the inversion angle"
+msgstr "de l'angle d'inversion"
+
+# File: calc/dl_poly/dlp_field.c, Line: 269
+msgid "of the metal potential"
+msgstr "du potentiel métallique"
+
+# File: calc/dl_poly/dlp_field.c, Line: 271
+msgid "of the three-body potential"
+msgstr "du potentiel à trois corps"
+
+# File: calc/dl_poly/dlp_field.c, Line: 272
+msgid "of the four-body potential"
+msgstr "du potentiel à quatre corps"
+
+# File: calc/dl_poly/dlp_field.c, Line: 273
+msgid "of the external field"
+msgstr "du champ externe"
+
+# File: calc/dl_poly/dlp_field.c, Line: 308
 msgid "Electron-Volts"
 msgstr "Électrons-volts"
 
-# File: calc/dl_poly/dlp_field.c, Line: 219,236
+# File: calc/dl_poly/dlp_field.c, Line: 308
 msgid "k-calories per mol"
 msgstr "k-calories par mole"
 
-# File: calc/dl_poly/dlp_field.c, Line: 219,236
+# File: calc/dl_poly/dlp_field.c, Line: 308
 msgid "k-Joules per mol"
 msgstr "k-Joules par mol"
 
-# File: calc/dl_poly/dlp_field.c, Line: 219
+# File: calc/dl_poly/dlp_field.c, Line: 308
 msgid "Kelvin per Boltzmann"
 msgstr "Kelvin pour Boltzmann"
 
-# File: calc/dl_poly/dlp_field.c, Line: 220,221,222,223,224,225,226,227,233,238,241,244,245,568
+# File: calc/dl_poly/dlp_field.c, Line: 309
 msgid "Harmonic"
 msgstr "Harmonique"
 
-# File: calc/dl_poly/dlp_field.c, Line: 220,221
+# File: calc/dl_poly/dlp_field.c, Line: 309
 msgid "Restraint"
 msgstr "Retenue"
 
-# File: calc/dl_poly/dlp_field.c, Line: 220,221,222,223,242
+# File: calc/dl_poly/dlp_field.c, Line: 309
 msgid "Quartic"
 msgstr "Quartique"
 
-# File: calc/dl_poly/dlp_field.c, Line: 221
+# File: calc/dl_poly/dlp_field.c, Line: 310
 msgid "Shifted FENE"
 msgstr "FENE décalé"
 
-# File: calc/dl_poly/dlp_field.c, Line: 221
+# File: calc/dl_poly/dlp_field.c, Line: 310
 msgid "MM3 bond stretch"
 msgstr "Étirement de la liaison MM3"
 
-# File: calc/dl_poly/dlp_field.c, Line: 221,222,223,224,225,226,227,228,239,242,245
+# File: calc/dl_poly/dlp_field.c, Line: 310
 msgid "Tabulated"
 msgstr "Tabulé"
 
-# File: calc/dl_poly/dlp_field.c, Line: 223,233
+# File: calc/dl_poly/dlp_field.c, Line: 312
 msgid "Truncated harmonic"
 msgstr "Harmonique tronquée"
 
-# File: calc/dl_poly/dlp_field.c, Line: 223,233
+# File: calc/dl_poly/dlp_field.c, Line: 312
 msgid "Screened harmonic"
 msgstr "Harmonique filtrée"
 
-# File: calc/dl_poly/dlp_field.c, Line: 223,233
+# File: calc/dl_poly/dlp_field.c, Line: 312
 msgid "Screened Vessal"
 msgstr "Navire blindé"
 
-# File: calc/dl_poly/dlp_field.c, Line: 223,233
+# File: calc/dl_poly/dlp_field.c, Line: 312
 msgid "Truncated Vessal"
 msgstr "Navire tronqué"
 
-# File: calc/dl_poly/dlp_field.c, Line: 223,224,225,226,227,234
+# File: calc/dl_poly/dlp_field.c, Line: 312
 msgid "Harmonic cosine"
 msgstr "Cosinus harmonique"
 
-# File: calc/dl_poly/dlp_field.c, Line: 223,224,225,226,241
+# File: calc/dl_poly/dlp_field.c, Line: 312
 msgid "Cosine"
 msgstr "Cosinus"
 
-# File: calc/dl_poly/dlp_field.c, Line: 223
+# File: calc/dl_poly/dlp_field.c, Line: 312
 msgid "MM3 stretch-bend"
 msgstr "MM3 étirable-plié"
 
-# File: calc/dl_poly/dlp_field.c, Line: 223
+# File: calc/dl_poly/dlp_field.c, Line: 312
 msgid "Compass stretch-stretch"
 msgstr "Boussole extensible-étirable"
 
-# File: calc/dl_poly/dlp_field.c, Line: 223
+# File: calc/dl_poly/dlp_field.c, Line: 312
 msgid "Compass stretch-bend"
 msgstr "Boussole extensible-courbée"
 
-# File: calc/dl_poly/dlp_field.c, Line: 223
+# File: calc/dl_poly/dlp_field.c, Line: 312
 msgid "Compass all terms"
 msgstr "Compas tous les termes"
 
-# File: calc/dl_poly/dlp_field.c, Line: 223
+# File: calc/dl_poly/dlp_field.c, Line: 312
 msgid "MM3 angle bend"
 msgstr "Coude d'angle MM3"
 
-# File: calc/dl_poly/dlp_field.c, Line: 225,226
+# File: calc/dl_poly/dlp_field.c, Line: 314
 msgid "Triple cosine"
 msgstr "Triple cosinus"
 
-# File: calc/dl_poly/dlp_field.c, Line: 225,226
+# File: calc/dl_poly/dlp_field.c, Line: 314
 msgid "Fluorinated Ryckaert-Bellemans"
 msgstr "Ryckaert-Bellemans fluoré"
 
-# File: calc/dl_poly/dlp_field.c, Line: 225,226
+# File: calc/dl_poly/dlp_field.c, Line: 314
 msgid "OPLS torsion"
 msgstr "Torsion OPLS"
 
-# File: calc/dl_poly/dlp_field.c, Line: 228,234
+# File: calc/dl_poly/dlp_field.c, Line: 317
 msgid "Planar"
 msgstr "Planaire"
 
-# File: calc/dl_poly/dlp_field.c, Line: 228
+# File: calc/dl_poly/dlp_field.c, Line: 317
 msgid "Extended Planar"
 msgstr "Planaire étendu"
 
-# File: calc/dl_poly/dlp_field.c, Line: 228
+# File: calc/dl_poly/dlp_field.c, Line: 317
 msgid "Calcite"
 msgstr "calcite"
 
-# File: calc/dl_poly/dlp_field.c, Line: 229
+# File: calc/dl_poly/dlp_field.c, Line: 318
 msgid "LJ cohesive"
 msgstr "LJ cohérent"
 
-# File: calc/dl_poly/dlp_field.c, Line: 229
+# File: calc/dl_poly/dlp_field.c, Line: 318
 msgid "12-10 H-bond"
 msgstr "12-10 H-liaison"
 
-# File: calc/dl_poly/dlp_field.c, Line: 229
+# File: calc/dl_poly/dlp_field.c, Line: 318
 msgid "Shifted force n-m"
 msgstr "Force décalée n-m"
 
-# File: calc/dl_poly/dlp_field.c, Line: 229
+# File: calc/dl_poly/dlp_field.c, Line: 318
 msgid "Shifted Weeks-Chandler-Anderson"
 msgstr "Semaines décalées-Chandler-Anderson"
 
-# File: calc/dl_poly/dlp_field.c, Line: 229
+# File: calc/dl_poly/dlp_field.c, Line: 318
 msgid "Standard DPD"
 msgstr "DPD standard"
 
-# File: calc/dl_poly/dlp_field.c, Line: 229
+# File: calc/dl_poly/dlp_field.c, Line: 318
 msgid "14-7 buffered AMOEBA FF"
 msgstr "AMOEBA FF tamponné 14-7"
 
-# File: calc/dl_poly/dlp_field.c, Line: 230
+# File: calc/dl_poly/dlp_field.c, Line: 319
 msgid "Morse modified"
 msgstr "Morse modifié"
 
-# File: calc/dl_poly/dlp_field.c, Line: 230
+# File: calc/dl_poly/dlp_field.c, Line: 319
 msgid "ZBL mixed with Morse"
 msgstr "ZBL mélangé avec Morse"
 
-# File: calc/dl_poly/dlp_field.c, Line: 230
+# File: calc/dl_poly/dlp_field.c, Line: 319
 msgid "ZBL mixed with Buckingham"
 msgstr "ZBL mélangé avec Buckingham"
 
-# File: calc/dl_poly/dlp_field.c, Line: 230
+# File: calc/dl_poly/dlp_field.c, Line: 319
 msgid "Lennard-Jones tapered with MDF"
 msgstr "Lennard-Jones effilé avec MDF"
 
-# File: calc/dl_poly/dlp_field.c, Line: 230
+# File: calc/dl_poly/dlp_field.c, Line: 319
 msgid "Buckingham tapered with MDF"
 msgstr "Buckingham effilé avec MDF"
 
-# File: calc/dl_poly/dlp_field.c, Line: 230
+# File: calc/dl_poly/dlp_field.c, Line: 319
 msgid "12-6 Lennard-Jones tapered with MDF"
 msgstr "12-6 Lennard-Jones effilé avec MDF"
 
-# File: calc/dl_poly/dlp_field.c, Line: 231
+# File: calc/dl_poly/dlp_field.c, Line: 320
 msgid "Extended Finis-Sinclair"
 msgstr "Finis-Sinclair étendu"
 
-# File: calc/dl_poly/dlp_field.c, Line: 233
+# File: calc/dl_poly/dlp_field.c, Line: 318
 msgid "H-bond"
 msgstr "Liaison H"
 
-# File: calc/dl_poly/dlp_field.c, Line: 235
+# File: calc/dl_poly/dlp_field.c, Line: 324
 msgid "Electric field"
 msgstr "Champ électrique"
 
-# File: calc/dl_poly/dlp_field.c, Line: 235
+# File: calc/dl_poly/dlp_field.c, Line: 324
 msgid "Oscillating Shear"
 msgstr "Cisaille oscillante"
 
-# File: calc/dl_poly/dlp_field.c, Line: 235
+# File: calc/dl_poly/dlp_field.c, Line: 324
 msgid "Continuous Shear"
 msgstr "Cisaillement continu"
 
-# File: calc/dl_poly/dlp_field.c, Line: 235
+# File: calc/dl_poly/dlp_field.c, Line: 324
 msgid "Gravitational field"
 msgstr "Champ gravitationnel"
 
-# File: calc/dl_poly/dlp_field.c, Line: 235
+# File: calc/dl_poly/dlp_field.c, Line: 324
 msgid "Magnetic field"
 msgstr "Champ magnétique"
 
-# File: calc/dl_poly/dlp_field.c, Line: 235
+# File: calc/dl_poly/dlp_field.c, Line: 324
 msgid "Containing Sphere"
 msgstr "Sphère contenante"
 
-# File: calc/dl_poly/dlp_field.c, Line: 235
+# File: calc/dl_poly/dlp_field.c, Line: 324
 msgid "Repulsive Wall"
 msgstr "Mur répulsif"
 
-# File: calc/dl_poly/dlp_field.c, Line: 235
+# File: calc/dl_poly/dlp_field.c, Line: 324
 msgid "X-Piston"
 msgstr "X-Piston"
 
-# File: calc/dl_poly/dlp_field.c, Line: 235
+# File: calc/dl_poly/dlp_field.c, Line: 324
 msgid "Molecule in HR Zone"
 msgstr "Molécule dans la zone HR"
 
-# File: calc/dl_poly/dlp_field.c, Line: 235
+# File: calc/dl_poly/dlp_field.c, Line: 324
 msgid "HR Zone (pull out)"
 msgstr "Zone HR (retirable)"
 
-# File: calc/dl_poly/dlp_field.c, Line: 235
+# File: calc/dl_poly/dlp_field.c, Line: 324
 msgid "HR Zone (pull in)"
 msgstr "Zone RH (tirez-vous)"
 
-# File: calc/dl_poly/dlp_field.c, Line: 235
+# File: calc/dl_poly/dlp_field.c, Line: 324
 msgid "Osc. Electric Field"
 msgstr "Osc. Champ électrique"
 
-# File: calc/dl_poly/dlp_field.c, Line: 235
+# File: calc/dl_poly/dlp_field.c, Line: 324
 msgid "Umbrella sampling, harm. constant"
 msgstr "Échantillonnage de parapluie, préjudice. constante"
 
-# File: calc/dl_poly/dlp_field.c, Line: 236
+# File: calc/dl_poly/dlp_field.c, Line: 291
 msgid "electron"
 msgstr "électron"
 
-# File: calc/dl_poly/dlp_field.c, Line: 238,241,244,247
+# File: calc/dl_poly/dlp_field.c, Line: 327
 msgid "COMPASS class2 force field"
 msgstr "Champ de force COMPASS classe 2"
 
-# File: calc/dl_poly/dlp_field.c, Line: 238
+# File: calc/dl_poly/dlp_field.c, Line: 327
 msgid "Finite extensible nonlinear elastic (FENE)"
-msgstr "Élastique non linéaire extensible fini (FENE)"
+msgstr "Élastique non-linéaire extensible fini (FENE)"
 
-# File: calc/dl_poly/dlp_field.c, Line: 238
+# File: calc/dl_poly/dlp_field.c, Line: 327
 msgid "FENE with variable size particles"
 msgstr "FENE à particules de taille variable"
 
-# File: calc/dl_poly/dlp_field.c, Line: 238
+# File: calc/dl_poly/dlp_field.c, Line: 327
 msgid "GROMOS force field"
 msgstr "Champ de force GROMOS"
 
-# File: calc/dl_poly/dlp_field.c, Line: 238
+# File: calc/dl_poly/dlp_field.c, Line: 327
 msgid "Shifted harmonic"
 msgstr "Harmonique décalée"
 
-# File: calc/dl_poly/dlp_field.c, Line: 238
+# File: calc/dl_poly/dlp_field.c, Line: 327
 msgid "Shifted truncated harmonic"
 msgstr "Harmonique tronquée décalée"
 
-# File: calc/dl_poly/dlp_field.c, Line: 238
+# File: calc/dl_poly/dlp_field.c, Line: 327
 msgid "MM3 anharmonic"
 msgstr "MM3 anharmonique"
 
-# File: calc/dl_poly/dlp_field.c, Line: 238
+# File: calc/dl_poly/dlp_field.c, Line: 327
 msgid "Nonlinear"
 msgstr "Non linéaire"
 
-# File: calc/dl_poly/dlp_field.c, Line: 238
+# File: calc/dl_poly/dlp_field.c, Line: 327
 msgid "Finite extensible nonlinear elastic DNA"
-msgstr "ADN élastique non linéaire extensible fini"
+msgstr "ADN élastique non-linéaire extensible fini"
 
-# File: calc/dl_poly/dlp_field.c, Line: 239
+# File: calc/dl_poly/dlp_field.c, Line: 328
 msgid "Finite extensible nonlinear elastic DNA (2)"
-msgstr "ADN élastique non linéaire extensible fini (2)"
+msgstr "ADN élastique non-linéaire extensible fini (2)"
 
-# File: calc/dl_poly/dlp_field.c, Line: 239
+# File: calc/dl_poly/dlp_field.c, Line: 328
 msgid "Finite extensible nonlinear elastic RNA"
-msgstr "ARN élastique non linéaire extensible fini"
+msgstr "ARN élastique non-linéaire extensible fini"
 
-# File: calc/dl_poly/dlp_field.c, Line: 239
+# File: calc/dl_poly/dlp_field.c, Line: 328
 msgid "Breakable quartic"
 msgstr "Quartique cassable"
 
-# File: calc/dl_poly/dlp_field.c, Line: 239
+# File: calc/dl_poly/dlp_field.c, Line: 328
 msgid "Special bond exclusions for 1-5 pairs and beyond"
 msgstr "Exclusions spéciales de liaison pour paires 1-5 et au-delà"
 
-# File: calc/dl_poly/dlp_field.c, Line: 241,244
+# File: calc/dl_poly/dlp_field.c, Line: 330
 msgid "CHARMM force field"
 msgstr "Champ de force CHARMM"
 
-# File: calc/dl_poly/dlp_field.c, Line: 241
+# File: calc/dl_poly/dlp_field.c, Line: 330
 msgid "COMPASS class2 force field - 6th order"
 msgstr "Champ de force COMPASS classe 2 - 6ème ordre"
 
-# File: calc/dl_poly/dlp_field.c, Line: 241
+# File: calc/dl_poly/dlp_field.c, Line: 330
 msgid "Cosine with Buckingham term between 1-3"
 msgstr "Cosinus avec terme de Buckingham entre 1 et 3"
 
-# File: calc/dl_poly/dlp_field.c, Line: 241
+# File: calc/dl_poly/dlp_field.c, Line: 330
 msgid "Difference of cosines"
 msgstr "Différence de cosinus"
 
-# File: calc/dl_poly/dlp_field.c, Line: 241,247,572
+# File: calc/dl_poly/dlp_field.c, Line: 330
 msgid "DREIDING force field"
 msgstr "Champ de force DREIDING"
 
-# File: calc/dl_poly/dlp_field.c, Line: 241
+# File: calc/dl_poly/dlp_field.c, Line: 330
 msgid "Cosine with a shift"
 msgstr "Cosinus avec un décalage"
 
-# File: calc/dl_poly/dlp_field.c, Line: 241,244
+# File: calc/dl_poly/dlp_field.c, Line: 330
 msgid "Cosine with a shift and exponential term in spring"
 msgstr "Cosinus avec décalage et terme exponentiel au printemps"
 
-# File: calc/dl_poly/dlp_field.c, Line: 242
+# File: calc/dl_poly/dlp_field.c, Line: 331
 msgid "Cosine with squared term"
 msgstr "Cosinus avec terme carré"
 
-# File: calc/dl_poly/dlp_field.c, Line: 242
+# File: calc/dl_poly/dlp_field.c, Line: 331
 msgid "Cross term coupling angle and bond length"
 msgstr "Angle de couplage des termes croisés et longueur de liaison"
 
-# File: calc/dl_poly/dlp_field.c, Line: 242
+# File: calc/dl_poly/dlp_field.c, Line: 331
 msgid "Dipole orientation"
 msgstr "Orientation dipolaire"
 
-# File: calc/dl_poly/dlp_field.c, Line: 242,247,567
+# File: calc/dl_poly/dlp_field.c, Line: 331
 msgid "Fourier (multiple cosines)"
 msgstr "Fourier (cosinus multiples)"
 
-# File: calc/dl_poly/dlp_field.c, Line: 242
+# File: calc/dl_poly/dlp_field.c, Line: 331
 msgid "Fourier (single cosine)"
 msgstr "Fourier (cosinus simple)"
 
-# File: calc/dl_poly/dlp_field.c, Line: 242
+# File: calc/dl_poly/dlp_field.c, Line: 331
 msgid "Combination of the harmonic (SDK)"
 msgstr "Combinaison de l'harmonique (SDK)"
 
-# File: calc/dl_poly/dlp_field.c, Line: 244
+# File: calc/dl_poly/dlp_field.c, Line: 333
 msgid "CHARMM force field with force switching"
 msgstr "Champ de force CHARMM avec commutation de force"
 
-# File: calc/dl_poly/dlp_field.c, Line: 244
+# File: calc/dl_poly/dlp_field.c, Line: 333
 msgid "Helix"
 msgstr "Hélix"
 
-# File: calc/dl_poly/dlp_field.c, Line: 244
+# File: calc/dl_poly/dlp_field.c, Line: 333
 msgid "Harmonic with 5 terms"
 msgstr "Harmonique à 5 termes"
 
-# File: calc/dl_poly/dlp_field.c, Line: 245
+# File: calc/dl_poly/dlp_field.c, Line: 334
 msgid "Harmonic with N terms"
 msgstr "Harmonique avec N termes"
 
-# File: calc/dl_poly/dlp_field.c, Line: 245
+# File: calc/dl_poly/dlp_field.c, Line: 334
 msgid "OPLS force field"
 msgstr "Champ de force OPLS"
 
-# File: calc/dl_poly/dlp_field.c, Line: 245
+# File: calc/dl_poly/dlp_field.c, Line: 334
 msgid "Quadratic"
 msgstr "Quadratique"
 
-# File: calc/dl_poly/dlp_field.c, Line: 245
+# File: calc/dl_poly/dlp_field.c, Line: 334
 msgid "Spherical"
 msgstr "Sphérique"
 
-# File: calc/dl_poly/dlp_field.c, Line: 245
+# File: calc/dl_poly/dlp_field.c, Line: 334
 msgid "Tabulated with analytic cutoff"
 msgstr "Tabulé avec seuil analytique"
 
-# File: calc/dl_poly/dlp_field.c, Line: 247,563
+# File: calc/dl_poly/dlp_field.c, Line: 336
 msgid "Cosine squared"
 msgstr "Cosinus carré"
 
-# File: calc/dl_poly/dlp_field.c, Line: 247,564
+# File: calc/dl_poly/dlp_field.c, Line: 336
 msgid "CVFF force field"
 msgstr "Champ de force CVFF"
 
-# File: calc/dl_poly/dlp_field.c, Line: 247,565
+# File: calc/dl_poly/dlp_field.c, Line: 336
 msgid "Distance between atom planes"
 msgstr "Distance entre les plans atomiques"
 
-# File: calc/dl_poly/dlp_field.c, Line: 247,566
+# File: calc/dl_poly/dlp_field.c, Line: 336
 msgid "Out-of-the plane distance"
 msgstr "Distance hors du plan"
 
-# File: calc/dl_poly/dlp_field.c, Line: 247,570
+# File: calc/dl_poly/dlp_field.c, Line: 336
 msgid "Planar conformation"
 msgstr "Forme planaire"
 
-# File: calc/dl_poly/dlp_field.c, Line: 247,571
+# File: calc/dl_poly/dlp_field.c, Line: 336
 msgid "Squared distance harmonic"
 msgstr "Harmonique de distance carrée"
 
-# File: calc/dl_poly/dlp_field.c, Line: 248,569
+# File: calc/dl_poly/dlp_field.c, Line: 337
 msgid "Harmonic with Wilson Decius out-of-plane"
 msgstr "Harmonique avec Wilson Decius hors plan"
 
-# File: calc/dl_poly/dlp_field.c, Line: 338,410,477
+# File: calc/dl_poly/dlp_field.c, Line: 427,499
 msgid "Interpolation style"
 msgstr "Style d'interpolation"
 
-# File: calc/dl_poly/dlp_field.c, Line: 466
+# File: calc/dl_poly/dlp_field.c, Line: 555
 msgid "weighting factor"
 msgstr "facteur de pondération"
 
-# File: calc/dl_poly/dlp_field.c, Line: 835,836,837,838,839,840,841,842,843,844,845,846,847,848,849,850,851,852,853
+# File: calc/dl_poly/dlp_field.c, Line: 924
 msgid "Viz. 3D"
-msgstr "À savoir. 3D"
+msgstr "Vue. 3D"
 
-# File: calc/dl_poly/dlp_field.c, Line: 835
+# File: calc/dl_poly/dlp_field.c, Line: 924
 msgid "Viz. Atom num."
-msgstr "À savoir. Numéro d'atome."
+msgstr "Vue Numéro d'Atome."
 
-# File: calc/dl_poly/dlp_field.c, Line: 836
+# File: calc/dl_poly/dlp_field.c, Line: 925
 msgid "Mass"
 msgstr "Masse"
 
-# File: calc/dl_poly/dlp_field.c, Line: 836
+# File: calc/dl_poly/dlp_field.c, Line: 925
 msgid "Charge"
 msgstr "Charge"
 
-# File: calc/dl_poly/dlp_field.c, Line: 836
+# File: calc/dl_poly/dlp_field.c, Line: 925
 msgid "Frozen"
 msgstr "Congelé"
 
-# File: calc/dl_poly/dlp_field.c, Line: 837
+# File: calc/dl_poly/dlp_field.c, Line: 926
 msgid "Core Id"
 msgstr "Identifiant de base"
 
-# File: calc/dl_poly/dlp_field.c, Line: 837
+# File: calc/dl_poly/dlp_field.c, Line: 926
 msgid "Shell"
 msgstr "Coquille"
 
-# File: calc/dl_poly/dlp_field.c, Line: 837
+# File: calc/dl_poly/dlp_field.c, Line: 926
 msgid "Use (3)"
 msgstr "Utiliser (3)"
 
-# File: calc/dl_poly/dlp_field.c, Line: 838
+# File: calc/dl_poly/dlp_field.c, Line: 927
 msgid "At.1 Id"
 msgstr "At.1 Identifiant"
 
-# File: calc/dl_poly/dlp_field.c, Line: 838
+# File: calc/dl_poly/dlp_field.c, Line: 927
 msgid "At.2 Id"
 msgstr "At.2 Identifiant"
 
-# File: calc/dl_poly/dlp_field.c, Line: 838
+# File: calc/dl_poly/dlp_field.c, Line: 927
 msgid "Length [Å]"
 msgstr "Longueur [Å]"
 
-# File: calc/dl_poly/dlp_field.c, Line: 838,842
+# File: calc/dl_poly/dlp_field.c, Line: 927
 msgid "av. d [Å] (1)"
 msgstr "av. d [Å] (1)"
 
-# File: calc/dl_poly/dlp_field.c, Line: 838,842,843,844,845,846,847,848
+# File: calc/dl_poly/dlp_field.c, Line: 927
 msgid "Use (2)"
 msgstr "Utiliser (2)"
 
-# File: calc/dl_poly/dlp_field.c, Line: 839
+# File: calc/dl_poly/dlp_field.c, Line: 928
 msgid "av. d12 [Å] (1)"
 msgstr "av. d12 [Å] (1)"
 
-# File: calc/dl_poly/dlp_field.c, Line: 839
+# File: calc/dl_poly/dlp_field.c, Line: 928
 msgid "Unit Id"
 msgstr "Identifiant de l'unité"
 
-# File: calc/dl_poly/dlp_field.c, Line: 839
+# File: calc/dl_poly/dlp_field.c, Line: 928
 msgid "At. Id"
 msgstr "À. Identifiant"
 
-# File: calc/dl_poly/dlp_field.c, Line: 839
+# File: calc/dl_poly/dlp_field.c, Line: 928
 msgid "Weight (2)"
 msgstr "Poids (2)"
 
-# File: calc/dl_poly/dlp_field.c, Line: 840
+# File: calc/dl_poly/dlp_field.c, Line: 929
 msgid "Atom(s) in unit"
 msgstr "Atome(s) dans l'unité"
 
-# File: calc/dl_poly/dlp_field.c, Line: 840
+# File: calc/dl_poly/dlp_field.c, Line: 929
 msgid "List of atom(s)"
 msgstr "Liste des atomes"
 
-# File: calc/dl_poly/dlp_field.c, Line: 840,850,851,852,853,854
+# File: calc/dl_poly/dlp_field.c, Line: 929
 msgid "Use (1)"
 msgstr "Utiliser (1)"
 
-# File: calc/dl_poly/dlp_field.c, Line: 841
+# File: calc/dl_poly/dlp_field.c, Line: 159
 msgid "Potential"
 msgstr "Potentiel"
 
-# File: calc/dl_poly/dlp_field.c, Line: 842,843,844,845,846,847,848,849,851,853
+# File: calc/dl_poly/dlp_field.c, Line: 927
 msgid "At.1"
 msgstr "À.1"
 
-# File: calc/dl_poly/dlp_field.c, Line: 842,843,844,845,846,847,848,849,851,853
+# File: calc/dl_poly/dlp_field.c, Line: 927
 msgid "At.2"
 msgstr "À.2"
 
-# File: calc/dl_poly/dlp_field.c, Line: 844,845,846,847,848,849,853,854
+# File: calc/dl_poly/dlp_field.c, Line: 933
 msgid "At.3"
 msgstr "À.3"
 
-# File: calc/dl_poly/dlp_field.c, Line: 846,847,848,849
+# File: calc/dl_poly/dlp_field.c, Line: 935
 msgid "At.4"
 msgstr "À.4"
 
-# File: calc/dl_poly/dlp_field.c, Line: 854
+# File: calc/dl_poly/dlp_field.c, Line: 943
 msgid "At.1*"
 msgstr "À.1*"
 
-# File: calc/dl_poly/dlp_field.c, Line: 853
+# File: calc/dl_poly/dlp_field.c, Line: 942
 msgid "At.2*"
 msgstr "À.2*"
 
-# File: calc/dl_poly/dlp_field.c, Line: 842,843,844,845,846,847,848
+# File: calc/dl_poly/dlp_field.c, Line: 931
 msgid "Potential (3)"
 msgstr "Potentiel (3)"
 
-# File: calc/dl_poly/dlp_field.c, Line: 843
-msgid "Bond restraint(s)"
-msgstr "Restrictions de cautionnement"
-
-# File: calc/dl_poly/dlp_field.c, Line: 844
+# File: calc/dl_poly/dlp_field.c, Line: 348
 msgid "Angle(s)"
 msgstr "Angle(s)"
 
-# File: calc/dl_poly/dlp_field.c, Line: 844
+# File: calc/dl_poly/dlp_field.c, Line: 933
 msgid "av. θ [°] (1)"
 msgstr "av. θ [°] (1)"
 
-# File: calc/dl_poly/dlp_field.c, Line: 845
-msgid "Angle restraint(s)"
-msgstr "Retenue(s) d'angle"
-
-# File: calc/dl_poly/dlp_field.c, Line: 846
+# File: calc/dl_poly/dlp_field.c, Line: 350
 msgid "Dihedral(s)"
-msgstr "Dièdres"
+msgstr "Dièdre(s)"
 
-# File: calc/dl_poly/dlp_field.c, Line: 846,847,848
+# File: calc/dl_poly/dlp_field.c, Line: 935
 msgid "av. ϕ [°] (1)"
 msgstr "av. ϕ [°] (1)"
 
-# File: calc/dl_poly/dlp_field.c, Line: 847
-msgid "Torsional restraint(s)"
-msgstr "Maintien(s) de torsion"
-
-# File: calc/dl_poly/dlp_field.c, Line: 848
+# File: calc/dl_poly/dlp_field.c, Line: 352
 msgid "Improper(s)"
-msgstr "Incorrect(s)"
+msgstr "Impropre(s)"
 
-# File: calc/dl_poly/dlp_field.c, Line: 849
+# File: calc/dl_poly/dlp_field.c, Line: 353
 msgid "Inversion(s)"
 msgstr "Inversion(s)"
 
-# File: calc/dl_poly/dlp_field.c, Line: 850
+# File: calc/dl_poly/dlp_field.c, Line: 939
 msgid "Spec.1"
 msgstr "Spéc.1"
 
-# File: calc/dl_poly/dlp_field.c, Line: 850
+# File: calc/dl_poly/dlp_field.c, Line: 939
 msgid "Spec.2"
 msgstr "Spéc.2"
 
-# File: calc/dl_poly/dlp_field.c, Line: 850
+# File: calc/dl_poly/dlp_field.c, Line: 939
 msgid "VdW potential"
 msgstr "Potentiel VdW"
 
-# File: calc/dl_poly/dlp_field.c, Line: 851
+# File: calc/dl_poly/dlp_field.c, Line: 927
 msgid "At."
 msgstr "À."
 
-# File: calc/dl_poly/dlp_field.c, Line: 852
+# File: calc/dl_poly/dlp_field.c, Line: 941
 msgid "Tersoff Pot."
 msgstr "Pot Tersoff."
 
-# File: calc/dl_poly/dlp_field.c, Line: 853
+# File: calc/dl_poly/dlp_field.c, Line: 942
 msgid "Three-body Pot."
 msgstr "Pot à trois corps."
 
-# File: calc/dl_poly/dlp_field.c, Line: 854
+# File: calc/dl_poly/dlp_field.c, Line: 943
 msgid "Four-body Pot."
 msgstr "Pot à quatre corps."
 
-# File: calc/dl_poly/dlp_field.c, Line: 855
+# File: calc/dl_poly/dlp_field.c, Line: 944
 msgid "Field type"
 msgstr "Type de champ"
 
-# File: calc/dl_poly/dlp_field.c, Line: 936
+# File: calc/dl_poly/dlp_field.c, Line: 934
 msgid "Angle"
 msgstr "Angle"
 
-# File: calc/dl_poly/dlp_field.c, Line: 936
+# File: calc/dl_poly/dlp_field.c, Line: 934
 msgid "Angle restraint"
 msgstr "Retenue d'angle"
 
-# File: calc/dl_poly/dlp_field.c, Line: 936
+# File: calc/dl_poly/dlp_field.c, Line: 935
 msgid "Dihedral"
 msgstr "Dièdre"
 
-# File: calc/dl_poly/dlp_field.c, Line: 936
+# File: calc/dl_poly/dlp_field.c, Line: 937
 msgid "Improper"
 msgstr "Incorrect"
 
-# File: calc/dl_poly/dlp_field.c, Line: 936
+# File: calc/dl_poly/dlp_field.c, Line: 938
 msgid "Inversion"
 msgstr "Inversion"
 
-# File: calc/dl_poly/dlp_field.c, Line: 1071
+# File: calc/dl_poly/dlp_field.c, Line: 1160
 msgid "\t <b>(1)</b> Force constant of the core-shell spring in [<b>%s &#xC5;<sup>-2</sup></b>]"
 msgstr "\t <b>(1)</b> Constante de force du ressort cœur-coquille en [<b>%s &#xC5;<sup>-2</sup></b>]"
 
-# File: calc/dl_poly/dlp_field.c, Line: 1178
+# File: calc/dl_poly/dlp_field.c, Line: 1267
 msgid "<b>Default</b>: %s (%s)"
 msgstr "<b>Par défaut</b> : %s (%s)"
 
-# File: calc/dl_poly/dlp_field.c, Line: 1677
+# File: calc/dl_poly/dlp_field.c, Line: 1766
 msgid "the <b>%d</b> different fragment(s) in molecule <b>%s</b>\n"
 msgstr "le(s) <b>%d</b> fragment(s) différent(s) dans la molécule <b>%s</b>\n"
 
-# File: calc/dl_poly/dlp_field.c, Line: 1682
+# File: calc/dl_poly/dlp_field.c, Line: 1771
 msgid "the system\n"
 msgstr "le système\n"
 
-# File: calc/dl_poly/dlp_field.c, Line: 1688
+# File: calc/dl_poly/dlp_field.c, Line: 1777
 msgid "%seach contains the following <b>%d</b> type(s) of atom"
-msgstr "%scontient le(s) type(s) d'atome <b>%d</b> suivant(s)"
+msgstr "%scontient le(s) <b>%d</b> type(s) d'atome suivant(s)"
 
-# File: calc/dl_poly/dlp_field.c, Line: 1693
+# File: calc/dl_poly/dlp_field.c, Line: 1782
 msgid "%sdo not contains any core-shell unit"
 msgstr "%sne contient aucune unité cœur-coquille"
 
-# File: calc/dl_poly/dlp_field.c, Line: 1697
+# File: calc/dl_poly/dlp_field.c, Line: 1786
 msgid "%seach contains the following <b>%d</b> core-shell unit"
 msgstr "%scontient l'unité cœur-coquille <b>%d</b> suivante"
 
-# File: calc/dl_poly/dlp_field.c, Line: 1703
+# File: calc/dl_poly/dlp_field.c, Line: 1792
 msgid "%sdo not contains any constraint"
 msgstr "%sne contient aucune contrainte"
 
-# File: calc/dl_poly/dlp_field.c, Line: 1707
+# File: calc/dl_poly/dlp_field.c, Line: 1796
 msgid "%seach contains the following <b>%d</b> constraint(s)"
 msgstr "%scontient la ou les <b>%d</b> contrainte(s) suivante(s)"
 
-# File: calc/dl_poly/dlp_field.c, Line: 1713
+# File: calc/dl_poly/dlp_field.c, Line: 1802
 msgid "%sdo not contains any mean force potential"
 msgstr "%sne contient aucun potentiel de force moyenne"
 
-# File: calc/dl_poly/dlp_field.c, Line: 1717
+# File: calc/dl_poly/dlp_field.c, Line: 1806
 msgid "%seach contains the following <b>%d</b> type(s) of mean force potential(s)"
 msgstr "%scontient le(s) type(s) <b>%d</b> de potentiel(s) de force moyenne suivant(s)"
 
-# File: calc/dl_poly/dlp_field.c, Line: 1723
+# File: calc/dl_poly/dlp_field.c, Line: 1812
 msgid "%sdo not contains any rigid unit"
 msgstr "%sne contient aucune unité rigide"
 
-# File: calc/dl_poly/dlp_field.c, Line: 1727
+# File: calc/dl_poly/dlp_field.c, Line: 1816
 msgid "%seach contains the following <b>%d</b> rigid unit(s)"
 msgstr "%scontient le(s) <b>%d</b> unité(s) rigide(s) suivante(s)"
 
-# File: calc/dl_poly/dlp_field.c, Line: 1733
+# File: calc/dl_poly/dlp_field.c, Line: 1822
 msgid "%sdo not contains any tethering potential(s)"
 msgstr "%sne contient aucun potentiel de partage de connexion"
 
-# File: calc/dl_poly/dlp_field.c, Line: 1737
+# File: calc/dl_poly/dlp_field.c, Line: 1826
 msgid "%seach contains the following <b>%d</b> tethering potential(s)"
 msgstr "%seach contient le(s) potentiel(s) de connexion <b>%d</b> suivant(s)"
 
-# File: calc/dl_poly/dlp_field.c, Line: 1743
+# File: calc/dl_poly/dlp_field.c, Line: 1832
 msgid "the force field do not contains any external field(s)"
 msgstr "le champ de force ne contient aucun champ externe"
 
-# File: calc/dl_poly/dlp_field.c, Line: 1747
+# File: calc/dl_poly/dlp_field.c, Line: 1836
 msgid "the force field contains the following <b>%d</b> external field(s)"
 msgstr "le champ de force contient le(s) champ(s) externe(s) <b>%d</b> suivant(s)"
 
-# File: calc/dl_poly/dlp_field.c, Line: 1757
+# File: calc/dl_poly/dlp_field.c, Line: 1846
 msgid "%sdo not contains any %s <sup>*</sup>"
 msgstr "%sne contient aucun %s <sup>*</sup>"
 
-# File: calc/dl_poly/dlp_field.c, Line: 1761
-msgid "%s contains the following <b>%d</b> type(s) of %s <sup>*</sup>"
-msgstr "%s contient le(s) type(s) <b>%d</b> suivants de %s <sup>*</sup>"
+# File: calc/dl_poly/dlp_field.c, Line: 1850
+msgid "%s contains the following <b>%d</b> type(s) %s <sup>*</sup>"
+msgstr "%s contient les <b>%d</b> type(s) suivant(s) %s <sup>*</sup>"
 
-# File: calc/dl_poly/dlp_field.c, Line: 1757
+# File: calc/dl_poly/dlp_field.c, Line: 1846
 msgid "%sdo not contains any %s"
 msgstr "%sne contient aucun %s"
 
-# File: calc/dl_poly/dlp_field.c, Line: 1761
-msgid "%s contains the following <b>%d</b> type(s) of %s"
-msgstr "%s contient le(s) type(s) <b>%d</b> suivants de %s"
+# File: calc/dl_poly/dlp_field.c, Line: 1850
+msgid "%s contains the following <b>%d</b> type(s) %s"
+msgstr "%s contient le(s) type(s) <b>%d</b> suivants %s"
 
 # File: calc/dl_poly/dlp_field.c, Line: 1782
 msgid "the force field do not contains any %s(s)"
 msgstr "le champ de force ne contient aucun %s"
 
-# File: calc/dl_poly/dlp_field.c, Line: 1786
-msgid "the force field contains the following <b>%d</b> %s(s)"
-msgstr "le champ de force contient les <b>%d</b> %s(s) suivants"
+# File: calc/dl_poly/dlp_field.c, Line: 1875
+msgid "the force field contains the following <b>%d</b> %s"
+msgstr "le champ de force contient les <b>%d</b> %s suivant(s)"
 
-# File: calc/dl_poly/dlp_field.c, Line: 2113
+# File: calc/dl_poly/dlp_field.c, Line: 2202
 msgid "Change energy unit ?"
 msgstr "Changer d'unité d'énergie ?"
 
-# File: calc/dl_poly/dlp_field.c, Line: 2114
+# File: calc/dl_poly/dlp_field.c, Line: 2203
 msgid "Yes"
 msgstr "Oui"
 
-# File: calc/dl_poly/dlp_field.c, Line: 2117
+# File: calc/dl_poly/dlp_field.c, Line: 2206
 msgid "Change the energy unit ?\nThe value of all field parameters that are energy related (listed below) will be scaled accordingly."
 msgstr "Changer l'unité d'énergie ?\nLa valeur de tous les paramètres de champ liés à l'énergie (répertoriés ci-dessous) sera mise à l'échelle en conséquence."
 
-# File: calc/dl_poly/dlp_field.c, Line: 2118
+# File: calc/dl_poly/dlp_field.c, Line: 2207
 msgid "List of energy related parameters in your FIELD file:\n"
 msgstr "Liste des paramètres liés à l'énergie dans votre fichier FIELD :\n"
 
-# File: calc/dl_poly/dlp_field.c, Line: 2233
+# File: calc/dl_poly/dlp_field.c, Line: 2322
 msgid "<b>Please select the %s:</b>"
 msgstr "<b>Veuillez sélectionner le %s :</b>"
 
-# File: calc/dl_poly/dlp_field.c, Line: 2251
+# File: calc/dl_poly/dlp_field.c, Line: 2340
 msgid "<b>Please select the component(s) of the force field:</b>"
 msgstr "<b>Veuillez sélectionner le(s) composant(s) du champ de force :</b>"
 
-# File: calc/dl_poly/dlp_field.c, Line: 2254
+# File: calc/dl_poly/dlp_field.c, Line: 2343
 msgid "<u> Intra-molecular interaction(s):</u>"
 msgstr "<u> Interaction(s) intra-moléculaire(s) :</u>"
 
-# File: calc/dl_poly/dlp_field.c, Line: 2256
+# File: calc/dl_poly/dlp_field.c, Line: 2345
 msgid "Use multiple molecule(s)"
 msgstr "Utiliser plusieurs molécules"
 
-# File: calc/dl_poly/dlp_field.c, Line: 2271
-msgid "Use %s(s)"
-msgstr "Utiliser %s(s)"
+# File: calc/dl_poly/dlp_field.c, Line: 2360
+msgid "Use %s"
+msgstr "Utiliser %s"
 
-# File: calc/dl_poly/dlp_field.c, Line: 2282
+# File: calc/dl_poly/dlp_field.c, Line: 2371
 msgid "<u>Non-bonded interaction(s)</u>"
 msgstr "<u>Interactions non-liées</u>"
 
-# File: calc/dl_poly/dlp_field.c, Line: 1178
+# File: calc/dl_poly/dlp_field.c, Line: 1267
 msgid "<b>Default</b>: %s"
 msgstr "<b>Par défaut</b> : %s"
 
@@ -12142,215 +12398,215 @@ msgstr "<b>Par défaut</b> : %s"
 msgid "Atom N°%d: \"%s\""
 msgstr "Atome N°%d : \"%s\""
 
-# File: calc/dl_poly/dlp_field.c, Line: 2575
+# File: calc/dl_poly/dlp_field.c, Line: 2664
 msgid "Core-Shell N°%d: Atom %d (%s) - "
-msgstr "Noyau-Coquille N°%d: Atome %d (%s) - "
+msgstr "Cœur-Coquille N°%d: Atome %d (%s) - "
 
-# File: calc/dl_poly/dlp_field.c, Line: 2580
+# File: calc/dl_poly/dlp_field.c, Line: 2669
 msgid "Core-Shell N°%d: <i>%s</i> - "
-msgstr "Noyau-Coque N°%d: <i>%s</i> - "
+msgstr "Cœur-Coque N°%d: <i>%s</i> - "
 
-# File: calc/dl_poly/dlp_field.c, Line: 2601
+# File: calc/dl_poly/dlp_field.c, Line: 2690
 msgid "Constrained Bond N°%d: Atom %d (%s) - "
 msgstr "Liaison contrainte N°%d: Atome %d (%s) - "
 
-# File: calc/dl_poly/dlp_field.c, Line: 2606
+# File: calc/dl_poly/dlp_field.c, Line: 2695
 msgid "Constrained Bond N°%d: <i>%s</i> - "
 msgstr "Liaison contrainte N°%d: <i>%s</i> - "
 
-# File: calc/dl_poly/dlp_field.c, Line: 2624
+# File: calc/dl_poly/dlp_field.c, Line: 2713
 msgid "Mean Force Potential N°%d"
 msgstr "Potentiel de Force Moyenne N°%d"
 
-# File: calc/dl_poly/dlp_field.c, Line: 2632
+# File: calc/dl_poly/dlp_field.c, Line: 2721
 msgid "Rigid Unit N°%d: %d Atom(s)"
 msgstr "Unité rigide N°%d : %d Atome(s)"
 
-# File: calc/dl_poly/dlp_field.c, Line: 2640
+# File: calc/dl_poly/dlp_field.c, Line: 2729
 msgid "Tethering Potential N°%d"
 msgstr "Potentiel de connexion N°%d"
 
-# File: calc/dl_poly/dlp_field.c, Line: 2678
+# File: calc/dl_poly/dlp_field.c, Line: 2767
 msgid "%s - NONE"
 msgstr "%s - AUCUN"
 
 # File: calc/dl_poly/dlp_field.c, Line: 2709
 msgid "Edit Name: \"%s\""
-msgstr "Éditer le nom : \"%s\""
+msgstr "Éditer le Nom : \"%s\""
 
-# File: calc/dl_poly/dlp_field.c, Line: 2712
-msgid "Edit %s Properties"
+# File: calc/dl_poly/dlp_field.c, Line: 2801
+msgid "Edit properties %s"
 msgstr "Éditer les propriétés %s"
 
-# File: calc/dl_poly/dlp_field.c, Line: 2728
+# File: calc/dl_poly/dlp_field.c, Line: 2817
 msgid "Add a new %s"
 msgstr "Ajouter un nouveau %s"
 
-# File: calc/dl_poly/dlp_field.c, Line: 2742
+# File: calc/dl_poly/dlp_field.c, Line: 2831
 msgid "Remove %s"
 msgstr "Supprimer %s"
 
-# File: calc/dl_poly/dlp_field.c, Line: 2869
+# File: calc/dl_poly/dlp_field.c, Line: 2958
 msgid "Add new molecule"
 msgstr "Ajouter une nouvelle molécule"
 
-# File: calc/dl_poly/dlp_field.c, Line: 2878
+# File: calc/dl_poly/dlp_field.c, Line: 2967
 msgid "Remove molecule %s from force field"
 msgstr "Supprimer la molécule %s du champ de force"
 
-# File: calc/dl_poly/dlp_field.c, Line: 2894
+# File: calc/dl_poly/dlp_field.c, Line: 2983
 msgid "Created new force field atom from %s atom(s)"
-msgstr "Création d'un nouvel atome de champ de force à partir de %s atome(s)"
+msgstr "Création d'un nouvel atome de champ de force à partir de %s"
 
-# File: calc/dl_poly/dlp_field.c, Line: 2909
+# File: calc/dl_poly/dlp_field.c, Line: 2998
 msgid "Remove atom %s from force field molecule"
 msgstr "Supprimer l'atome %s de la molécule du champ de force"
 
-# File: calc/dl_poly/dlp_field.c, Line: 3610
+# File: calc/dl_poly/dlp_field.c, Line: 3699
 msgid "Parameter(s)"
 msgstr "Paramètres"
 
-# File: calc/dl_poly/dlp_field.c, Line: 3778
+# File: calc/dl_poly/dlp_field.c, Line: 3867
 msgid "Please select molecule: "
 msgstr "Veuillez sélectionner une molécule: "
 
-# File: calc/dl_poly/dlp_field.c, Line: 3809
+# File: calc/dl_poly/dlp_field.c, Line: 3898
 msgid "Number of isolated molecular fragments: "
 msgstr "Nombre de fragments moléculaires isolés: "
 
-# File: calc/dl_poly/dlp_field.c, Line: 3813
+# File: calc/dl_poly/dlp_field.c, Line: 3902
 msgid "\tEach of these fragments can be described separately in the force field."
 msgstr "\tChacun de ces fragments peut être décrit séparément dans le champ de force."
 
-# File: calc/dl_poly/dlp_field.c, Line: 3816
+# File: calc/dl_poly/dlp_field.c, Line: 3905
 msgid "Number of distinct molecules: "
 msgstr "Nombre de molécules distinctes: "
 
-# File: calc/dl_poly/dlp_field.c, Line: 3820
+# File: calc/dl_poly/dlp_field.c, Line: 3909
 msgid "Number of molecules in the force field: "
 msgstr "Nombre de molécules dans le champ de force: "
 
-# File: calc/dl_poly/dlp_field.c, Line: 3846
-msgid "%s(s) properties: "
-msgstr "Propriétés %s(s): "
+# File: calc/dl_poly/dlp_field.c, Line: 3935,3939
+msgid "Properties %s: "
+msgstr "Propriétés %s: "
 
-# File: calc/dl_poly/dlp_field.c, Line: 3880
+# File: calc/dl_poly/dlp_field.c, Line: 3969
 msgid "\t <b>*</b> the potential will be calculated by the sum of the 3 possible inversion terms between atoms 1 (center), 2, 3 and 4."
 msgstr "\t <b>*</b> le potentiel sera calculé par la somme des 3 termes d'inversion possibles entre les atomes 1 (centre), 2, 3 et 4."
 
-# File: calc/dl_poly/dlp_field.c, Line: 3884
+# File: calc/dl_poly/dlp_field.c, Line: 3973
 msgid "\t <b>(1)</b> average value for the force field element as measured in the model."
 msgstr "\t <b>(1)</b> valeur moyenne de l'élément du champ de force telle que mesurée dans le modèle."
 
-# File: calc/dl_poly/dlp_field.c, Line: 3887
+# File: calc/dl_poly/dlp_field.c, Line: 3976
 msgid "\t <b>(2)</b> only the selected element(s) will be used to create the force field."
 msgstr "\t <b>(2)</b> seuls les éléments sélectionnés seront utilisés pour créer le champ de force."
 
-# File: calc/dl_poly/dlp_field.c, Line: 3890
+# File: calc/dl_poly/dlp_field.c, Line: 3979
 msgid "\t <b>(3)</b> each force field element can be tuned separately, if not the <b>Default</b> parameters will be used."
 msgstr "\t <b>(3)</b> chaque élément du champ de force peut être réglé séparément, sinon les paramètres <b>Par défaut</b> seront utilisés."
 
-# File: calc/dl_poly/dlp_field.c, Line: 3902
+# File: calc/dl_poly/dlp_field.c, Line: 3991
 msgid "\t <b>(3)</b> only the selected element(s) will be used to create the force field."
 msgstr "\t <b>(3)</b> seuls les éléments sélectionnés seront utilisés pour créer le champ de force."
 
-# File: calc/dl_poly/dlp_field.c, Line: 3917
+# File: calc/dl_poly/dlp_field.c, Line: 4006
 msgid "\t <b>(1)</b> average distance between the barycenters of units 1 and 2 as measured in the model."
 msgstr "\t <b>(1)</b> distance moyenne entre les barycentres des unités 1 et 2 telle que mesurée dans le modèle."
 
-# File: calc/dl_poly/dlp_field.c, Line: 3920
+# File: calc/dl_poly/dlp_field.c, Line: 4009
 msgid "\t <b>(2)</b> if all 0.0 then atomic weight(s) will be used by DL-POLY."
 msgstr "\t <b>(2)</b> si tous 0,0 alors le(s) poids atomique(s) seront utilisés par DL-POLY."
 
-# File: calc/dl_poly/dlp_field.c, Line: 3929
+# File: calc/dl_poly/dlp_field.c, Line: 4018
 msgid "\t <b>(1)</b> only the selected element(s) will be used to create the force field."
 msgstr "\t <b>(1)</b> seuls les éléments sélectionnés seront utilisés pour créer le champ de force."
 
-# File: calc/dl_poly/dlp_field.c, Line: 4206
+# File: calc/dl_poly/dlp_field.c, Line: 4295
 msgid "Initialize force field using: "
-msgstr "Initialisez le champ de force en utilisant: "
+msgstr "Créez le champ de force avec: "
 
-# File: calc/dl_poly/dlp_field.c, Line: 4266
+# File: calc/dl_poly/dlp_field.c, Line: 4355
 msgid "Clean all force field parameter(s) ?"
 msgstr "Nettoyer tous les paramètres du champ de force ?"
 
-# File: calc/dl_poly/dlp_field.c, Line: 4341
+# File: calc/dl_poly/dlp_field.c, Line: 4430
 msgid "Select the component(s) of the force field"
-msgstr "Sélectionnez la ou les composantes du champ de force"
+msgstr "Composante(s) du champ de force"
 
-# File: calc/dl_poly/dlp_field.c, Line: 4355
+# File: calc/dl_poly/dlp_field.c, Line: 4444
 msgid "<b>   Finalize the creation of the %s input file(s) now !</b>"
 msgstr "<b>   Finalisez la création du ou des fichiers d'entrée %s maintenant !</b>"
 
-# File: calc/dl_poly/dlp_field.c, Line: 4361
+# File: calc/dl_poly/dlp_field.c, Line: 4450
 msgid "Create the LAMMPS input file(s) now !"
 msgstr "Créez le(s) fichier(s) d'entrée LAMMPS maintenant !"
 
-# File: calc/dl_poly/dlp_field.c, Line: 4361
+# File: calc/dl_poly/dlp_field.c, Line: 4450
 msgid "Create the DL-POLY input file(s) now !"
 msgstr "Créez le(s) fichier(s) d'entrée DL-POLY maintenant !"
 
-# File: calc/dl_poly/dlp_field.c, Line: 4368
-msgid "Atomic species as field atom(s)"
-msgstr "Espèces atomiques en tant qu'atomes de champ"
+# File: calc/dl_poly/dlp_field.c, Line: 4457
+msgid "Atomic Species as Field Atoms"
+msgstr "Espèces Chimiques comme Atomes de Champ"
 
-# File: calc/dl_poly/dlp_field.c, Line: 4369
-msgid "Atomic species and total coordination(s) as field atom(s)"
-msgstr "Espèces atomiques et coordination(s) totale(s) en tant qu'atome(s) de champ"
+# File: calc/dl_poly/dlp_field.c, Line: 4458
+msgid "Atomic Species and Total Coordinations as Field Atoms"
+msgstr "Espèces Chim. et Coord. Totales comme Atomes de Champ"
 
-# File: calc/dl_poly/dlp_field.c, Line: 4370
-msgid "Atomic species and partial coordination(s) as field atom(s)"
-msgstr "Espèces atomiques et coordination(s) partielle(s) en tant qu'atome(s) de champ"
+# File: calc/dl_poly/dlp_field.c, Line: 4459
+msgid "Atomic Species and Partial Coordinations as Field Atoms"
+msgstr "Espèces Chim. et Coord. Partielles comme Atomes de Champ"
 
-# File: calc/dl_poly/dlp_field.c, Line: 4410
+# File: calc/dl_poly/dlp_field.c, Line: 4499
 msgid "Force field was initialized using: "
-msgstr "Le champ de force a été initialisé en utilisant: "
+msgstr "Le champ de force créé avec: "
 
-# File: calc/dl_poly/dlp_field.c, Line: 4469
+# File: calc/dl_poly/dlp_field.c, Line: 4558
 msgid "Please select the force field first !"
 msgstr "Veuillez d'abord sélectionner le champ de force !"
 
-# File: calc/dl_poly/dlp_field.c, Line: 4486
+# File: calc/dl_poly/dlp_field.c, Line: 4575
 msgid "LAMMPS files preview"
 msgstr "Aperçu des fichiers LAMMPS"
 
-# File: calc/dl_poly/dlp_field.c, Line: 4486
+# File: calc/dl_poly/dlp_field.c, Line: 4575
 msgid "DL-POLY files preview"
 msgstr "Aperçu des fichiers DL-POLY"
 
-# File: calc/dl_poly/dlp_field.c, Line: 4585
+# File: calc/dl_poly/dlp_field.c, Line: 4674
 msgid "%s file found in '%s'\nreplace existing %s file ?"
 msgstr "Fichier %s trouvé dans '%s'\nremplacer le fichier %s existant ?"
 
-# File: calc/dl_poly/dlp_field.c, Line: 4586
+# File: calc/dl_poly/dlp_field.c, Line: 4675
 msgid "Replace file ?"
 msgstr "Remplacer le fichier ?"
 
-# File: calc/dl_poly/dlp_field.c, Line: 4723
+# File: calc/dl_poly/dlp_field.c, Line: 4812
 msgid "%s calculation assistant"
 msgstr "assistant de calcul %s"
 
-# File: calc/dl_poly/dlp_field.c, Line: 4733
+# File: calc/dl_poly/dlp_field.c, Line: 4822
 msgid "Force field: "
 msgstr "Champ de force: "
 
-# File: calc/dl_poly/dlp_field.c, Line: 4767
+# File: calc/dl_poly/dlp_field.c, Line: 4856
 msgid "\tDelete the existing force field data and reset the parameters to the default values"
 msgstr "\tSupprimez les données du champ de force existantes et réinitialisez les paramètres aux valeurs par défaut"
 
-# File: calc/dl_poly/dlp_field.c, Line: 4773
+# File: calc/dl_poly/dlp_field.c, Line: 4862
 msgid "\tPrepare the CONTROL file to describe the calculation"
 msgstr "\tPréparer le fichier CONTROL pour décrire le calcul"
 
-# File: calc/dl_poly/dlp_field.c, Line: 4775
+# File: calc/dl_poly/dlp_field.c, Line: 4864
 msgid "\tPrepare the FIELD and CONFIG files to describe the force field and the atomic scale model"
 msgstr "\tPréparez les fichiers FIELD et CONFIG pour décrire le champ de force et le modèle à l'échelle atomique"
 
-# File: calc/dl_poly/dlp_field.c, Line: 4780
+# File: calc/dl_poly/dlp_field.c, Line: 4869
 msgid "\tPrepare the LAMMPS Input to describe the calculation"
 msgstr "\tPréparez l'entrée LAMMPS pour décrire le calcul"
 
-# File: calc/dl_poly/dlp_field.c, Line: 4782
+# File: calc/dl_poly/dlp_field.c, Line: 4871
 msgid "\tPrepare the LAMMPS Atom file to describe the force field and the atomic scale model"
 msgstr "\tPréparez le fichier LAMMPS Atom pour décrire le champ de force et le modèle à l'échelle atomique"
 
@@ -13267,7 +13523,7 @@ msgstr "Les deux"
 
 # File: curve/tab-4.c, Line: 772,803
 # File: calc/cp2k/cp2k_init.c, Line: 700
-# File: calc/dl_poly/dlp_field.c, Line: 1404,1414,2580
+# File: calc/dl_poly/dlp_field.c, Line: 1493
 # File: opengl/win/w_advance.c, Line: 1344,1635
 # File: opengl/win/w_periodic.c, Line: 90
 msgid "None"

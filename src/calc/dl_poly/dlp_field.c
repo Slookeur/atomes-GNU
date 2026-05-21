@@ -3932,7 +3932,7 @@ GtkWidget * vbox_field (int f)
 
   if (f > 6 && f < MOLIMIT)
   {
-    hbox = fbox (vbx, g_strdup_printf (_("Properies %s: "), _(intelemt[f])));
+    hbox = fbox (vbx, g_strdup_printf (_("Properties %s: "), _(intelemt[f])));
   }
   else
   {
@@ -4454,9 +4454,9 @@ void add_classical_assistant_pages (int p)
   append_pages = TRUE;
 }
 
-gchar * field_init[3]={i18n("Atomic species as field atoms"),
-                       i18n("Atomic species and total coordinations as field atoms"),
-                       i18n("Atomic species and partial coordinations as field atoms")};
+gchar * field_init[3]={i18n("Atomic Species as Field Atoms"),
+                       i18n("Atomic Species and Total Coordinations as Field Atoms"),
+                       i18n("Atomic Species and Partial Coordinations as Field Atoms")};
 
 // gboolean create_ff_structure (gpointer data)
 /*!
