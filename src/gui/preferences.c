@@ -3584,11 +3584,7 @@ GtkWidget * style_tab (int style)
 {
   GtkWidget * vbox = create_vbox (BSEP);
   gchar * object[3]={i18n("<b>Atom(s)</b>"), i18n("<b>Bond(s)</b>"), i18n("\t<u>Clone(s)</u>")};
-  gchar * h_ats[3]={i18n("Atom(s) "), i18n("Dot(s)"), i18n("Sphere(s)")};
-
   gchar * dim[3]={i18n("Radius"), i18n("Size"), i18n("Width")};
-  gchar * h_bts[3]={i18n("Bond(s)"), i18n("Wireframe(s)"), i18n("Cylinder(s)")};
-
   int i;
   int bsid;
   int lid;

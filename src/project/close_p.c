@@ -481,7 +481,8 @@ void to_close_this_project (int to_activate, project * this_proj)
   if (nprojects > 0) close_project (this_proj);
   if (nprojects > 0)
   {
-    activate_project (NULL, GINT_TO_POINTER(to_activate));
+    int new_p = (to_activate >= nprojects) ? nprojects - 1 : to_activate;
+    activate_project (NULL, GINT_TO_POINTER(new_p));
   }
   else if (! atomes_render_image || atomes_from_libreoffice)
   {

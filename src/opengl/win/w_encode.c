@@ -240,6 +240,19 @@ image * clean_image (project * to_clean, image * to_cli)
       g_free (to_cli -> show_coord[i]);
       to_cli -> show_coord[i] = NULL;
     }
+    if (to_cli -> spcolor[i])
+    {
+      for (j=0; j<((i < 2) ? to_clean -> nspec : 1); j++)
+      {
+        if (to_cli -> spcolor[i][j])
+        {
+          g_free (to_cli -> spcolor[i][j]);
+          to_cli -> spcolor[i][j] = NULL;
+        }
+      }
+      g_free (to_cli -> spcolor[i]);
+      to_cli -> spcolor[i] = NULL;
+    }
   }
   if (to_cli -> at_color)
   {
@@ -260,22 +273,6 @@ image * clean_image (project * to_clean, image * to_cli)
   {
     g_free (to_cli -> atomicrad);
     to_cli -> atomicrad = NULL;
-  }
-  for (i=0; i<9; i++)
-  {
-    if (to_cli -> spcolor[i])
-    {
-      for (j=0; j<((i < 2) ? to_clean -> nspec : 1); j++)
-      {
-        if (to_cli -> spcolor[i][j])
-        {
-          g_free (to_cli -> spcolor[i][j]);
-          to_cli -> spcolor[i][j] = NULL;
-        }
-      }
-      g_free (to_cli -> spcolor[i]);
-      to_cli -> spcolor[i] = NULL;
-    }
   }
   for (i=0; i<2; i++)
   {
@@ -328,13 +325,12 @@ void clean_animation (project * proj, glwin * view)
 {
   int i;
   snapshot * shot = view -> anim -> first;
-  snapshot * del;
+  shot = view -> anim -> first;
   for (i=0; i < view -> anim -> frames-1; i++)
   {
-    del = shot;
     shot -> img = clean_image (proj, shot -> img);
     shot = shot -> next;
-    g_free (del);
+    g_free (shot -> prev);
   }
   view -> anim -> first = view -> anim -> last = shot;
   view -> anim -> frames = 0;
