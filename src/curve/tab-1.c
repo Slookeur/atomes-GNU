@@ -540,7 +540,7 @@ GtkWidget * create_tab_1 (curve_edition * cedit, gpointer data)
   gchar * axl[2];
   axl[0] = "x";
   axl[1] = "y";
-  gchar * ftb[5] = {i18n("closed"), i18n("top open"), i18n("right open"), i18n("left open"), i18n("open")};
+  gchar * ftb[5] = {i18n("Closed"), i18n("Top Open"), i18n("Right Open"), i18n("Left Open"), i18n("Open ")};
   int xlgt, ylgt;
   int i, j, k;
 

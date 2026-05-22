@@ -130,10 +130,10 @@ void fill_tool_model ()
       gtk_tree_store_append (tool_model, & calc_level, NULL);
       img = GTK_IMAGE(gtk_image_new_from_file(graph_img[i]));
 #ifdef GTK4
-      gtk_tree_store_set (tool_model, & calc_level, 0, -1, 1, -1, 2, img, 3, graph_name[i], -1);
+      gtk_tree_store_set (tool_model, & calc_level, 0, -1, 1, -1, 2, img, 3, _(graph_name[i]), -1);
 #else
       GdkPixbuf * pix =  gtk_image_get_pixbuf(img);
-      gtk_tree_store_set (tool_model, & calc_level, 0, -1, 1, -1, 2, pix, 3, graph_name[i], -1);
+      gtk_tree_store_set (tool_model, & calc_level, 0, -1, 1, -1, 2, pix, 3, _(graph_name[i]), -1);
 #endif
 
       gtk_image_clear (img);

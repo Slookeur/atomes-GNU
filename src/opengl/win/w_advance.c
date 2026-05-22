@@ -1302,7 +1302,7 @@ GtkWidget * rendering_fix (glwin * view, opengl_edition * ogl_edit)
   gtk_fixed_put (GTK_FIXED (fix), rmodel, 0, 10);
   combo_text_append (rmodel, _("3D Objects"));
   combo_text_append (rmodel, _("Ray Tracing"));
-  
+
   g_signal_connect (G_OBJECT (rmodel), "changed", G_CALLBACK(set_r_model), view);
   gtk_widget_set_size_request (rmodel, 110, -1);
   combo_set_active (rmodel, (view) ? view -> anim -> last -> img -> ray_tracing : tmp_opengl[4]);
@@ -1310,7 +1310,7 @@ GtkWidget * rendering_fix (glwin * view, opengl_edition * ogl_edit)
   ogl_edit -> render_fix = gtk_fixed_new ();
   gtk_fixed_put (GTK_FIXED (fix), ogl_edit -> render_fix, 130, 0);
   GtkWidget * quality_scale = create_hscale (3, 500, 1, (view) ? view -> anim -> last -> img -> quality : tmp_opengl[3], GTK_POS_TOP, 1, 100, G_CALLBACK(scale_quality), G_CALLBACK(scroll_scale_quality), view);
-  gtk_fixed_put (GTK_FIXED (ogl_edit -> render_fix), quality_scale, 0, 0);
+  gtk_fixed_put (GTK_FIXED (ogl_edit -> render_fix), quality_scale, 20, 0);
   if (! preferences)
   {
     GtkWidget * fmodel = create_combo ();
@@ -1635,7 +1635,7 @@ GtkWidget * fog_tab (glwin * view, opengl_edition * ogl_edit, Fog * the_fog)
   combo_text_append (fogmod, _("None"));
   combo_text_append (fogmod, _("Linear"));
   combo_text_append (fogmod, _("Exponential"));
-  combo_text_append (fogmod, _("Exponential squared"));
+  combo_text_append (fogmod, _("Exponential Squared"));
   gtk_widget_set_size_request (fogmod, 200, -1);
   combo_set_active (fogmod, the_fog -> mode);
   g_signal_connect (G_OBJECT (fogmod), "changed", G_CALLBACK(set_fog_mode), ogl_edit);
@@ -1763,11 +1763,11 @@ G_MODULE_EXPORT void opengl_advanced (GtkWidget * widg, gpointer data)
    gtk_widget_set_vexpand (notebook, TRUE);
 #endif
     add_box_child_start (GTK_ORIENTATION_VERTICAL, vbox, notebook, TRUE, TRUE, 0);
-    gtk_notebook_append_page (GTK_NOTEBOOK(notebook), materials_tab (view, view -> opengl_win, & view -> anim -> last -> img -> m_terial), 
+    gtk_notebook_append_page (GTK_NOTEBOOK(notebook), materials_tab (view, view -> opengl_win, & view -> anim -> last -> img -> m_terial),
                                                       markup_label(_("<b>Material aspect</b>"), -1, -1, 0.0, 0.5));
     gtk_notebook_append_page (GTK_NOTEBOOK(notebook), lights_tab (view, view -> opengl_win, & view -> anim -> last -> img -> l_ghtning),
                                                       markup_label(_("<b>Configure light sources</b>"), -1, -1, 0.0, 0.5));
-    gtk_notebook_append_page (GTK_NOTEBOOK(notebook), fog_tab (view, view -> opengl_win, & view -> anim -> last -> img -> f_g), 
+    gtk_notebook_append_page (GTK_NOTEBOOK(notebook), fog_tab (view, view -> opengl_win, & view -> anim -> last -> img -> f_g),
                                                       markup_label(_("<b>Configure fog</b>"), -1, -1, 0.0, 0.5));
     add_global_option (vbox, & view -> colorp[0][0]);
     add_gtk_close_event (view -> opengl_win -> win, G_CALLBACK(close_advanced), view);

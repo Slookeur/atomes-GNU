@@ -803,7 +803,6 @@ msgstr "Fonction: %s()\n"
 msgid "Line    : %d</span>"
 msgstr "Ligne   : %d</span>"
 
-# File: curve/tab-1.c, Line: 543
 # File: gui/callbacks.c, Line: 289
 msgid "open"
 msgstr "'ouvrir"
@@ -6044,8 +6043,8 @@ msgid "Exponential"
 msgstr "Exponentiel"
 
 # File: opengl/win/w_advance.c, Line: 1638
-msgid "Exponential squared"
-msgstr "Exponentiel au carré"
+msgid "Exponential Squared"
+msgstr "Exponentiel au Carré"
 
 # File: opengl/win/w_advance.c, Line: 1647
 msgid "<b>Fog type</b> "
@@ -11524,7 +11523,7 @@ msgstr "potentiel à quatre corps"
 
 # File: calc/dl_poly/dlp_field.c, Line: 207
 msgid "external field"
-msgstr "champ externe" 
+msgstr "champ externe"
 
 # File: calc/dl_poly/dlp_field.c, Line: 231
 msgid "of molecule(s)"
@@ -13132,7 +13131,7 @@ msgstr "\n# Limite à 2 le nombre de processeurs dans la direction z pour les si
 
 # File: curve/cedit.c, Line: 294
 msgid "Data sets"
-msgstr "Ensembles de données"
+msgstr "Jeux de données"
 
 # File: curve/cedit.c, Line: 362
 # File: curve/m_curve.c, Line: 86
@@ -13154,11 +13153,11 @@ msgstr "Légende"
 
 # File: curve/cedit.c, Line: 389
 msgid "<b>Add data set(s) to the active window</b>"
-msgstr "<b>Ajouter un (des) ensemble(s) de données à la fenêtre active</b>"
+msgstr "<b>Ajouter un (des) jeu(x) de données à la fenêtre active</b>"
 
 # File: curve/cedit.c, Line: 392,393
 msgid "Add data set"
-msgstr "Ajouter un ensemble de données"
+msgstr "Ajout de données"
 
 # File: curve/datab.c, Line: 472
 msgid "Add Constant to Column"
@@ -13280,20 +13279,24 @@ msgid "Frame y max must be < to frame y min"
 msgstr "L'image y max doit être < à l'image y min"
 
 # File: curve/tab-1.c, Line: 543
-msgid "closed"
-msgstr "fermé"
+msgid "Closed"
+msgstr "Fermé"
 
 # File: curve/tab-1.c, Line: 543
-msgid "top open"
-msgstr "ouvert en haut"
+msgid "Top Open"
+msgstr "Ouvert en Haut"
 
 # File: curve/tab-1.c, Line: 543
-msgid "right open"
-msgstr "ouvert à droite"
+msgid "Right Open"
+msgstr "Ouvert à Droite"
 
 # File: curve/tab-1.c, Line: 543
-msgid "left open"
-msgstr "ouvert à gauche"
+msgid "Left Open"
+msgstr "Ouvert à Gauche"
+
+# File: curve/tab-1.c, Line: 543
+msgid "Open "
+msgstr "Ouvert "
 
 # File: curve/tab-1.c, Line: 560
 msgid "Size:"
@@ -13378,8 +13381,8 @@ msgid "Data set(s)"
 msgstr "Jeu(x) de données"
 
 # File: curve/tab-2.c, Line: 929
-msgid "bar"
-msgstr "barre"
+msgid "Bar"
+msgstr "Histogramme"
 
 # File: curve/tab-2.c, Line: 916
 msgid "<b>Select set: </b>"
@@ -13394,12 +13397,12 @@ msgid "Data color:"
 msgstr "Couleur des données:"
 
 # File: curve/tab-2.c, Line: 945
-msgid "No line"
-msgstr "Pas de ligne"
+msgid "No Line"
+msgstr "Pas de Ligne"
 
 # File: curve/tab-2.c, Line: 970
-msgid "No glyph"
-msgstr "Pas de glyphe"
+msgid "No Glyph"
+msgstr "Pas de Glyphe"
 
 # File: curve/tab-2.c, Line: 978
 msgid "Glyph type:"
@@ -13430,8 +13433,8 @@ msgid "Bar opacity:"
 msgstr "Opacité de la barre:"
 
 # File: curve/tab-2.c, Line: 1021
-msgid "Automatic <i>x axis</i> shift for bar diagram  (to improve visibility)"
-msgstr "Décalage automatique de l'<i>axe x</i> pour le diagramme à barres (pour améliorer la visibilité)"
+msgid "Automatic <i>x axis</i> shift for bar diagram (to improve visibility)"
+msgstr "Décalage automatique de l'<i>axe x</i>\n pour l'histogramme (améliore la visibilité)"
 
 # File: curve/tab-2.c, Line: 1027
 msgid "<b>Layers organization: </b>"
@@ -13439,7 +13442,7 @@ msgstr "<b>Organisation des calques: </b>"
 
 # File: curve/tab-2.c, Line: 1037
 msgid "\tMove up/down to adjust layer position (up to front, down to back)"
-msgstr "\tDéplacez-vous vers le haut/bas pour ajuster la position du calque (de haut en avant, de bas en arrière)"
+msgstr "\tDéplacez pour ajuster la position du calque\n\thaut vers l'avant, bas vers l'arrière."
 
 # File: curve/tab-3.c, Line: 327
 msgid "Show/Hide legend"
@@ -13479,7 +13482,7 @@ msgstr "Type d'échelle:"
 
 # File: curve/tab-4.c, Line: 724
 msgid "Autoscale axis"
-msgstr "Mise à l'échelle automatique de l'axe"
+msgstr "Mise à l'échelle auto. de l'axe"
 
 # File: curve/tab-4.c, Line: 730
 msgid "Min:"
@@ -13519,7 +13522,7 @@ msgstr "Opposé"
 
 # File: curve/tab-4.c, Line: 771,802
 msgid "Both"
-msgstr "Les deux"
+msgstr "Les Deux"
 
 # File: curve/tab-4.c, Line: 772,803
 # File: calc/cp2k/cp2k_init.c, Line: 700

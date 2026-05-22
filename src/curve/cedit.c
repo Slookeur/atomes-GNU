@@ -308,7 +308,7 @@ GtkWidget * create_projects_tree (curve_edition * cedit, gpointer data)
     else
     {
       projcell[i] = gtk_cell_renderer_text_new();
-      projcol[i] =  gtk_tree_view_column_new_with_attributes(col_title[i], projcell[i], ctype[i], i, NULL);
+      projcol[i] =  gtk_tree_view_column_new_with_attributes(_(col_title[i]), projcell[i], ctype[i], i, NULL);
     }
     gtk_tree_view_append_column(GTK_TREE_VIEW(cedit -> projtree), projcol[i]);
     if (i == 0 || i > 2) gtk_tree_view_column_set_visible (projcol[i], FALSE);

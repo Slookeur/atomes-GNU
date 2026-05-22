@@ -803,7 +803,6 @@ msgstr "Function: %s()\n"
 msgid "Line    : %d</span>"
 msgstr "Line    : %d</span>"
 
-# File: curve/tab-1.c, Line: 543
 # File: gui/callbacks.c, Line: 289
 msgid "open"
 msgstr "open"
@@ -6044,8 +6043,8 @@ msgid "Exponential"
 msgstr "Exponential"
 
 # File: opengl/win/w_advance.c, Line: 1638
-msgid "Exponential squared"
-msgstr "Exponential squared"
+msgid "Exponential Squared"
+msgstr "Exponential Squared"
 
 # File: opengl/win/w_advance.c, Line: 1647
 msgid "<b>Fog type</b> "
@@ -13280,20 +13279,24 @@ msgid "Frame y max must be < to frame y min"
 msgstr "Frame y max must be < to frame y min"
 
 # File: curve/tab-1.c, Line: 543
-msgid "closed"
-msgstr "closed"
+msgid "Closed"
+msgstr "Closed"
 
 # File: curve/tab-1.c, Line: 543
-msgid "top open"
-msgstr "top open"
+msgid "Top Open"
+msgstr "Top Open"
 
 # File: curve/tab-1.c, Line: 543
-msgid "right open"
-msgstr "right open"
+msgid "Right Open"
+msgstr "Right Open"
 
 # File: curve/tab-1.c, Line: 543
-msgid "left open"
-msgstr "left open"
+msgid "Left Open"
+msgstr "Left Open"
+
+# File: curve/tab-1.c, Line: 543
+msgid "Open "
+msgstr "Open "
 
 # File: curve/tab-1.c, Line: 560
 msgid "Size:"
@@ -13378,8 +13381,8 @@ msgid "Data set(s)"
 msgstr "Data set(s)"
 
 # File: curve/tab-2.c, Line: 929
-msgid "bar"
-msgstr "bar"
+msgid "Bar"
+msgstr "Bar"
 
 # File: curve/tab-2.c, Line: 916
 msgid "<b>Select set: </b>"
@@ -13394,12 +13397,12 @@ msgid "Data color:"
 msgstr "Data color:"
 
 # File: curve/tab-2.c, Line: 945
-msgid "No line"
-msgstr "No line"
+msgid "No Line"
+msgstr "No Line"
 
 # File: curve/tab-2.c, Line: 970
-msgid "No glyph"
-msgstr "No glyph"
+msgid "No Glyph"
+msgstr "No Glyph"
 
 # File: curve/tab-2.c, Line: 978
 msgid "Glyph type:"
@@ -13430,8 +13433,8 @@ msgid "Bar opacity:"
 msgstr "Bar opacity:"
 
 # File: curve/tab-2.c, Line: 1021
-msgid "Automatic <i>x axis</i> shift for bar diagram  (to improve visibility)"
-msgstr "Automatic <i>x axis</i> shift for bar diagram  (to improve visibility)"
+msgid "Automatic <i>x axis</i> shift for bar diagram (to improve visibility)"
+msgstr "Automatic <i>x axis</i> shift for bar diagram (to improve visibility)"
 
 # File: curve/tab-2.c, Line: 1027
 msgid "<b>Layers organization: </b>"

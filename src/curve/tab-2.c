@@ -925,8 +925,8 @@ GtkWidget * create_tab_2 (curve_edition * cedit, gpointer data)
   add_box_child_start (GTK_ORIENTATION_HORIZONTAL, cedit -> pixarea, dhbox, FALSE, FALSE, 0);
 
   cedit -> data_aspect = create_combo ();
-  combo_text_append (cedit -> data_aspect, "/y");
-  combo_text_append (cedit -> data_aspect, _("bar"));
+  combo_text_append (cedit -> data_aspect, "x/y");
+  combo_text_append (cedit -> data_aspect, _("Bar"));
   combo_set_active (cedit -> data_aspect, this_curve -> layout -> aspect);
   gtk_widget_set_size_request (cedit -> data_aspect, 120, -1);
   g_signal_connect (G_OBJECT(cedit -> data_aspect), "changed", G_CALLBACK(set_data_aspect), data);
@@ -942,7 +942,7 @@ GtkWidget * create_tab_2 (curve_edition * cedit, gpointer data)
 
 // Line style
   cedit -> data_dash = create_combo ();
-  combo_text_append (cedit -> data_dash, _("No line"));
+  combo_text_append (cedit -> data_dash, _("No Line"));
   for ( i=1 ; i < ndash ; i++)
   {
      combo_text_append (cedit -> data_dash, g_strdup_printf("%d", i));
@@ -967,7 +967,7 @@ GtkWidget * create_tab_2 (curve_edition * cedit, gpointer data)
   add_box_child_start (GTK_ORIENTATION_VERTICAL, data_shape, cedit -> Glyph_box, FALSE, FALSE, 0);
 // Glyph type
   cedit -> data_glyph = create_combo ();
-  combo_text_append (cedit -> data_glyph, _("No glyph"));
+  combo_text_append (cedit -> data_glyph, _("No Glyph"));
   for ( i=1 ; i < nglyph ; i++)
   {
      combo_text_append (cedit -> data_glyph, g_strdup_printf("%d", i));
@@ -1018,7 +1018,7 @@ GtkWidget * create_tab_2 (curve_edition * cedit, gpointer data)
     hbox = create_hbox (0);
     add_box_child_start (GTK_ORIENTATION_VERTICAL, databox, hbox, FALSE, FALSE, 5);
     add_box_child_start (GTK_ORIENTATION_HORIZONTAL, hbox,
-                         check_button (_("Automatic <i>x axis</i> shift for bar diagram  (to improve visibility)"), -1, -1, this_curve -> bshift, G_CALLBACK(set_bshift), data),
+                         check_button (_("Automatic <i>x axis</i> shift for bar diagram (to improve visibility)"), -1, -1, this_curve -> bshift, G_CALLBACK(set_bshift), data),
                          FALSE, FALSE, 10);
     add_box_child_start (GTK_ORIENTATION_VERTICAL, databox, gtk_separator_new (GTK_ORIENTATION_HORIZONTAL), FALSE, FALSE, 5);
   }
