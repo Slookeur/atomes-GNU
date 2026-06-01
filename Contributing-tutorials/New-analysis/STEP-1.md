@@ -47,7 +47,7 @@
                            i18n("Spherical Harmonics"),
                            i18n("Mean Squared Displacement"),
                            i18n("Dynamic Structure Factor"),
-                           "The new analysis"};  // This is an example
+                           i18n("The new analysis")};  // This is an example
     ```
     - [`gchar * graph_name`][graph_name] : append a line to add the new analysis name for the tool box window
     ```C
@@ -62,7 +62,7 @@
                             i18n("Spherical Harmonics"),
                             i18n("Mean Squared Displacement"),
                             i18n("Dynamic Structure Factor"),
-                            "The new analysis"};  // This is an example
+                            i18n("The new analysis")};  // This is an example
     ```
     - [`gchar * graph_icon`][graph_icon] : append a line to add the new analysis icon file name
     ```C
