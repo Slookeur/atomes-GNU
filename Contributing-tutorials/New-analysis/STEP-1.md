@@ -69,6 +69,7 @@
                             i18n("Dynamic Structure Factor"),
                             "The new analysis"};  // This is an example
     ```
+
     - [`gchar * graph_icon`][graph_icon] : append a line to add the new analysis icon file name
     ```C
     gchar * graph_icon[] = {"pixmaps/gr.png",
