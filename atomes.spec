@@ -19,6 +19,7 @@ BuildRequires: gcc-gfortran
 BuildRequires: libgfortran
 BuildRequires: desktop-file-utils
 BuildRequires: libappstream-glib
+BuildRequires: gettext
 
 # pkg-config 
 BuildRequires: pkgconfig(gtk+-3.0)
@@ -88,7 +89,7 @@ appstream-util validate-relax --nonet %{buildroot}%{_metainfodir}/fr.ipcms.%{nam
 %{_metainfodir}/fr.ipcms.%{name}.appdata.xml
 
 %changelog
-* Tue Apr 30 2026 Sébastien Le Roux <sebastien.leroux@ipcms.unistra.fr> - 1.3.0-1
+* Fri Jun 05 2026 Sébastien Le Roux <sebastien.leroux@ipcms.unistra.fr> - 1.3.0-1
 - New features (see:  https://github.com/Slookeur/atomes-GNU/releases/tag/v1.3.0)
 
 * Tue Sep 30 2025 Sébastien Le Roux <sebastien.leroux@ipcms.unistra.fr> - 1.2.1-1
