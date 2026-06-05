@@ -177,6 +177,7 @@ fi
 AC_CONFIG_FILES([
  Makefile
  data/Makefile
+ man/Makefile
  locale/Makefile
  src/Makefile
  src/startup-testing/Makefile 

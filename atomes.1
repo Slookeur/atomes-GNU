@@ -1,0 +1,277 @@
+.\"                                      Hey, EMACS: -*- nroff -*-
+.\" (C) Copyright 2022-2026 Sébastien Le Roux <sebastien.leroux@ipcms.unistra.fr>,
+.\"
+.\" First parameter, NAME, should be all caps
+.\" Second parameter, SECTION, should be 1-8, maybe w/ subsection
+.\" other parameters are allowed: see man(7), man(1)
+.TH atomes 1 "June 5 2026"
+.\" Please adjust this date whenever revising the manpage.
+.\"
+.\" Some roff macros, for reference:
+.\" .nh        disable hyphenation
+.\" .hy        enable hyphenation
+.\" .ad l      left justify
+.\" .ad b      justify to both left and right margins
+.\" .nf        disable filling
+.\" .fi        enable filling
+.\" .br        insert line break
+.\" .sp <n>    insert n+1 empty lines
+.\" for manpage-specific macros, see man(7)
+.SH NAME
+atomes \- a toolbox to analyze, visualize and create/edit 3D atomic scale models
+.SH SYNOPSIS
+.B atomes
+.RI [ OPTIONS ] " files" ...
+.br
+.B atomes
+.RI [ IMAGES_OPTIONS ] " files" ...
+.br
+.SH DESCRIPTION
+This manual page documents briefly the
+.B atomes
+command.
+.PP
+.\" TeX users may be more comfortable with the \fB<whatever>\fP and
+.\" \fI<whatever>\fP escape sequences to invode bold face and italics,
+.\" respectively.
+\fBatomes\fP is a toolbox to analyze, visualize and create/edit 3D atomic scale models. 
+.br
+It offers a workspace to open and manage project(s) that can exchange data: analysis results, atomic coordinates ...
+.br
+\fBatomes\fP also provides an advanced input preparation system for calculations
+using well know molecular dynamics codes:
+
+.RS
+.B Classical MD:
+.IR DLPOLY
+and 
+.IR LAMMPS
+.RE
+.RS
+.B Ab-initio MD:
+.IR CPMD
+and 
+.IR CP2K
+.RE
+.RS
+.B QM-MM MD:
+.IR CPMD
+and 
+.IR CP2K
+.RE
+
+.SH OPTIONS
+This program uses a set of custom options to specify the file formats for atomic coordinates (ex: -xyz), 
+.br
+but otherwise follows the usual GNU command line syntax, with long options starting with two dashes (`-'). 
+.br
+\fBatomes\fP will try to open a file based on its extension, however file type can be strictly enforced using the corresponding option.
+.br
+A summary of options is presented below.
+.
+.TP
+.B \-h, \-\-help
+Show summary of options
+.TP
+.B \-v, \-\-version
+Show version of program
+.TP
+.B \-awf, \-AWF
+Open atomes workspace file
+.TP
+.B \-apf, \-APF
+Open atomes project file(s)
+.TP
+.B \-xyz, \-XYZ
+Import XYZ atomic coordinates(s)
+.TP
+.B \-c3d, \-C3D
+Import Chem3D atomic coordinates(s)
+.TP
+.B \-trj, \-TRJ
+Import CPMD atomic coordinates(s)
+.TP
+.B \-xdatcar, \-XDATCAR
+Import VASP atomic coordinates(s)
+.TP
+.B \-pdb, \-PDB, \-ent, \-ENT
+Import PDB atomic coordinates(s)
+.TP
+.B \-cif, \-CIF
+Import CIF atomic coordinate(s)
+.TP
+.B \-hist, \-HIST
+Import DL_POLY history file atomic coordinates(s)
+.TP
+.B \-ipf, \-IPF
+Import I.S.A.A.C.S. project
+.TP
+.SH EXEMPLES 
+.TP
+        atomes project.apf file.xyz -pdb other_file
+.br
+ atomes -awf workspace -apf project -xyz file -pdb other_file
+.SH IMAGE_OPTIONS
+\fBatomes\fP can be used to generate image of atomic scale models directly from the command line.
+.TP
+.B \-p, \-\-png, \-\-render-png
+Render PNG image
+.TP
+.B \-j, \-\-jpg, \-\-render-jpg
+Render JPG image
+.TP
+.B \-o, \-\-output=[FILE]
+Image name (default: image.png or image.jpg)
+.TP
+.B \-W, \-\-width=[X_SIZE]
+Image width in pixels, X_SIZE must be > 0
+.TP
+.B \-H, \-\-height=[Y_SIZE]
+Image height in pixels, Y_SIZE must be > 0
+.PP
+Depending on the file to be rendered, default parameters for the rendering are obtained: 
+.br
+  - For an \fBatomes\fP project file (*.apf): from the project file itself. 
+.br
+  - For any another type of atomic coordinates (ex: .xyz): from the user preferences in \fBatomes.pml\fP
+.br
+In both cases some parameters can be momentarely overriden using command line options:
+.TP
+.B \-s, \-\-style=[STYLE]
+Visual style, in:
+.br 
+   - Balls and sticks:            balls_and_sticks, ball_and_stick, b_and_s, bs, b
+.br
+   - Wireframes:                  wireframes, wireframe, wires, wire, wi, w
+.br
+   - Covalent radius:             covalent_radius, covalent, cov_rad, cov, co, cr
+.br
+   - Ionic radius:                ionic_radius, ionic_rad, ionic, ion, ir
+.br
+   - van der Waals radius:        van_der_waals_radius, van_der_waals, vdw_radius, vdw_rad, vdw, vr
+.br
+   - In crystal radius:           in_crystal_radius, crystal_radius, in_crystal, crystal, cryst, cr
+.br
+   - Spheres:                     spheres, sphere, sph, sp, s
+.br
+   - Cylinders:                   cylinders, cylinder, cyl, cy, c
+.br
+   - Dots:                        dots, dot, d
+.TP
+.B \-r, \-\-rep=[REP]
+Representation style, in:
+.br
+   - Orthographic:                orthograhpic, ortho, 0
+.br
+   - Perpsective (default):       perspective, persp, 1 
+.TP
+.B \-b, \-\-box=[STYLE]
+Trigger box representation, if any, and set box style
+.br
+Style, in:
+.br
+   - Wireframes:                  wireframes, wireframe, wires, wire, wi, w
+.br
+   - Cylinders:                   cylinders, cylinder, cyl, cy, c
+.TP
+.B \-a, \-\-axis=[STYLE]
+.br
+Trigger axis representation and set axis style
+.br
+Style, in:
+.br
+   - Wireframes:                  wireframes, wireframe, wires, wire, wi, w
+.br
+   - Cylinders:                   cylinders, cylinder, cyl, cy, c
+.TP
+.B \-e, \-\-acolor=[MAP]
+Set color map for atoms and bonds
+.br
+   - Chemical specie(s):          species, spec, sp, 0
+.br
+   - Total coordination(s):       total_coordiantion, total_coord, tc, 1
+.br
+   - Partial coordination(s):     partial_coordiantion, partial_coord, pc, 2
+.br
+   - Fragment(s)*:                fragment, frag, fg, 3
+.br
+   - Molecule(s)*:                molecule, mol, mo, 4
+.br
+* if required trigger the corresponding analysis
+.TP
+.B \-t, \-\-pcolor=[MAP]
+Trigger polyhedra representation, and set the corresponding color map  
+.TP
+.B \-C, \-\-box_color=[COLOR]
+Box color, COLOR in hexadecimal coding, 3 or 6 letters, with or without #
+.TP
+.B \-G, \-\-back_grad=[GRAD]
+Background gradient type, in:
+.br 
+  - No gradient:                  none, no, 0
+.br
+  - Linear:                       linear, lin, 1
+.br
+  - Circular:                     circular, circ, 2
+.TP
+.B \-B, \-\-back_color=[COLOR]
+Background color, COLOR in hexadecimal coding, 3 or 6 letters, with or without #
+.br 
+Trigger single color mode (no gradient) for the background
+.TP
+.B \-D, \-\-back_dir=[DIR]
+Background gradient direction, in: 
+.br
+  - Linear gradient
+.br
+    - Right to left:              0
+.br
+    - Top to bottom:              1
+.br
+    - Bottom right to top left:   2
+.br
+    - Top right to bottom left:   3
+.br
+  - Circular gradient
+.br
+    - Right to left:              0
+.br
+    - Left to right:              1
+.br
+    - Top to bottom:              2
+.br
+    - Bottom to top:              3
+.br
+    - Bottom right to top left:   4
+.br
+    - Bottom left to top right:   5
+.br
+    - Top right to bottom left:   6
+.br
+    - Top left to bottom righ:    7
+.br
+    - From the center:            8
+.TP
+.B \-P, \-\-back_pos=[POS]
+Gradient colors mixed position in [0.0 - 1.0]
+.TP
+.B \-U, \-\-grad_col_a=[COLOR]
+Gradient initial color, COLOR in hexadecimal coding, 3 or 6 letters, with or without #
+.TP
+.B \-V, \-\-grad_col_b=[COLOR]
+Gradient final color, COLOR in hexadecimal coding, 3 or 6 letters, with or without #
+.TP
+.SH EXAMPLES 
+.TP
+        atomes --render-png --width=1920 --height=1024 -o project.png project.apf
+ atomes -j -W 1920 -H 1024 --output=my_file.jpg file.pdb -s cyl -e pc
+
+.SH SEE ALSO
+.BR https://atomes.ipcms.fr/
+.BR 
+
+.SH AUTHOR
+This manual page was created by Dr. Sébastien Le Roux <sebastien.leroux@ipcms.unistra.fr>
+
+.SH BUGS
+Report bugs at <https://github.com/Slookeur/atomes-GNU/issues>.
