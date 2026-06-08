@@ -67,12 +67,14 @@ step by step to achieve this crucial step.
 
 %install
 %make_install
+%find_lang %{name}
+%find_lang %{name} --with-man
 
 %check
 desktop-file-validate %{buildroot}/%{_datadir}/applications/%{name}.desktop
 appstream-util validate-relax --nonet %{buildroot}%{_metainfodir}/fr.ipcms.%{name}.appdata.xml
 
-%files
+%files -f %{name}.lang
 %license COPYING
 %{_bindir}/%{name}
 %{_libexecdir}/%{name}_startup_testing
@@ -89,7 +91,7 @@ appstream-util validate-relax --nonet %{buildroot}%{_metainfodir}/fr.ipcms.%{nam
 %{_metainfodir}/fr.ipcms.%{name}.appdata.xml
 
 %changelog
-* Fri Jun 05 2026 Sébastien Le Roux <sebastien.leroux@ipcms.unistra.fr> - 1.3.0-1
+* Fri Jun 12 2026 Sébastien Le Roux <sebastien.leroux@ipcms.unistra.fr> - 1.3.0-1
 - New features (see:  https://github.com/Slookeur/atomes-GNU/releases/tag/v1.3.0)
 
 * Tue Sep 30 2025 Sébastien Le Roux <sebastien.leroux@ipcms.unistra.fr> - 1.2.1-1

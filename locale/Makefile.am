@@ -1,6 +1,6 @@
 # Nom du programme (doit correspondre à GETTEXT_PACKAGE dans configure.ac)
 PACKAGE = atomes
-atomes_locale = $(localedir)
+atomes_locale = $(DESTDIR)$(localedir)
 
 # Liste des fichiers de langue à compiler
 POFILES = en/atomes-messages.po \
