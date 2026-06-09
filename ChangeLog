@@ -4,7 +4,7 @@
 		New code structure to facilitate the use of the 2D graph system
 		New 'analysis' data structure
 		New version and structure of the projet file
-		OpenGL ray tracing : new shaders for ray tracing rendering
+		New OpenGL shaders for ray tracing rendering
 		Image rendering from the command line
 		Error backtrace for reading and saving atomes files (apf and awf)
 		Internationalisation (Fr + En): atomes interface is now translatable
