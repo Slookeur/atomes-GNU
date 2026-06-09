@@ -67,7 +67,6 @@ step by step to achieve this crucial step.
 
 %install
 %make_install
-%find_lang %{name}
 %find_lang %{name} --with-man
 
 %check
