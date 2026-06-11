@@ -1,7 +1,7 @@
 2026-06-11 Sébastien Le Roux <sebastien.leroux@ipcms.unistra.fr>
          Release of version 1.3.1
          * Bug corrections:
-		Ensure that init_camera always uses the active project 'preferences.c'
+		Ensure that init_camera always uses the active project 'init_p.c'
 		Curve layout when saving workspace 'save_curve.c'
 		
 2026-06-11 Sébastien Le Roux <sebastien.leroux@ipcms.unistra.fr>
