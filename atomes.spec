@@ -89,7 +89,7 @@ appstream-util validate-relax --nonet %{buildroot}%{_metainfodir}/fr.ipcms.%{nam
 %{_metainfodir}/fr.ipcms.%{name}.appdata.xml
 
 %changelog
-* Fri Thu 11 2026 Sébastien Le Roux <sebastien.leroux@ipcms.unistra.fr> - 1.3.0-1
+* Thu 11 2026 Sébastien Le Roux <sebastien.leroux@ipcms.unistra.fr> - 1.3.0-1
 - New features (see:  https://github.com/Slookeur/atomes-GNU/releases/tag/v1.3.0)
 
 * Fri Jan 16 2026 Fedora Release Engineering <releng@fedoraproject.org> - 1.2.1-4
