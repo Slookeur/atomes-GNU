@@ -1,6 +1,6 @@
 ## Process this file with automake to produce Makefile.in
 
-SUBDIRS = src data
+SUBDIRS = data man locale src
 
 atomes_datadir = $(DESTDIR)$(datadir)
 atomes_pkgdatadir = $(DESTDIR)$(pkgdatadir)
@@ -10,14 +10,11 @@ atomes_mimedir = $(atomes_datadir)/mime/packages/
 atomes_metadir = $(atomes_datadir)/metainfo
 atomes_bashdir = $(atomes_datadir)/bash-completion/completions
 atomes_docdir = $(docdir)
+
 atomes_doc_DATA = \
 	README.md \
 	AUTHORS.md \
 	ChangeLog
-
-atomes_mandir = $(mandir)/man1/
-atomes_man_DATA = \
-	atomes.1.gz 
 
 install-data-local:
 # Bash completion

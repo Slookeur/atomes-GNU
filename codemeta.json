@@ -59,9 +59,9 @@
         }
     ],
     "dateCreated": "2012-01-01",
-    "dateModified": "2024-10-11",
+    "dateModified": "2026-06-11",
     "datePublished": "2022-09-01",
-    "description": "<b>atomes</b>: a toolbox to analyze, to visualize \nand to create/edit three-dimensional atomistic models.\nIt offers a workspace that allows to have many projects opened simultaneously.\nThe different projects in the workspace can exchange data: \nanalysis results, atomic coordinates...\n<b>atomes</b> also provides an advanced input preparation system \nfor further calculations using well known molecular dynamics codes:\n\n    Classical MD: DLPOLY and LAMMPS\n    ab-initio MD: CPMD and CP2K\n    QM-MM MD: CPMD and CP2K\n\nTo prepare the input files for these calculations is likely to be the key, \nand most complicated step towards MD simulations.\n<b>atomes</b> offers a user-friendly assistant to help and guide the scientist\nstep by step to achieve this crucial step.",
+    "description": "<b>atomes</b>: a toolbox to analyze, to visualize \nand to create/edit three-dimensional atomic scale models.\nThe software interface offers a workspace that allows to have many projects opened simultaneously.\nThe different projects in the workspace can exchange data: \nanalysis results, atomic coordinates...\n<b>atomes</b> also provides an advanced input preparation system \nfor further calculations using well known molecular dynamics codes:\n\n    Classical MD: DLPOLY and LAMMPS\n    ab-initio MD: CPMD and CP2K\n    QM-MM MD: CPMD and CP2K\n\nTo prepare the input files for these calculations is likely to be the key, \nand most complicated step towards MD simulations.\n<b>atomes</b> offers a user-friendly assistant to help and guide the scientist\nstep by step to achieve this crucial step.",
     "downloadUrl": "https://atomes.ipcms.fr",
     "funder": {
         "type": "Organization",
@@ -88,7 +88,7 @@
         "Fortran"
     ],
     "relatedLink": "https://atomes.ipcms.fr/",
-    "schema:releaseNotes": "Release of version 1.2.0\n\n  - New features \n  - Improvements \n - Bug corrections"
+    "schema:releaseNotes": "Release of version 1.3.0\n\n  - New features \n  - Improvements \n - Bug corrections \n  - Extras"
     "softwareRequirements": [
         "libgtk+3.0 or ligtk4 : https://www.gtk.org/",
         "libepoxy : https://github.com/anholt/libepoxy/",
@@ -97,7 +97,7 @@
         "libxml-2 : https://github.com/GNOME/libxml2/",
         "libavutil, libavformat, libavcodec, libswscale : https://www.ffmpeg.org/"
     ],
-    "version": "1.2.0",
+    "version": "1.3.0",
     "developmentStatus": "active",
     "issueTracker": "https://github.com/Slookeur/atomes-GNU/issues"
 }

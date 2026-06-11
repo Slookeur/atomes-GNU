@@ -4,8 +4,8 @@ dnl Created by Sébastien Le Roux.
 AC_PREREQ(2.59)
 
 m4_define(atomes_major_version, 1)
-m4_define(atomes_minor_version, 2)
-m4_define(atomes_patch_version, 1)
+m4_define(atomes_minor_version, 3)
+m4_define(atomes_patch_version, 0)
 m4_define(atomes_version, atomes_major_version.atomes_minor_version.atomes_patch_version)
 m4_define(atomes_url, https://atomes.ipcms.fr)
 m4_define(atomes_tar, atomes)
@@ -25,9 +25,11 @@ dnl ***************************************************************************
 dnl Internatinalization
 dnl ***************************************************************************
 
-GETTEXT_PACKAGE=atomes
-AC_SUBST(GETTEXT_PACKAGE)
-AC_DEFINE_UNQUOTED(GETTEXT_PACKAGE,"$GETTEXT_PACKAGE", [GETTEXT package name])
+dnl GETTEXT_PACKAGE=atomes
+dnl AC_SUBST(GETTEXT_PACKAGE)
+dnl AC_DEFINE_UNQUOTED([GETTEXT_PACKAGE], ["$GETTEXT_PACKAGE"], [GETTEXT package name])
+AC_PROG_CC
+AC_CHECK_HEADERS([libintl.h locale.h])
 
 dnl ***************************************************************************
 dnl Check for the operating system
@@ -175,6 +177,8 @@ fi
 AC_CONFIG_FILES([
  Makefile
  data/Makefile
+ man/Makefile
+ locale/Makefile
  src/Makefile
  src/startup-testing/Makefile 
 ])
