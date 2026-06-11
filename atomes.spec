@@ -39,9 +39,8 @@ Requires: mesa-libGLU
 Provides: %{name} = %{version}-%{release}
 
 %description
-atomes: a toolbox to analyze, to visualize 
-and to create/edit three-dimensional atomic scale models.
-It offers a workspace that allows to have many projects opened simultaneously.
+atomes: a toolbox to analyze, to visualize and to create/edit 3D atomic scale models.
+The software interface offers a workspace that allows to open many projects simultaneously.
 The different projects in the workspace can exchange data: 
 analysis results, atomic coordinates...
 atomes also provides an advanced input preparation system 
@@ -90,8 +89,17 @@ appstream-util validate-relax --nonet %{buildroot}%{_metainfodir}/fr.ipcms.%{nam
 %{_metainfodir}/fr.ipcms.%{name}.appdata.xml
 
 %changelog
-* Fri Jun 12 2026 Sébastien Le Roux <sebastien.leroux@ipcms.unistra.fr> - 1.3.0-1
+* Fri Thu 11 2026 Sébastien Le Roux <sebastien.leroux@ipcms.unistra.fr> - 1.3.0-1
 - New features (see:  https://github.com/Slookeur/atomes-GNU/releases/tag/v1.3.0)
+
+* Fri Jan 16 2026 Fedora Release Engineering <releng@fedoraproject.org> - 1.2.1-4
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_44_Mass_Rebuild
+
+* Fri Jan 16 2026 Fedora Release Engineering <releng@fedoraproject.org> - 1.2.1-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_44_Mass_Rebuild
+
+* Wed Oct 01 2025 Dominik Mierzejewski <dominik@greysector.net> - 1.2.1-2
+ - Rebuilt for FFmpeg 8
 
 * Tue Sep 30 2025 Sébastien Le Roux <sebastien.leroux@ipcms.unistra.fr> - 1.2.1-1
 - New features (see:  https://github.com/Slookeur/atomes-GNU/releases/tag/v1.2.1)
