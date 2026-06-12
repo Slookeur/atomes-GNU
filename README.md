@@ -62,7 +62,7 @@ To do that:
 Note the default flag is: `--with-gtk=3`
 
 
-  2. Build ***atomes***
+  2. Build **atomes**
 
 ```
 make
@@ -83,13 +83,13 @@ It is possible to turn this off, and to build a serial version of **atomes**, to
 ```
 
 
-  2. Build ***atomes***
+  2. Build **atomes**
 
 ```
 make
 ```
 
-## Install ***atomes***
+## Install **atomes**
 
 ```
 make install
