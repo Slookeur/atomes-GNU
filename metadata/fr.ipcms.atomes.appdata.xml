@@ -14,7 +14,7 @@
     <p>atomes: a toolbox to analyze, to visualize  and to create/edit 3D atomic scale models. The software interface offers a workspace that allows to have many projects opened simultaneously. The different projects in the workspace can exchange data:  analysis results, atomic coordinates...</p>
     <p xml:lang="fr">atomes: une boîte à outils pour analyser, visualiser et créer/éditer des modèles 3D à l'échelle atomique. L'interface du logiciel offre un espace de travail qui permet d'avoir plusieurs projets ouvert simultanément. Les différents projets de l'espace de travail peuvent échanger des données: résultats d'analyses, coordonnées atomiques...</p>
     <p>atomes also provides an advanced input preparation system for further calculations using well known <b>M</b>olecular <b>D</b>ynamics codes:</p>
-    <p xml:lang="fr">atomes propose également un système avancé de préparation de fichiers d'entrée pour des calculs externes avec des codes de <b>Dy</b>namique <b>M</b>oléculaire bien connus:</p>
+    <p xml:lang="fr">atomes propose également un système avancé de préparation de fichiers d'entrée pour des calculs externes avec des codes de <b>D</b>ynamique <b>M</b>oléculaire bien connus:</p>
     <ul>
       <li>Classical MD: DLPOLY and LAMMPS</li>
       <li>ab-initio MD: CPMD and CP2K</li>
