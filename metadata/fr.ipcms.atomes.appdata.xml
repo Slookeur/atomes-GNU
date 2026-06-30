@@ -4,6 +4,7 @@
   <id>fr.ipcms.atomes</id>
   
   <name>atomes</name>
+  <name xml:lang="fr">atomes</name>
   <summary>An atomic scale modeling toolbox</summary>
   <summary xml:lang="fr">Une boite à outils pour la modélisation à l'échelle atomique</summary>
   
@@ -13,17 +14,15 @@
   <description>
     <p>atomes: a toolbox to analyze, to visualize  and to create/edit 3D atomic scale models. The software interface offers a workspace that allows to have many projects opened simultaneously. The different projects in the workspace can exchange data:  analysis results, atomic coordinates...</p>
     <p xml:lang="fr">atomes: une boîte à outils pour analyser, visualiser et créer/éditer des modèles 3D à l'échelle atomique. L'interface du logiciel offre un espace de travail qui permet d'avoir plusieurs projets ouvert simultanément. Les différents projets de l'espace de travail peuvent échanger des données: résultats d'analyses, coordonnées atomiques...</p>
-    <p>atomes also provides an advanced input preparation system for further calculations using well known <b>M</b>olecular <b>D</b>ynamics codes:</p>
-    <p xml:lang="fr">atomes propose également un système avancé de préparation de fichiers d'entrée pour des calculs externes avec des codes de <b>D</b>ynamique <b>M</b>oléculaire bien connus:</p>
+    <p>atomes also provides an advanced input preparation system for further calculations using well known Molecular Dynamics codes:</p>
+    <p xml:lang="fr">atomes propose également un système avancé de préparation de fichiers d'entrée pour des calculs externes avec des codes de Dynamique Moléculaire bien connus:</p>
     <ul>
       <li>Classical MD: DLPOLY and LAMMPS</li>
+      <li xml:lang="fr">DM classique: DLPOLY et LAMMPS</li>
       <li>ab-initio MD: CPMD and CP2K</li>
+      <li xml:lang="fr">DM ab-initio: CPMD et CP2K</li>
       <li>Hybrid MD (QM-MM): CPMD and CP2K</li>
-    </ul>
-    <ul xml:lang="fr">
-      <li>DM classique: DLPOLY et LAMMPS</li>
-      <li>DM ab-initio: CPMD et CP2K</li>
-      <li>DM hybride (QM-MM): CPMD et CP2K</li>
+      <li xml:lang="fr">DM hybride (QM-MM): CPMD et CP2K</li>
     </ul>
     <p>To prepare the input files for these calculations is likely to be the key, and most complicated step towards MD simulations. atomes offers a user-friendly assistant to help and guide the scientist step by step to achieve this crucial step.</p>
     <p xml:lang="fr">Préparer les fichiers d'entrée pour ces calculs est généralement le point clef, et l'étape la plus complexe pour réaliser des calculs de DM. atomes propose des assistants à l'interface utilisateur conviviale pour aider et guider le scientifique pas à pas pour réaliser cette étape cruciale.</p>
@@ -54,6 +53,7 @@
   <url type="bugtracker">https://github.com/Slookeur/atomes/issues/new/choose</url>
   <developer_name>Dr. Sébastien Le Roux</developer_name>
   <update_contact>atomes_AT_ipcms.unistra.fr</update_contact>
+  <translation type="gettext">atomes</translation>
   
   <provides>
     <id>atomes.desktop</id>
@@ -101,111 +101,162 @@
     <release version="1.3.1" date="2026-06-11">
       <description>
         <p>Release of version 1.3.1:</p>
-        <p>- Bug correction, see: <url>https://github.com/Slookeur/atomes-GNU/releases/tag/v1.3.1</url></p>
+	<ul>
+          <li>Bug corrections</li>
+	</ul>
       </description>
+      <url>https://github.com/Slookeur/atomes-GNU/releases/tag/v1.3.1</url>
     </release>    
     <release version="1.3.0" date="2026-06-11">
       <description>
         <p>Release of version 1.3.0:</p>
-        <p>- New features, see: <url>https://github.com/Slookeur/atomes-GNU/releases/tag/v1.3.0</url></p>
-        <p>- Improvements, see: <url>https://github.com/Slookeur/atomes-GNU/releases/tag/v1.3.0</url></p>
-        <p>- Bug correction, see: <url>https://github.com/Slookeur/atomes-GNU/releases/tag/v1.3.0</url></p>
+        <ul>
+          <li>New features</li>
+	  <li>Improvements</li>
+          <li>Bug correction</li>
+	 </ul>
       </description>
+      <url>https://github.com/Slookeur/atomes-GNU/releases/tag/v1.3.0</url>
     </release>
     <release version="1.2.1" date="2025-09-30">
       <description>
         <p>Release of version 1.2.1:</p>
-        <p>- Bug correction, see: <url>https://github.com/Slookeur/atomes-GNU/releases/tag/v1.2.1</url></p>
+	<ul>
+          <li>Bug corrections</li>
+        </ul>
       </description>
+      <url>https://github.com/Slookeur/atomes-GNU/releases/tag/v1.2.1</url>
     </release>
     <release version="1.2.0" date="2025-09-05">
       <description>
         <p>Release of version 1.2.0:</p>
-        <p>- New features, see: <url>https://github.com/Slookeur/atomes-GNU/releases/tag/v1.2.0</url></p>
+        <ul>
+          <li>New features</li>
+        </ul>
       </description>
+      <url>https://github.com/Slookeur/atomes-GNU/releases/tag/v1.2.0</url>
     </release>
     <release version="1.1.18" date="2025-05-15">
       <description>
         <p>Release of version 1.1.18:</p>
-        <p>- Bug corrections, see: <url>https://github.com/Slookeur/atomes-GNU/releases/tag/v1.1.18</url></p>
+        <ul>
+          <li>Bug corrections</li>
+        </ul>
       </description>
+      <url>https://github.com/Slookeur/atomes-GNU/releases/tag/v1.1.18</url>
     </release>
     <release version="1.1.17" date="2025-02-20">
       <description>
         <p>Release of version 1.1.17:</p>
-        <p>- Bug corrections, see: <url>https://github.com/Slookeur/atomes-GNU/releases/tag/v1.1.17</url></p>
-        <p>- Improvements, see: <url>https://github.com/Slookeur/atomes-GNU/releases/tag/v1.1.17</url></p>
+	<ul>
+          <li>Bug corrections</li>
+	  <li>Improvements</li>
+        </ul>
       </description>
+      <url>https://github.com/Slookeur/atomes-GNU/releases/tag/v1.1.17</url>
     </release>
     <release version="1.1.16" date="2024-12-18">
       <description>
         <p>Release of version 1.1.16:</p>
-        <p>- Bug corrections, see: <url>https://github.com/Slookeur/atomes-GNU/releases/tag/v1.1.16</url></p>
+        <ul>
+          <li>Bug corrections</li>
+        </ul>
       </description>
+      <url>https://github.com/Slookeur/atomes-GNU/releases/tag/v1.1.16</url>
     </release>
     <release version="1.1.15" date="2024-10-14">
       <description>
         <p>Release of version 1.1.15:</p>
-        <p>- Bug corrections, see: <url>https://github.com/Slookeur/atomes-GNU/releases/tag/v1.1.15</url></p>
-	<p>- Improvements, see: <url>https://github.com/Slookeur/atomes-GNU/releases/tag/v1.1.15</url></p>
+        <ul>
+          <li>Bug corrections</li>
+          <li>Improvements</li>
+        </ul>
       </description>
+      <url>https://github.com/Slookeur/atomes-GNU/releases/tag/v1.1.15</url>
     </release>
     <release version="1.1.14" date="2024-03-20">
       <description>
         <p>Release of version 1.1.14:</p>
-        <p>- Bug corrections, see: <url>https://github.com/Slookeur/atomes-GNU/releases/tag/v1.1.14</url></p>
-	<p>- Improvements, see: <url>https://github.com/Slookeur/atomes-GNU/releases/tag/v1.1.14</url></p>
+        <ul>
+          <li>Bug corrections</li>
+          <li>Improvements</li>
+        </ul>
       </description>
+      <url>https://github.com/Slookeur/atomes-GNU/releases/tag/v1.1.14</url>
     </release>
     <release version="1.1.13" date="2024-02-28">
       <description>
         <p>Release of version 1.1.13:</p>
-        <p>- Bug corrections, see: <url>https://github.com/Slookeur/atomes-GNU/releases/tag/v1.1.13</url></p>
-	<p>- Improvements, see: <url>https://github.com/Slookeur/atomes-GNU/releases/tag/v1.1.13</url></p>
+        <ul>
+          <li>Bug corrections</li>
+          <li>Improvements</li>
+        </ul>
       </description>
+      <url>https://github.com/Slookeur/atomes-GNU/releases/tag/v1.1.13</url>
     </release>
     <release version="1.1.12" date="2023-09-11">
       <description>
         <p>Release of version 1.1.12:</p>
-        <p>- Bug corrections, see: <url>https://github.com/Slookeur/atomes-GNU/releases/tag/v1.1.12</url></p>
-	<p>- Improvements, see: <url>https://github.com/Slookeur/atomes-GNU/releases/tag/v1.1.12</url></p>
+        <ul>
+          <li>Bug corrections</li>
+          <li>Improvements</li>
+        </ul>
       </description>
+      <url>https://github.com/Slookeur/atomes-GNU/releases/tag/v1.1.12</url>
     </release>
     <release version="1.1.11" date="2023-03-27">
       <description>
         <p>Release of version 1.1.11:</p>
-        <p>- Bug corrections: see: <url>https://github.com/Slookeur/atomes-GNU/releases/tag/v1.1.11</url></p>
+        <ul>
+          <li>Bug corrections</li>
+        </ul>
       </description>
+      <url>https://github.com/Slookeur/atomes-GNU/releases/tag/v1.1.11</url>
     </release>	  
     <release version="1.1.10" date="2022-11-04">
       <description>
         <p>Release of version 1.1.10:</p>
-        <p>- Bug corrections: see: <url>https://github.com/Slookeur/atomes-GNU/releases/tag/v1.1.10</url></p>
+        <ul>
+          <li>Bug corrections</li>
+        </ul>
       </description>
+      <url>https://github.com/Slookeur/atomes-GNU/releases/tag/v1.1.10</url>
     </release>
     <release version="1.1.9" date="2022-10-28">
       <description>
         <p>Release of version 1.1.9:</p>
-        <p>- Bug corrections: see: <url>https://github.com/Slookeur/atomes-GNU/releases/tag/v1.1.9</url></p>
+        <ul>
+          <li>Bug corrections</li>
+        </ul>
       </description>
+      <url>https://github.com/Slookeur/atomes-GNU/releases/tag/v1.1.9</url>
     </release>
     <release version="1.1.8" date="2022-10-27">
       <description>
         <p>Release of version 1.1.8:</p>
-        <p>- Bug corrections: see: <url>https://github.com/Slookeur/atomes-GNU/releases/tag/v1.1.8</url></p>
+        <ul>
+          <li>Bug corrections</li>
+        </ul>
       </description>
+      <url>https://github.com/Slookeur/atomes-GNU/releases/tag/v1.1.8</url>
     </release>
     <release version="1.1.7" date="2022-10-13">
       <description>
         <p>Release of version 1.1.7:</p>
-        <p>- Bug corrections: see: <url>https://github.com/Slookeur/atomes-GNU/releases/tag/v1.1.7</url></p>
+        <ul>
+          <li>Bug corrections</li>
+        </ul>
       </description>
+      <url>https://github.com/Slookeur/atomes-GNU/releases/tag/v1.1.7</url>
     </release>
     <release version="1.1.6" date="2022-10-10">
       <description>
         <p>Release of version 1.1.6:</p>
-        <p>- Bug corrections: see: <url>https://github.com/Slookeur/atomes-GNU/releases/tag/v1.1.6</url></p>
+        <ul>
+          <li>Bug corrections</li>
+        </ul>
       </description>
+      <url>https://github.com/Slookeur/atomes-GNU/releases/tag/v1.1.6</url>
     </release>
     <release version="1.1.5" date="2022-09-23">
       <description>
