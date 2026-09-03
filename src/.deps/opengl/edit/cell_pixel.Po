@@ -1,0 +1,3 @@
+opengl/edit/cell_pixel.o: opengl/edit/cell_pixel.c \
+ /usr/include/stdc-predef.h
+/usr/include/stdc-predef.h:

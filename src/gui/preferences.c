@@ -3223,7 +3223,7 @@ void color_button_event (GtkWidget * widget, double event_x, double event_y, gui
           gtk_tree_model_get (model, & row, 3, & z, -1);
           gchar * str = g_strdup_printf (_("%s %s color"), periodic_table_info[z].lab, obj[i]);
           GdkRGBA col = colrgba_togtkrgba (get_spec_color (z, color_list));
-          GtkWidget * win = gtk_color_chooser_dialog_new (str, GTK_WINDOW(MainWindow));
+          GtkWidget * win = gtk_color_chooser_dialog_new (str, GTK_WINDOW(atomes_app -> main_window));
           gtk_window_set_modal (GTK_WINDOW(win), TRUE);
           gtk_color_chooser_set_use_alpha (GTK_COLOR_CHOOSER(win), TRUE);
           gtk_color_chooser_set_rgba (GTK_COLOR_CHOOSER(win), & col);
@@ -3346,7 +3346,7 @@ G_MODULE_EXPORT void edit_species_parameters (GtkButton * but, gpointer data)
   edit_list = NULL;
   color_list = NULL;
   tmp_color = NULL;
-  GtkWidget * win = dialog_cancel_apply (str, MainWindow, TRUE);
+  GtkWidget * win = dialog_cancel_apply (str, atomes_app -> main_window, TRUE);
   g_free (str);
   gtk_window_set_default_size (GTK_WINDOW(win), (num_col == 8) ? 600 : 300, 600);
   GtkWidget * vbox = dialog_get_content_area (win);
@@ -4184,7 +4184,7 @@ G_MODULE_EXPORT void edit_cutoffs (GtkDialog * edit_cuts, gint response_id, gpoi
 */
 G_MODULE_EXPORT void set_cutoffs_default (GtkButton * but, gpointer data)
 {
-  GtkWidget * win = dialog_cancel_apply (_("Select partial cutoffs(s)"), MainWindow, TRUE);
+  GtkWidget * win = dialog_cancel_apply (_("Select partial cutoffs(s)"), atomes_app -> main_window, TRUE);
   GtkWidget * vbox = dialog_get_content_area (win);
   GtkWidget * hbox = create_hbox (BSEP);
   add_box_child_start (GTK_ORIENTATION_VERTICAL, vbox, hbox, FALSE, FALSE, 5);
@@ -4879,7 +4879,7 @@ void save_preferences ()
     if (ask_yes_no(_("Apply to project(s) in workspace ?"), _("Preferences were saved for the active session !\n Do you want to apply preferences to the project(s) opened in the workspace ?"), GTK_MESSAGE_QUESTION, pref_ogl_edit -> win))
     {
      // Select project here
-     GtkWidget * proj_sel = message_dialogmodal (_("Project selection"), _("Select to apply preferences"), GTK_MESSAGE_QUESTION, GTK_BUTTONS_OK, MainWindow);
+     GtkWidget * proj_sel = message_dialogmodal (_("Project selection"), _("Select to apply preferences"), GTK_MESSAGE_QUESTION, GTK_BUTTONS_OK, atomes_app -> main_window);
      GtkWidget * vbox = dialog_get_content_area (proj_sel);
      GtkWidget * hbox;
      up_project = allocbool (nprojects*2);
@@ -4942,7 +4942,7 @@ void adjust_preferences_window ()
 G_MODULE_EXPORT void restore_defaults_parameters (GtkButton * but, gpointer data)
 {
 
-  if (ask_yes_no(_("Restore default parameters"), _("Are you sure ?"), GTK_MESSAGE_QUESTION, MainWindow))
+  if (ask_yes_no(_("Restore default parameters"), _("Are you sure ?"), GTK_MESSAGE_QUESTION, atomes_app -> main_window))
   {
     set_atomes_defaults ();
     prepare_tmp_default ();
@@ -4975,7 +4975,7 @@ G_MODULE_EXPORT void edit_preferences (GtkDialog * edit_prefs, gint response_id,
   switch (response_id)
   {
     case GTK_RESPONSE_APPLY:
-      if (ask_yes_no(_("Save parameters"), _("Are you sure ?"), GTK_MESSAGE_QUESTION, MainWindow))
+      if (ask_yes_no(_("Save parameters"), _("Are you sure ?"), GTK_MESSAGE_QUESTION, atomes_app -> main_window))
       {
         save_preferences ();
         gchar * str = g_strdup_printf (_("Do you want to save <b>atomes</b> preferences in:\n\n\t%s\n\nIf found this file is processed at every <b>atomes</b> startup.\n\n\t\t\t\t\t\tSave file ?"), ATOMES_CONFIG);
@@ -4983,7 +4983,7 @@ G_MODULE_EXPORT void edit_preferences (GtkDialog * edit_prefs, gint response_id,
         {
           if (! save_preferences_to_xml_file ())
           {
-            show_error ((pref_error) ? pref_error : _("Error while trying to save preferences to file"), 0, MainWindow);
+            show_error ((pref_error) ? pref_error : _("Error while trying to save preferences to file"), 0, atomes_app -> main_window);
             g_free (pref_error);
             pref_error = NULL;
           }
@@ -5021,7 +5021,7 @@ G_MODULE_EXPORT void edit_preferences (GtkDialog * edit_prefs, gint response_id,
 */
 void create_user_preferences_dialog ()
 {
-  GtkWidget * win = dialog_cancel_apply (_("User preferences"), MainWindow, TRUE);
+  GtkWidget * win = dialog_cancel_apply (_("User preferences"), atomes_app -> main_window, TRUE);
   preferences = TRUE;
   prepare_tmp_default ();
   GtkWidget * vbox = dialog_get_content_area (win);
@@ -5129,7 +5129,7 @@ G_MODULE_EXPORT void set_default_options (GtkButton * but, gpointer data)
     {
       if (! save_preferences_to_xml_file ())
       {
-        show_error ((pref_error) ? pref_error : _("Error while trying to save preferences to file"), 0, MainWindow);
+        show_error ((pref_error) ? pref_error : _("Error while trying to save preferences to file"), 0, atomes_app -> main_window);
         g_free (pref_error);
         pref_error = NULL;
       }

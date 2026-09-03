@@ -130,6 +130,7 @@ atomes_gui = $(gui)bdcall.c \
 	     $(gui)initc.c \
 	     $(gui)preferences.c \
 	     $(gui)interface.c \
+	     $(gui)fr.ipcms.atomes.Instance.c \
 	     $(gui)main.c \
 	     $(gui)msdcall.c \
 	     $(gui)ringscall.c \
@@ -332,6 +333,7 @@ atomes_includes = config.h \
 		  $(gui)interface.h \
 		  $(gui)xmlrw.h \
 		  $(gui)preferences.h \
+		  $(gui)fr.ipcms.atomes.Instance.h \
 		  $(work)workspace.h \
 		  $(proj)project.h \
 		  $(read)readers.h \
