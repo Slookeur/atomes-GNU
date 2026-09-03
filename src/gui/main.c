@@ -1565,7 +1565,7 @@ int main (int argc, char *argv[])
 
   if (RUNC)
   {
-    if (! atomes_from_libreoffice && ! atomes_render_image)
+    if (default_instance && (! atomes_from_libreoffice && ! atomes_render_image))
     {
       if (argc > 1)
       {
