@@ -82,7 +82,6 @@ Copyright (C) 2022-2026 by CNRS and University of Strasbourg */
 #include "workspace.h"
 #include "glview.h"
 #include "movie.h"
-#include "fr.ipcms.atomes.Instance.h"
 
 #ifdef G_OS_WIN32
 #define APP_EXTENSION ".exe"
@@ -90,6 +89,7 @@ Copyright (C) 2022-2026 by CNRS and University of Strasbourg */
 #else
 #include <pwd.h>
 #define APP_EXTENSION
+#include "fr_ipcms_atomes-Instance.h"
 #endif
 
 extern GtkWidget * create_main_window (GApplication * app);
@@ -1006,10 +1006,7 @@ void open_this_data_file (int file_type, gchar * file_name)
   }
 }
 
-#ifdef G_OS_WIN32
-
-
-#else
+#ifndef G_OS_WIN32
 /*!
   \fn static gboolean handle_open_file (Instance * object, GDBusMethodInvocation * invocation, const gchar * arg_file, gpointer user_data)
 
