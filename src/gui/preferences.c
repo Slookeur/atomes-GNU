@@ -4791,7 +4791,7 @@ G_MODULE_EXPORT void toggled_select_project (GtkToggleButton * but, gpointer dat
 void save_preferences ()
 {
   default_instance = tmp_instance;
-  g_debug ("default_instance = %d", default_instance);
+  g_print ("default_instance = %d\n", default_instance);
   default_totcut = tmp_totcut;
   if (default_bond_cutoff)
   {
@@ -5138,7 +5138,7 @@ void create_user_preferences_dialog ()
    gtk_toggle_button_set_active ((GtkToggleButton *)beh_but[1], ! tmp_instance);
 #endif // GTK3
   gchar * instance_about[2] = {i18n("(1) Each and every file is opened in a single <b>atomes</b> instance"),
-                               i18n("(2) When required files are opened in separate, new, <b>atomes</b> instance(s)")};
+                               i18n("(2) When required files are opened in a separate, new, <b>atomes</b> instance")};
   for (i=0; i<2; i++)
   {
     hbox = create_hbox (BSEP);

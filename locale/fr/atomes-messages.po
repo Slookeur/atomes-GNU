@@ -3016,7 +3016,7 @@ msgstr "Les paramètres par défaut sont utilisés\npour tout nouveau projet ajo
 
 # File: gui/preferences.c, Line: 5109
 msgid "<b>atomes</b> default behavior:"
-msgstr "Comportement <b>atomes</b> par défaut:"
+msgstr "Comportement par défaut d'<b>atomes</b>:"
 
 # File: gui/preferences.c, Line 5110
 msgid "Single instance (1)"
@@ -3032,7 +3032,7 @@ msgstr "(1) Chaque fichier est ouvert dans une unique instance d'<b>atomes</b>"
 
 # File: gui/preferences.c, Line 5140
 msgid "(2) When required files are opened in a separate, new, <b>atomes</b> instance"
-msgstr "(2) Quand cela est nécéssaire le(s) fichier(s) est/sont ouvert dans une instance isolée, nouvelle, d'<b>atomes</b>"
+msgstr "(2) Quand cela est nécéssaire une nouvelle instance isolée d'<b>atomes</b> est créée"
 
 # File: gui/preferences.c, Line: 5058
 msgid "Restore <b>atomes</b> default parameters"

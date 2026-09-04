@@ -1128,6 +1128,7 @@ static gboolean check_existing_instance (void)
     return FALSE;
   }
 
+  if (! flist) return FALSE;
   gboolean sent = FALSE;
   struct file_list * tmp = flist;
   while (tmp)
@@ -1565,40 +1566,6 @@ int main (int argc, char *argv[])
 
   if (RUNC)
   {
-    if (default_instance && (! atomes_from_libreoffice && ! atomes_render_image))
-    {
-      if (argc > 1)
-      {
-        // Check if there is already an existing atomes instance running
-        // If yes then transmit the file(s) to open
-#ifdef G_OS_WIN32
-         /* Check for an existing atomes instance via Win32 Named Mutex/Pipe */
-        if (check_existing_win32_instance ())
-        {
-          g_free (atomes_app);
-          return 0;
-        }
-      }
-      if (! init_win32_server (atomes_app))
-      {
-        g_print ("Init Win32 pipe server failed\n");
-        return 1;
-      }
-#else
-       if (check_existing_instance ())
-       {
-          g_free (atomes_app);
-          return 0;
-        }
-      }
-      if (! init_dbus_server (atomes_app))
-      {
-        g_print ("Init DBUS failed\n");
-        return 1;
-      }
-#endif // G_OS_WIN32
-    }
-
 #ifdef G_OS_WIN32
 #ifndef DEBUG
     FreeConsole ();
@@ -1658,6 +1625,42 @@ int main (int argc, char *argv[])
 
     set_atomes_preferences ();
 
+    // Now user preferences are known
+    if (! atomes_from_libreoffice && ! atomes_render_image)
+    {
+      if (default_instance)
+      {
+        if (argc > 1)
+        {
+          // Check if there is already an existing atomes instance running
+          // If yes then transmit the file(s) to open to this instance
+#ifdef G_OS_WIN32
+          /* Check for an existing atomes instance via Win32 Named Mutex/Pipe */
+          if (check_existing_win32_instance ())
+          {
+            g_free (atomes_app);
+            return 0;
+          }
+        }
+        else if (! init_win32_server (atomes_app))
+        {
+          g_print ("Init Win32 pipe server failed\n");
+          return 1;
+#else
+          if (check_existing_instance ())
+          {
+            g_free (atomes_app);
+            return 0;
+          }
+        }
+        else if (! init_dbus_server (atomes_app))
+        {
+          g_print ("Init DBUS failed\n");
+          return 1;
+#endif // G_OS_WIN32
+        }
+      }
+    }
 #if GLIB_MINOR_VERSION < 74
     atomes_app -> gtk_app = gtk_application_new (g_strdup_printf ("fr.ipcms.atomes.prog-%d", (int)clock()), G_APPLICATION_FLAGS_NONE);
 #else
