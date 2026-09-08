@@ -46,9 +46,15 @@ Copyright (C) 2022-2026 by CNRS and University of Strasbourg */
   ColRGBA * get_color_from_hexa_string (gchar * color_string);
 
   gboolean destroy_func (gpointer user_data);
+
   static gboolean handle_open_file (Instance * object, GDBusMethodInvocation * invocation, const gchar * arg_file, gpointer user_data);
   static gboolean init_dbus_server (AppData * app_data);
   static gboolean check_existing_instance (void);
+
+  static gboolean win32_open_file_idle (gpointer user_data);
+  static gpointer win32_pipe_server_thread (gpointer user_data);
+  static gboolean init_win32_server (AppData * app_data);
+  static gboolean check_existing_win32_instance ();
 
   G_MODULE_EXPORT gboolean splashdraw (GtkWidget * widget, cairo_t * cr, gpointer data);
 
@@ -1012,9 +1018,9 @@ void open_this_data_file (int file_type, gchar * file_name)
 
   \brief D-Bus method for OpenFile : open a file in the active instance
 
-  \param object   D-bus skeleton
+  \param object D-bus skeleton
   \param invocation invocation method
-  \param arg_file  file to be opened
+  \param arg_file file to be opened
   \param user_data associated data (AppData)
 */
 static gboolean handle_open_file (Instance * object, GDBusMethodInvocation * invocation, const gchar * arg_file, gpointer user_data)
@@ -1184,7 +1190,7 @@ struct OpenFileData
 
   \param user_data pointer to an OpenFileData structure (ownership transferred; freed here)
 
-  \return G_SOURCE_REMOVE (always, single-shot idle)
+  \return FALSE
 */
 static gboolean win32_open_file_idle (gpointer user_data)
 {
@@ -1196,7 +1202,7 @@ static gboolean win32_open_file_idle (gpointer user_data)
   }
   g_free (ofd -> file_name);
   g_free (ofd);
-  return G_SOURCE_REMOVE;
+  return FALSE;
 }
 
 /*!
@@ -1273,7 +1279,7 @@ static gboolean init_win32_server (AppData * app_data)
 }
 
 /*!
-  \fn static gboolean check_existing_win32_instance (void)
+  \fn static gboolean check_existing_win32_instance ()
 
   \brief Search for an already running atomes instance on Windows.
          If found, transmit all pending files (flist) via the Named Pipe
@@ -1283,7 +1289,7 @@ static gboolean init_win32_server (AppData * app_data)
   \return TRUE if an existing instance was found and handled flist,
           FALSE otherwise (no instance found, or flist is empty)
 */
-static gboolean check_existing_win32_instance (void)
+static gboolean check_existing_win32_instance ()
 {
   if (! flist) return FALSE;
 
@@ -1655,7 +1661,7 @@ int main (int argc, char *argv[])
         }
         else if (! init_dbus_server (atomes_app))
         {
-          g_print ("Init DBUS failed\n");
+          g_print ("Init D-BUS failed\n");
           return 1;
 #endif // G_OS_WIN32
         }
