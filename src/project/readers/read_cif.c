@@ -158,8 +158,8 @@ The following lines describe keywords used to declare atomic coordinates in the 
 Note that this can change, so in all cases if required add more.
 */
 #define NLKEYS 2
-gchar * linekeys[NLKEYS] = {"_atom_site",                                           // Most common
-                            "_chem_comp_atom"};                                    // RCSB database: https://www.rcsb.org/
+gchar * linekeys[NLKEYS] = {"_atom_site",                                            // Most common
+                            "_chem_comp_atom"};                                      // RCSB database: https://www.rcsb.org/
 
 #define CFKEYS 2
 gchar * frackeys[CFKEYS][3] = {{"fract_x", "fract_y", "fract_z"},                    // Most common
