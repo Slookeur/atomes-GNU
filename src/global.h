@@ -1152,7 +1152,6 @@ extern void remove_action (gchar * action_name);
 extern void remove_edition_actions ();
 extern void remove_edition_and_analyze_actions ();
 
-extern AppData * AtomesApp;
 extern workspace workzone;
 extern project * proj;
 extern chemical_data * active_chem;

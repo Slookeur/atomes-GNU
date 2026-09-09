@@ -813,7 +813,7 @@ gboolean test_gr (int rdf)
 {
   if (active_project -> analysis[rdf] -> num_delta < 2)
   {
-    show_warning (_("You must specify a number of &#x3b4;r intevals >= 2\n"
+    show_warning (_("You must specify a number of &#x3b4;r intervals >= 2\n"
                     "to discretize the real space between 0.0 and D<sub>max</sub>\n"), calc_win);
     return FALSE;
   }
