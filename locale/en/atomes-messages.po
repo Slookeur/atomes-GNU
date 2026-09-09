@@ -3944,6 +3944,7 @@ msgid "All Selected Atoms"
 msgstr "All Selected Atoms"
 
 # File: calc/cpmd/cpmd_init.c, Line: 158
+# File: calc/dl_poly/dlp_edit.c, Line: 2466
 # File: opengl/edit/atom_edit.c, Line: 61
 msgid "All Atoms"
 msgstr "All Atoms"
@@ -11097,12 +11098,15 @@ msgstr "Frozen: "
 msgid "\tCore-Shell N°<b>%d</b>"
 msgstr "\tCore-Shell N°<b>%d</b>"
 
+# File: calc/dl_poly/dlp_edit.c, Line: 2443
 msgid "Selected !"
 msgstr "Selected !"
 
+# File: calc/dl_poly/dlp_edit.c, Line: 2447
 msgid "%d atom(s) selected !"
 msgstr "%d atom(s) selected !"
 
+# File: calc/dl_poly/dlp_edit.c, Line: 2467
 msgid "Selected Atoms"
 msgstr "Selected Atoms"
 
@@ -12423,6 +12427,7 @@ msgstr "<b>Please select the component(s) of the force field:</b>"
 msgid "<u> Intra-molecular interaction(s):</u>"
 msgstr "<u> Intra-molecular interaction(s):</u>"
 
+# File: calc/dl_poly/dlp_field.c, Line: 2345
 msgid "Use multiple molecule(s)"
 msgstr "Use multiple molecule(s)"
 
@@ -12771,12 +12776,15 @@ msgstr "# Integration time step in ps\n"
 msgid "# Target presssure in k atms\n"
 msgstr "# Target presssure in k atms\n"
 
+# File: calc/dl_poly/dlp_print.c, Line: 1673
 msgid "# Target temperature"
 msgstr "# Target temperature"
 
+# File: calc/dl_poly/dlp_print.c, Line: 1673
 msgid "# Number of MD steps"
 msgstr "# Number of MD steps"
 
+# File: calc/dl_poly/dlp_print.c, Line: 1673
 msgid "# MD time step d(t)"
 msgstr "# MD time step d(t)"
 
