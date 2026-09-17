@@ -162,6 +162,7 @@ atomes_readers = $(read)read_c3d.c \
 		 $(read)read_cif.c \
 		 $(read)read_coord.c \
 		 $(read)read_hist.c \
+		 $(read)read_sml.c \
 		 $(read)read_isaacs.c \
 		 $(read)read_npt.c \
 		 $(read)read_pdb.c \

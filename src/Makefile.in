@@ -136,16 +136,16 @@ am__atomes_SOURCES_DIST = $(for)parameters.F90 $(for)mendeleiev.F90 \
 	$(gui)sqcall.c $(gui)sktcall.c $(gui)tools.c $(gui)work_menu.c \
 	$(work)modelinfo.c $(work)workinfo.c $(work)workspace.c \
 	$(read)read_c3d.c $(read)read_cif.c $(read)read_coord.c \
-	$(read)read_hist.c $(read)read_isaacs.c $(read)read_npt.c \
-	$(read)read_pdb.c $(read)read_trj.c $(read)read_vas.c \
-	$(read)read_xyz.c $(proj)close_p.c $(proj)debugio.c \
-	$(proj)init_p.c $(proj)open_p.c $(proj)project.c \
-	$(proj)read_bond.c $(proj)read_curve.c $(proj)read_field.c \
-	$(proj)read_mol.c $(proj)read_opengl.c $(proj)read_qm.c \
-	$(proj)save_bond.c $(proj)save_curve.c $(proj)save_field.c \
-	$(proj)save_mol.c $(proj)save_opengl.c $(proj)save_p.c \
-	$(proj)save_qm.c $(proj)update_p.c $(calc)calc.c \
-	$(cp2k)cp2k_basis.c $(cp2k)cp2k_files.c \
+	$(read)read_hist.c $(read)read_sml.c $(read)read_isaacs.c \
+	$(read)read_npt.c $(read)read_pdb.c $(read)read_trj.c \
+	$(read)read_vas.c $(read)read_xyz.c $(proj)close_p.c \
+	$(proj)debugio.c $(proj)init_p.c $(proj)open_p.c \
+	$(proj)project.c $(proj)read_bond.c $(proj)read_curve.c \
+	$(proj)read_field.c $(proj)read_mol.c $(proj)read_opengl.c \
+	$(proj)read_qm.c $(proj)save_bond.c $(proj)save_curve.c \
+	$(proj)save_field.c $(proj)save_mol.c $(proj)save_opengl.c \
+	$(proj)save_p.c $(proj)save_qm.c $(proj)update_p.c \
+	$(calc)calc.c $(cp2k)cp2k_basis.c $(cp2k)cp2k_files.c \
 	$(cp2k)cp2k_gth-basis.c $(cp2k)cp2k_init.c $(cp2k)cp2k_mol.c \
 	$(cp2k)cp2k_molopt-basis.c $(cp2k)cp2k_pot.c \
 	$(cp2k)cp2k_print.c $(cpmd)cpmd_atoms.c $(cpmd)cpmd_init.c \
@@ -232,9 +232,10 @@ am__objects_8 = $(work)modelinfo.$(OBJEXT) $(work)workinfo.$(OBJEXT) \
 	$(work)workspace.$(OBJEXT)
 am__objects_9 = $(read)read_c3d.$(OBJEXT) $(read)read_cif.$(OBJEXT) \
 	$(read)read_coord.$(OBJEXT) $(read)read_hist.$(OBJEXT) \
-	$(read)read_isaacs.$(OBJEXT) $(read)read_npt.$(OBJEXT) \
-	$(read)read_pdb.$(OBJEXT) $(read)read_trj.$(OBJEXT) \
-	$(read)read_vas.$(OBJEXT) $(read)read_xyz.$(OBJEXT)
+	$(read)read_sml.$(OBJEXT) $(read)read_isaacs.$(OBJEXT) \
+	$(read)read_npt.$(OBJEXT) $(read)read_pdb.$(OBJEXT) \
+	$(read)read_trj.$(OBJEXT) $(read)read_vas.$(OBJEXT) \
+	$(read)read_xyz.$(OBJEXT)
 am__objects_10 = $(am__objects_9) $(proj)close_p.$(OBJEXT) \
 	$(proj)debugio.$(OBJEXT) $(proj)init_p.$(OBJEXT) \
 	$(proj)open_p.$(OBJEXT) $(proj)project.$(OBJEXT) \
@@ -477,10 +478,10 @@ am__depfiles_remade = ./$(DEPDIR)/$(calc)calc.Po \
 	./$(DEPDIR)/$(read)read_hist.Po \
 	./$(DEPDIR)/$(read)read_isaacs.Po \
 	./$(DEPDIR)/$(read)read_npt.Po ./$(DEPDIR)/$(read)read_pdb.Po \
-	./$(DEPDIR)/$(read)read_trj.Po ./$(DEPDIR)/$(read)read_vas.Po \
-	./$(DEPDIR)/$(read)read_xyz.Po ./$(DEPDIR)/$(work)modelinfo.Po \
-	./$(DEPDIR)/$(work)workinfo.Po ./$(DEPDIR)/$(work)workspace.Po \
-	./$(DEPDIR)/global.Po
+	./$(DEPDIR)/$(read)read_sml.Po ./$(DEPDIR)/$(read)read_trj.Po \
+	./$(DEPDIR)/$(read)read_vas.Po ./$(DEPDIR)/$(read)read_xyz.Po \
+	./$(DEPDIR)/$(work)modelinfo.Po ./$(DEPDIR)/$(work)workinfo.Po \
+	./$(DEPDIR)/$(work)workspace.Po ./$(DEPDIR)/global.Po
 am__mv = mv -f
 PPFCCOMPILE = $(FC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) \
 	$(AM_CPPFLAGS) $(CPPFLAGS) $(AM_FCFLAGS) $(FCFLAGS)
@@ -835,6 +836,7 @@ atomes_readers = $(read)read_c3d.c \
 		 $(read)read_cif.c \
 		 $(read)read_coord.c \
 		 $(read)read_hist.c \
+		 $(read)read_sml.c \
 		 $(read)read_isaacs.c \
 		 $(read)read_npt.c \
 		 $(read)read_pdb.c \
@@ -1324,6 +1326,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/$(read)read_isaacs.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/$(read)read_npt.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/$(read)read_pdb.Po@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/$(read)read_sml.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/$(read)read_trj.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/$(read)read_vas.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/$(read)read_xyz.Po@am__quote@ # am--include-marker
@@ -1737,6 +1740,7 @@ distclean: distclean-recursive
 	-rm -f ./$(DEPDIR)/$(read)read_isaacs.Po
 	-rm -f ./$(DEPDIR)/$(read)read_npt.Po
 	-rm -f ./$(DEPDIR)/$(read)read_pdb.Po
+	-rm -f ./$(DEPDIR)/$(read)read_sml.Po
 	-rm -f ./$(DEPDIR)/$(read)read_trj.Po
 	-rm -f ./$(DEPDIR)/$(read)read_vas.Po
 	-rm -f ./$(DEPDIR)/$(read)read_xyz.Po
@@ -1970,6 +1974,7 @@ maintainer-clean: maintainer-clean-recursive
 	-rm -f ./$(DEPDIR)/$(read)read_isaacs.Po
 	-rm -f ./$(DEPDIR)/$(read)read_npt.Po
 	-rm -f ./$(DEPDIR)/$(read)read_pdb.Po
+	-rm -f ./$(DEPDIR)/$(read)read_sml.Po
 	-rm -f ./$(DEPDIR)/$(read)read_trj.Po
 	-rm -f ./$(DEPDIR)/$(read)read_vas.Po
 	-rm -f ./$(DEPDIR)/$(read)read_xyz.Po
