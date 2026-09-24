@@ -1961,7 +1961,6 @@ msgstr "\nUtilisation : atomes [OPTION]\n"
 " atomes -c sml file.pdb\n\n"
 
 # File: gui/main.c, Line: 204,285
-# File: startup-testing/startup_testing.c, Line: 68,85
 msgid "\nReport a bug to <"
 msgstr "\nSignaler un bug à <"
 
