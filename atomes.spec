@@ -1,7 +1,7 @@
 Name:           atomes
 %global upname atomes-GNU
-Version:        1.3.1
-Release:        2%{?dist}
+Version:        1.3.2
+Release:        1%{?dist}
 Summary:        An atomistic toolbox
 License:        AGPL-3.0-or-later
 Source0:        https://github.com/Slookeur/%{upname}/archive/refs/tags/v%{version}.tar.gz
@@ -20,6 +20,7 @@ BuildRequires: libgfortran
 BuildRequires: desktop-file-utils
 BuildRequires: libappstream-glib
 BuildRequires: gettext
+BuildRequires: dbus-codegen
 
 # pkg-config 
 BuildRequires: pkgconfig(gtk+-3.0)
@@ -89,6 +90,9 @@ appstream-util validate-relax --nonet %{buildroot}%{_metainfodir}/fr.ipcms.%{nam
 %{_metainfodir}/fr.ipcms.%{name}.appdata.xml
 
 %changelog
+* Tue Oct 06 2026 Sébastien Le Roux <sebastien.leroux@ipcms.unistra.fr> - 1.3.2-1
+- Bug corrections and improvements (see:  https://github.com/Slookeur/atomes-GNU/releases/tag/v1.3.2)
+
 * Fri Jun 12 2026 Sébastien Le Roux <sebastien.leroux@ipcms.unistra.fr> - 1.3.1-2
 - Bug corrections (see:  https://github.com/Slookeur/atomes-GNU/releases/tag/v1.3.1)
 
