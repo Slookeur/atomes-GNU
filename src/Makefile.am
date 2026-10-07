@@ -31,7 +31,7 @@ if GTK3
 else
   GTK_VERSION=-DGTK4
 endif
-
+ 
 atomes_locale = $(DESTDIR)$(localedir)
 
 # Use AM_CPPFLAGS to define additional preprocessor flags:
@@ -48,6 +48,21 @@ endif
 
 # Use AM_FFLAGS to define additional Fortran 90 flags:
 AM_FFLAGS = $(OpenMP_FLAGS)
+
+# D-bus for Linux and OSX
+if WINDOWS
+  dbus =
+  atomes_dbus =
+  DBUS_H =
+else
+  dbus = d-bus/
+  DBUS_XML = $(dbus)fr.ipcms.atomes.Instance.xml
+  atomes_dbus = $(dbus)fr_ipcms_atomes-Instance.c
+  DBUS_H = $(dbus)fr_ipcms_atomes-Instance.h
+  # Règle pour générer les fichiers dbus C/H
+$(atomes_dbus) $(DBUS_H): $(DBUS_XML)
+	gdbus-codegen --interface-prefix fr.ipcms.atomes. --generate-c-code $(dbus)fr_ipcms_atomes-Instance $<
+endif
 
 for = fortran/
 gui = gui/
@@ -66,7 +81,7 @@ glwin = opengl/win/
 gldraw = opengl/draw/
 gledit = opengl/edit/
 
-inc = -I$(gui) -I$(work) -I$(proj) -I$(read) -I$(calc) -I$(dlpoly) -I$(lammps) -I$(fields) -I$(cpmd) -I$(cp2k) -I$(curve) -I$(glwin) -I$(gledit) -I$(gldraw) -I$(ogl) -I.
+inc = -I$(dbus) -I$(gui) -I$(work) -I$(proj) -I$(read) -I$(calc) -I$(dlpoly) -I$(lammps) -I$(fields) -I$(cpmd) -I$(cp2k) -I$(curve) -I$(glwin) -I$(gledit) -I$(gldraw) -I$(ogl) -I.
 includes = $(inc) -DGTK_DISABLE_DEPRECATED
 
 # Use AM_CFLAGS to define additional C flags:
@@ -147,6 +162,7 @@ atomes_readers = $(read)read_c3d.c \
 		 $(read)read_cif.c \
 		 $(read)read_coord.c \
 		 $(read)read_hist.c \
+		 $(read)read_sml.c \
 		 $(read)read_isaacs.c \
 		 $(read)read_npt.c \
 		 $(read)read_pdb.c \
@@ -327,6 +343,7 @@ atomes_includes = config.h \
 		  global.h \
 		  bind.h \
 		  affero.h \
+		  $(DBUS_H) \
 		  $(gui)callbacks.h \
 		  $(gui)gui.h \
 		  $(gui)interface.h \
@@ -366,6 +383,7 @@ atomes_SOURCES = \
 	$(atomes_fortran) \
 	$(atomes_includes) \
 	global.c \
+	$(atomes_dbus) \
 	$(atomes_gui) \
 	$(atomes_workspace) \
 	$(atomes_project) \
