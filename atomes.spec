@@ -20,7 +20,6 @@ BuildRequires: libgfortran
 BuildRequires: desktop-file-utils
 BuildRequires: libappstream-glib
 BuildRequires: gettext
-BuildRequires: dbus-codegen
 
 # pkg-config 
 BuildRequires: pkgconfig(gtk+-3.0)
