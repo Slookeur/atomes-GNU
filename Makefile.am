@@ -40,7 +40,7 @@ install-data-local:
 		$(mkinstalldirs) $(atomes_metadir); \
 	fi
 	$(INSTALL_DATA) $(srcdir)/metadata/fr.ipcms.atomes.appdata.xml $(atomes_metadir)
-	appstreamcli validate --no-net $(atomes_metadir)/fr.ipcms.atomes.appdata.xml
+	appstream-util validate-relax --nonet $(atomes_metadir)/fr.ipcms.atomes.appdata.xml
 
 # Desktop file
 	if [ ! -d $(atomes_desktopdir) ]; then \
