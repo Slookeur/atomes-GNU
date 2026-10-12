@@ -78,7 +78,7 @@ dnl ***************************************************************************
 AC_CHECK_PROG([PKG_CONFIG], [pkg-config], [yes], [no])
 AC_CHECK_PROG([UP_MIME], [update-mime-database], [yes], [no])
 AC_CHECK_PROG([UP_DESKTOP], [update-desktop-database], [yes], [no])
-AC_CHECK_PROG([UP_APPSTREAM], [appstreamcli], [yes], [no])
+AC_CHECK_PROG([UP_APPSTREAM], [appstream-util], [yes], [no])
 
 
 dnl ***************************************************************************
