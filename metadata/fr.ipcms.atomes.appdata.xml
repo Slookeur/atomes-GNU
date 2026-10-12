@@ -51,7 +51,9 @@
   
   <url type="homepage">https://atomes.ipcms.fr/</url>
   <url type="bugtracker">https://github.com/Slookeur/atomes/issues/new/choose</url>
-  <developer_name>Dr. Sébastien Le Roux</developer_name>
+  <developer id="fr.ipcms">
+    <name>Dr. Sébastien Le Roux</name>
+  </developer>
   <update_contact>atomes_AT_ipcms.unistra.fr</update_contact>
   <translation type="gettext">atomes</translation>
   
