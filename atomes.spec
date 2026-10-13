@@ -89,7 +89,7 @@ appstreamcli validate --no-net %{buildroot}%{_metainfodir}/fr.ipcms.%{name}.appd
 %{_metainfodir}/fr.ipcms.%{name}.appdata.xml
 
 %changelog
-* Tue Oct 06 2026 Sébastien Le Roux <sebastien.leroux@ipcms.unistra.fr> - 1.3.2-1
+* Tue Oct 13 2026 Sébastien Le Roux <sebastien.leroux@ipcms.unistra.fr> - 1.3.2-1
 - Bug corrections and improvements (see:  https://github.com/Slookeur/atomes-GNU/releases/tag/v1.3.2)
 
 * Fri Jun 12 2026 Sébastien Le Roux <sebastien.leroux@ipcms.unistra.fr> - 1.3.1-2
