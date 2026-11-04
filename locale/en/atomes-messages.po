@@ -1564,7 +1564,7 @@ msgid "Bond Cutoffs"
 msgstr "Bond Cutoffs"
 
 # File: gui/gui.c, Line: 985
-# File: gui/tools.c, Line: 349
+# File: gui/tools.c, Line: 354
 # File: project/close_p.c, Line: 371
 msgid "Toolboxes"
 msgstr "Toolboxes"
@@ -1830,7 +1830,7 @@ msgstr "%s - isolated"
 msgid " - isolated"
 msgstr " - isolated"
 
-# File: gui/main.c, Line: 140
+# File: gui/main.c, Line: 142
 msgid "\nUsage: atomes [OPTION]\n"
 "       atomes [FILE]\n"
 "       atomes [OPTION] [FILE]\n"
@@ -1960,35 +1960,35 @@ msgstr "\nUsage: atomes [OPTION]\n"
 " atomes --convert=xyz project.apf\n"
 " atomes -c sml file.pdb\n\n"
 
-# File: gui/main.c, Line: 204,285
+# File: gui/main.c, Line: 206,287
 msgid "\nReport a bug to <"
 msgstr "\nReport a bug to <"
 
-# File: gui/main.c, Line: 215
+# File: gui/main.c, Line: 217
 msgid "\n3D atomic scale model analysis, creation/edition and post-processing tool\n"
 msgstr "\n3D atomic scale model analysis, creation/edition and post-processing tool\n"
 
-# File: gui/main.c, Line: 897
+# File: gui/main.c, Line: 899
 msgid "Error while reading workspace file\n%s\n"
 msgstr "Error while reading workspace file\n%s\n"
 
-# File: gui/main.c, Line: 1473
+# File: gui/main.c, Line: 1513
 msgid "Impossible to load the splash screen\n"
 msgstr "Impossible to load the splash screen\n"
 
-# File: gui/main.c, Line: 1575
+# File: gui/main.c, Line: 1661
 msgid "Fatal error on OpenGL initialization: trying to adjust environment !"
 msgstr "Fatal error on OpenGL initialization: trying to adjust environment !"
 
-# File: gui/main.c, Line: 1578
+# File: gui/main.c, Line: 1664
 msgid "Impossible to initialize the OpenGL 3D rendering !"
 msgstr "Impossible to initialize the OpenGL 3D rendering !"
 
-# File: gui/main.c, Line: 1581
+# File: gui/main.c, Line: 1667
 msgid "GDK visual must be modified to initialize the OpenGL context !"
 msgstr "GDK visual must be modified to initialize the OpenGL context !"
 
-# File: gui/main.c, Line: 1712
+# File: gui/main.c, Line: 1798
 msgid "Error impossible to obtain the AppData\\Roaming (code 0x%08lx)\n%s"
 msgstr "Error impossible to obtain the AppData\\Roaming (code 0x%08lx)\n%s"
 
@@ -2514,7 +2514,7 @@ msgstr "radius"
 msgid "size"
 msgstr "size"
 
-# File: gui/main.c, Line: 598
+# File: gui/main.c, Line: 600
 # File: gui/preferences.c, Line: 3321
 msgid "width"
 msgstr "width"
@@ -3078,7 +3078,7 @@ msgstr "Restore <b>atomes</b> default parameters"
 msgid "rendering"
 msgstr "rendering"
 
-# File: gui/main.c, Line: 605
+# File: gui/main.c, Line: 607
 # File: gui/preferences.c, Line: 1014,2074,5178
 # File: opengl/win/m_box.c, Line: 490,498,540,545,569,574
 # File: opengl/win/w_bonds.c, Line: 410
@@ -3086,7 +3086,7 @@ msgstr "rendering"
 msgid "box"
 msgstr "box"
 
-# File: gui/main.c, Line: 604
+# File: gui/main.c, Line: 606
 # File: gui/preferences.c, Line: 1107,2094,5178
 # File: opengl/win/m_box.c, Line: 490,498,540,545,569,574
 # File: opengl/win/w_bonds.c, Line: 410
@@ -3280,19 +3280,19 @@ msgstr " is the maximum wave vector:\n\n"
 msgid "The S(q) calculation has failed"
 msgstr "The S(q) calculation has failed"
 
-# File: gui/tools.c, Line: 309
+# File: gui/tools.c, Line: 314
 msgid "Logo"
 msgstr "Logo"
 
 # File: calc/dl_poly/dlp_atom.c, Line: 744
 # File: calc/dl_poly/dlp_field.c, Line: 924,925
 # File: calc/dl_poly/dlp_mol.c, Line: 761
-# File: gui/tools.c, Line: 309
+# File: gui/tools.c, Line: 314
 # File: opengl/win/w_search.c, Line: 3577,3578,3579,3580,3581,3582
 msgid "Name"
 msgstr "Name"
 
-# File: gui/tools.c, Line: 309
+# File: gui/tools.c, Line: 314
 msgid "Button"
 msgstr "Button"
 
@@ -3889,7 +3889,7 @@ msgstr "Impossible to initialize the OpenGL 3D rendering ! \n %s\n"
 msgid "Compilation failure in %s shader:\n%s"
 msgstr "Compilation failure in %s shader:\n%s"
 
-# File: gui/main.c, Line: 439
+# File: gui/main.c, Line: 441
 # File: opengl/ogl_shading.c, Line: 111
 # File: opengl/win/menu_bar.c, Line: 372
 # File: opengl/win/popup.c, Line: 4143
@@ -5935,7 +5935,7 @@ msgid "Color palette error: %s - %d, custom= %s"
 msgstr "Color palette error: %s - %d, custom= %s"
 
 # File: calc/dl_poly/dlp_field.c, Line: 209
-# File: gui/main.c, Line: 440
+# File: gui/main.c, Line: 442
 # File: opengl/win/menu_bar.c, Line: 372
 # File: opengl/win/popup.c, Line: 4143
 # File: opengl/win/w_coord.c, Line: 959
@@ -6234,7 +6234,7 @@ msgid "Clone(s) configuration - "
 msgstr "Clone(s) configuration - "
 
 # File: calc/force_fields/force_fields.c, Line: 711,2384
-# File: gui/main.c, Line: 602
+# File: gui/main.c, Line: 604
 # File: gui/preferences.c, Line: 931,2048,2066
 # File: opengl/win/w_atoms.c, Line: 599
 # File: opengl/win/w_library.c, Line: 483
