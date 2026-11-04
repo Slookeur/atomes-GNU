@@ -3526,7 +3526,7 @@ msgid "Object(s) at equivalent positions have been removed\n"
 "when using <b>P</b>eriodic <b>B</b>oundary <b>C</b>onditions\n "
 msgstr "Les objets situés à des positions équivalentes ont été supprimés\n"
 "pour assurer la cohérence du modèle\n"
-"lors de l'utilisation des <b>C</b>onditions aux <b>L</b>imites</b> <b>P</b>ériodiques\n "
+"lors de l'utilisation des <b>C</b>onditions aux <b>L</b>imites <b>P</b>ériodiques\n "
 
 # File: project/readers/read_cif.c, Line: 391
 msgid "Error while reading CIF file"

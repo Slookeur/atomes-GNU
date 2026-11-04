@@ -318,7 +318,7 @@ gboolean * remove_bonds_from_project (project * this_proj, atomic_object * this_
         }
       }
     }
-    if ( old_id[i] > 0 || ! remove || passivate)  tmp_list = tmp_list -> next;
+    if (old_id[i] > 0 || ! remove || passivate) tmp_list = tmp_list -> next;
   }
   g_free (tmp_vois);
 
@@ -501,18 +501,18 @@ gboolean * remove_bonds_from_project (project * this_proj, atomic_object * this_
           this_proj -> modelgl -> bondid[0][i] = allocdint (tmpbond[i], 2);
           for (k=0; k<tmpbond[i]; k++)
           {
-            this_proj -> modelgl -> bondid[0][i][k][0] = id_mod[tmpbondid[i][k][0]];
-            this_proj -> modelgl -> bondid[0][i][k][1] = id_mod[tmpbondid[i][k][1]];
-            //g_debug ("bc:: i= %d, j= %d, a= %d, b= %d", i, k, tmpbondid[i][k][0], tmpbondid[i][k][1]);
+            l = tmpbondid[i][k][0];
+            m = tmpbondid[i][k][1];
             if (i)
             {
-              l = this_proj -> modelgl -> bondid[0][i][k][0];
-              m = this_proj -> modelgl -> bondid[0][i][k][1];
               clo = distance_3d (& this_proj -> cell, 0, & this_proj -> atoms[0][l], & this_proj -> atoms[0][m]);
               this_proj -> modelgl -> clones[0][k].x = clo.x;
               this_proj -> modelgl -> clones[0][k].y = clo.y;
               this_proj -> modelgl -> clones[0][k].z = clo.z;
             }
+            this_proj -> modelgl -> bondid[0][i][k][0] = id_mod[l];
+            this_proj -> modelgl -> bondid[0][i][k][1] = id_mod[m];
+            //g_debug ("bc:: i= %d, j= %d, a= %d, b= %d", i, k, tmpbondid[i][k][0], tmpbondid[i][k][1]);
           }
         }
         this_proj -> modelgl -> bonds[0][i] = tmpbond[i];
