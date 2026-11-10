@@ -167,7 +167,7 @@ void update_omega_max ()
   if ( delt > 0.0 && num_delt && t_unit > -1)
   {
     omega_max_info = create_hbox(0);
-    double omega_max = pi/(delt * num_delt);
+    double omega_max = M_PI/(delt * num_delt);
     add_box_child_start (GTK_ORIENTATION_HORIZONTAL, omega_max_info, markup_label (_("&#969;<sub>max</sub> ="), 50, -1, 0.0, 0.5), FALSE, FALSE, 2);
     str = g_strdup_printf ("%f", (t_unit == 1) ? omega_max : omega_max * 1000.0);
     add_box_child_start (GTK_ORIENTATION_HORIZONTAL, omega_max_info, markup_label (str, 100, -1, 1.0, 0.5), FALSE, FALSE, 0);

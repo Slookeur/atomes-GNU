@@ -712,10 +712,10 @@ void print_lammps_atom_file (GtkTextBuffer * buf)
       float lx, ly, lz;
       float xy, xz, yz;
       lx = tmp_proj -> cell.box[0].param[0][0];
-      xy = tmp_proj -> cell.box[0].param[0][1] * cos(tmp_proj -> cell.box[0].param[1][2]*pi/180.0);
-      xz = tmp_proj -> cell.box[0].param[0][2] * cos(tmp_proj -> cell.box[0].param[1][1]*pi/180.0);
+      xy = tmp_proj -> cell.box[0].param[0][1] * cos(tmp_proj -> cell.box[0].param[1][2]*M_PI/180.0);
+      xz = tmp_proj -> cell.box[0].param[0][2] * cos(tmp_proj -> cell.box[0].param[1][1]*M_PI/180.0);
       ly = sqrt(tmp_proj -> cell.box[0].param[0][1]*tmp_proj -> cell.box[0].param[0][1] -xy*xy);
-      yz = (tmp_proj -> cell.box[0].param[0][1]*(tmp_proj -> cell.box[0].param[0][2]*cos(tmp_proj -> cell.box[0].param[1][0]*pi/180.0)) - xy*xz) / ly;
+      yz = (tmp_proj -> cell.box[0].param[0][1]*(tmp_proj -> cell.box[0].param[0][2]*cos(tmp_proj -> cell.box[0].param[1][0]*M_PI/180.0)) - xy*xz) / ly;
       lz = sqrt(tmp_proj -> cell.box[0].param[0][2]*tmp_proj -> cell.box[0].param[0][2] - xz*xz - yz*yz);
       str = g_strdup_printf ("%f %f %f\n", lx, ly, lz);
       print_info (str, NULL, buf);

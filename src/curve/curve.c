@@ -390,7 +390,7 @@ void set_curve_data_zero (int rid, int cid, int interv)
   }
   else
   {
-    double delta_omega = (pi/(active_project -> analysis[MSD] -> delta*active_project -> analysis[MSD] -> num_delta)) / active_project -> sqw_freq;
+    double delta_omega = (M_PI/(active_project -> analysis[MSD] -> delta*active_project -> analysis[MSD] -> num_delta)) / active_project -> sqw_freq;
     for (i=0; i<interv; i++)
     {
       active_project -> analysis[rid] -> curves[cid] -> data[0][i] = i*delta_omega;

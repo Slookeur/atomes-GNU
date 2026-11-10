@@ -956,9 +956,9 @@ void set_lights_data (glsl_program * glsl)
     glUniform1f (glsl -> light_uniform[k+4], plot -> l_ghtning.spot[j] -> attenuation.x);
     glUniform1f (glsl -> light_uniform[k+5], plot -> l_ghtning.spot[j] -> attenuation.y);
     glUniform1f (glsl -> light_uniform[k+6], plot -> l_ghtning.spot[j] -> attenuation.z);
-    glUniform1f (glsl -> light_uniform[k+7], cos(plot -> l_ghtning.spot[j] -> spot_data.x*pi/180.0));
-    glUniform1f (glsl -> light_uniform[k+8], cos(plot -> l_ghtning.spot[j] -> spot_data.y*pi/180.0));
-    glUniform1f (glsl -> light_uniform[k+9], cos(plot -> l_ghtning.spot[j] -> spot_data.z*pi/180.0));
+    glUniform1f (glsl -> light_uniform[k+7], cos(plot -> l_ghtning.spot[j] -> spot_data.x*M_PI/180.0));
+    glUniform1f (glsl -> light_uniform[k+8], cos(plot -> l_ghtning.spot[j] -> spot_data.y*M_PI/180.0));
+    glUniform1f (glsl -> light_uniform[k+9], cos(plot -> l_ghtning.spot[j] -> spot_data.z*M_PI/180.0));
   }
 }
 

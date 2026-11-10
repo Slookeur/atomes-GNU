@@ -60,12 +60,12 @@ void draw_poly (cairo_t * to, double x, double y, double size, double step, doub
   double astep;
   double astart;
 
-  astart = 2*pi / initp;
+  astart = 2 * M_PI / initp;
   px = x + size * cos (astart);
   py = y + size * sin (astart);
-  astep = 2 * pi / step;
+  astep = 2 * M_PI / step;
   cairo_move_to (to, px, py);
-  for (alpha =0.0 ; alpha <= 2*pi ; alpha += astep)
+  for (alpha =0.0 ; alpha <= 2 * M_PI ; alpha += astep)
   {
     px = x + size * cos (astart + alpha);
     py = y + size *sin (astart + alpha);
@@ -187,7 +187,7 @@ void draw_glyph (cairo_t * in, int theglyph, double x, double y, ColRGBA gcolor,
   }
   else if (theglyph >= 12 && theglyph < 17)
   {
-    cairo_arc (in, x, y, size, 0.0, 2*pi);
+    cairo_arc (in, x, y, size, 0.0, 2*M_PI);
     if (theglyph == 12)
     {
       cairo_fill(in);
@@ -196,25 +196,25 @@ void draw_glyph (cairo_t * in, int theglyph, double x, double y, ColRGBA gcolor,
     {
       cairo_stroke (in);
       cairo_set_source_rgba (in, gcolor.red, gcolor.green, gcolor.blue, 0.25);
-      cairo_arc (in, x, y, size, 0.0, 2*pi);
+      cairo_arc (in, x, y, size, 0.0, 2*M_PI);
       cairo_fill (in);
     }
     else if (theglyph == 14)
     {
       cairo_stroke (in);
       cairo_set_source_rgba (in, 1.0, 1.0, 1.0, 1.0);
-      cairo_arc (in, x, y, size, 0.0, 2*pi);
+      cairo_arc (in, x, y, size, 0.0, 2*M_PI);
       cairo_fill (in);
       cairo_stroke (in);
       cairo_set_source_rgba (in, gcolor.red, gcolor.green, gcolor.blue, 0.25);
-      cairo_arc (in, x, y, size, 0.0, 2*pi);
+      cairo_arc (in, x, y, size, 0.0, 2*M_PI);
       cairo_fill (in);
     }
     else if (theglyph == 15)
     {
       cairo_stroke (in);
       cairo_set_source_rgba (in, 1.0, 1.0, 1.0, 1.0);
-      cairo_arc (in, x, y, size, 0.0, 2*pi);
+      cairo_arc (in, x, y, size, 0.0, 2*M_PI);
       cairo_fill (in);
     }
     cairo_stroke (in);

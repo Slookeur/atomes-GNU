@@ -107,11 +107,11 @@ G_MODULE_EXPORT void set_camera_pos (GtkWidget * widg, gpointer data)
     axis.x = 0.0;
     axis.y = 1.0;
     axis.z = 0.0;
-    q_a = axis_to_quat (axis, -pi*angle_y/180.0);
+    q_a = axis_to_quat (axis, -M_PI*angle_y/180.0);
     axis.x = 1.0;
     axis.y = 0.0;
     axis.z = 0.0;
-    q_b = axis_to_quat (axis, -pi*angle_x/180.0);
+    q_b = axis_to_quat (axis, -M_PI*angle_x/180.0);
     glwin * view = get_project_by_id(id -> a) -> modelgl;
     view -> anim -> last -> img -> rotation_quaternion = q4_mul (q_a, q_b);
     update (view);
@@ -189,11 +189,11 @@ G_MODULE_EXPORT void to_set_camera_pos (GSimpleAction * action, GVariant * param
 GMenu * menu_proj (glwin * view, int popm)
 {
   GMenu * menu = g_menu_new ();
-  gchar * projection[6]={i18n("Right [1, 0, 0]"), 
-                         i18n("Left [-1, 0, 0]"), 
-                         i18n("Top [0, 1, 0]"), 
-                         i18n("Bottom [0, -1, 0]"), 
-                         i18n("Front [0, 0, 1]"), 
+  gchar * projection[6]={i18n("Right [1, 0, 0]"),
+                         i18n("Left [-1, 0, 0]"),
+                         i18n("Top [0, 1, 0]"),
+                         i18n("Bottom [0, -1, 0]"),
+                         i18n("Front [0, 0, 1]"),
                          i18n("Back [0, 0, -1]")};
   int i;
   for (i=0; i<6; i++)

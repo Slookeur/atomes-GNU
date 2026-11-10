@@ -418,7 +418,7 @@ void ticks_angle_has_changed (gpointer data, double value)
 {
   Curve * this_curve = get_curve_from_pointer (data);
   int i = get_active_axis (this_curve -> curve_edit);
-  this_curve -> labels_angle[i] = value * (pi/180.0);
+  this_curve -> labels_angle[i] = value * (M_PI/180.0);
   update_curve (data);
 }
 
@@ -637,7 +637,7 @@ G_MODULE_EXPORT void update_axis (GtkComboBox * box, gpointer data)
   combo_set_active (cedit -> ticks_pos_box, this_curve -> ticks_pos[i]);
   combo_set_active (cedit -> labels_pos_box, this_curve -> labels_pos[i]);
   gtk_font_chooser_set_font (GTK_FONT_CHOOSER(cedit -> ticks_labels_font), this_curve -> labels_font[i]);
-  gtk_range_set_value (GTK_RANGE(cedit -> ticks_labels_angle), this_curve -> labels_angle[i] * (180.0/pi));
+  gtk_range_set_value (GTK_RANGE(cedit -> ticks_labels_angle), this_curve -> labels_angle[i] * (180.0/M_PI));
   if (((tint *)data) -> b < MSD)
   {
     widget_set_sensitive (cedit -> scale_box, 0);

@@ -138,7 +138,7 @@ void clean_volumes_data (glwin * view)
 */
 double cap_volume (double ht, double dh)
 {
-  return (pi/3.0)*ht*ht*(3*dh-ht);
+  return (M_PI/3.0)*ht*ht*(3*dh-ht);
 }
 
 /*!
@@ -172,7 +172,7 @@ double get_sphere_caps_volume (double dab, double rad, double rbd)
 */
 double sphere_volume (double rad)
 {
-  return ((4.0*pi)/3.0)*rad*rad*rad;
+  return ((4.0*M_PI)/3.0)*rad*rad*rad;
 }
 
 /*!

@@ -613,13 +613,13 @@ void cuboid_slab (mat4_t rot)
   {
     if (wingl -> cell_win -> cparam[i+15] == 90.0)
     {
-      ang[i] = pi/2.0;
+      ang[i] = M_PI/2.0;
       sang[i] = 1.0;
       cang[i] = 0.0;
     }
     else
     {
-      ang[i] = wingl -> cell_win -> cparam[i+15]*pi/180.0;
+      ang[i] = wingl -> cell_win -> cparam[i+15]*M_PI/180.0;
       sang[i] = sin(ang[i]);
       cang[i] = cos(ang[i]);
     }
@@ -805,7 +805,7 @@ void cylinder_slab (mat4_t rot)
     GLenum prim_slcp = (plot -> ray_tracing) ? GL_TRIANGLE_STRIP : GL_TRIANGLE_FAN;
     wingl -> ogl_glsl[SLABS][0][1] = init_shader_program (SLABS, GLSL_CAPS, vs_slcp, NULL, fs_slc, prim_slcp, 5, 1, TRUE, slab_cap);
   }
-  wingl -> cell_win -> slab_vol = pi*pow(wingl -> cell_win -> cparam[13], 2)*wingl -> cell_win -> cparam[12];
+  wingl -> cell_win -> slab_vol = M_PI*pow(wingl -> cell_win -> cparam[13], 2)*wingl -> cell_win -> cparam[12];
   for (i=0; i<proj_gl -> nspec; i++) wingl -> cell_win -> slab_lot[i] = 0;
   wingl -> cell_win -> slab_atoms = 0;
   vec3_t atc, patc;
@@ -871,7 +871,7 @@ void spherical_slab ()
     const GLchar * fs_sls = (plot -> ray_tracing) ? full_color_ray : full_color;
     wingl -> ogl_glsl[SLABS][0][0] = init_shader_program (SLABS, GLSL_SPHERES, vs_sls, NULL, fs_sls, GL_TRIANGLE_STRIP, 4, 1, TRUE, slab);
   }
-  wingl -> cell_win -> slab_vol = (4.0*pi/3.0)*(pow(wingl -> cell_win -> cparam[14], 3));
+  wingl -> cell_win -> slab_vol = (4.0*M_PI/3.0)*(pow(wingl -> cell_win -> cparam[14], 3));
   vec3_t cat = vec3 (wingl -> cell_win -> cparam[6], wingl -> cell_win -> cparam[7], wingl -> cell_win -> cparam[8]);
   for (i=0; i<proj_gl -> nspec; i++) wingl -> cell_win -> slab_lot[i] = 0;
   wingl -> cell_win -> slab_atoms = 0;

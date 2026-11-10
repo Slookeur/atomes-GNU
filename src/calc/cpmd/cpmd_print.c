@@ -528,7 +528,7 @@ void print_system_section (GtkTextBuffer * buf)
           }
           else
           {
-            v = cos (qm_proj -> cell.box[0].param[i][j]*pi/180.0);
+            v = cos (qm_proj -> cell.box[0].param[i][j]*M_PI/180.0);
           }
         }
         str = g_strdup_printf (" %12.6lf", v);
