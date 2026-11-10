@@ -531,7 +531,7 @@ const GLchar * gs_cylinder_geom = GLSL(
   out vec3 surfaceNormal;
   out vec3 surfaceToCamera;
 
-  float pi = 3.141592653;
+  const float pi = 3.14159265359;
 
   vec3 create_perp (in vec3 axis)
   {

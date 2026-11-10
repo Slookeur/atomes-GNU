@@ -111,7 +111,7 @@ object_3d * draw_cylinder (int quality, float ra, float rb)
   new_cylinder -> ind_buffer_size = 1;
   new_cylinder -> indices = allocint (cylinder_indices (quality));
 
-  float step = 2.0 * pi / (quality-1);
+  float step = 2.0 * M_PI / (quality-1);
   float x, y;
   j = 0;
   // Vertex
@@ -184,7 +184,7 @@ object_3d * draw_cylinder_cap (int quality, float rad, gboolean picked)
   new_cap -> indices = allocint (new_cap -> num_indices);
 
   float delta = (picked) ? 0.05 : 0.0;
-  float step = 2.0 * pi / (quality - 1);
+  float step = 2.0 * M_PI / (quality - 1);
   float x, y;
   j = 0;
   // Center
@@ -224,7 +224,7 @@ vec4_t rotate_bond (vec3_t a, vec3_t b)
   f = vec3 (0.0, 0.0, 1.0);
   double rangle;
   raxis = v3_cross (f, c);
-  //rangle = 180.0 / pi * acos(v3_dot(f, c) / v3_length(c));
+  //rangle = 180.0 / M_PI * acos(v3_dot(f, c) / v3_length(c));
   rangle = acos(v3_dot(f, c) / v3_length(c));
   return axis_to_quat (raxis, rangle);
 }

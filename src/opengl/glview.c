@@ -1107,11 +1107,11 @@ void rotate_x_y (glwin * view, double angle_x, double angle_y)
   axis.x = 0.0;
   axis.y = 1.0;
   axis.z = 0.0;
-  q_a = axis_to_quat (axis, -pi*angle_y/180.0);
+  q_a = axis_to_quat (axis, -M_PI*angle_y/180.0);
   axis.x = 1.0;
   axis.y = 0.0;
   axis.z = 0.0;
-  q_b = axis_to_quat (axis, -pi*angle_x/180.0);
+  q_b = axis_to_quat (axis, -M_PI*angle_x/180.0);
   q_c = q4_mul (q_a, q_b);
   view -> anim -> last -> img -> c_angle[0] -= angle_x;
   view -> anim -> last -> img -> c_angle[1] -= angle_y;

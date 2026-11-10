@@ -200,7 +200,6 @@ struct timespec start_time;
 struct timespec stop_time;
 
 double opac = 0.75;
-double pi = 3.141592653589793238462643383279502884197;
 
 GSimpleAction * edition_actions[3];
 

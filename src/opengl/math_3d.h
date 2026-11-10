@@ -112,10 +112,6 @@ v1.0  2016-02-15  Initial release
 // Define PI directly because we would need to define the _BSD_SOURCE or
 // _XOPEN_SOURCE feature test macros to get it from math.h. That would be a
 // rather harsh dependency. So we define it directly if necessary.
-#ifndef M_PI
-#define M_PI 3.14159265358979323846
-#endif
-
 
 //
 // 3D vectors
@@ -467,16 +463,15 @@ static inline mat4_t m4_rotation (float angle_in_rad, vec3_t axis) {
 static inline mat4_t m4_rotation_anti_xyz (float alpha, float beta, float gamma) {
 	mat4_t rot = m4_identity ();
 	vec4_t qr;
-	double pi = 3.141592653589793238462643383279502884197;
     vec3_t ax[3];
     ax[0] = vec3(1.0,0.0,0.0);
     ax[1] = vec3(0.0,1.0,0.0);
     ax[2] = vec3(0.0,0.0,1.0);
-    qr = axis_to_quat (ax[2], - gamma*pi/90.0);
+    qr = axis_to_quat (ax[2], - gamma*M_PI/90.0);
     rot = m4_mul (rot, m4_quat_rotation (qr));
-    qr = axis_to_quat (ax[1], - beta*pi/90.0);
+    qr = axis_to_quat (ax[1], - beta*M_PI/90.0);
     rot = m4_mul (rot, m4_quat_rotation (qr));
-    qr = axis_to_quat (ax[0], - alpha*pi/90.0);
+    qr = axis_to_quat (ax[0], - alpha*M_PI/90.0);
     rot = m4_mul (rot, m4_quat_rotation (qr));
 	return rot;
 }
@@ -484,16 +479,15 @@ static inline mat4_t m4_rotation_anti_xyz (float alpha, float beta, float gamma)
 static inline mat4_t m4_rotation_xyz (float alpha, float beta, float gamma) {
 	mat4_t rot = m4_identity ();
 	vec4_t qr;
-    double pi = 3.141592653589793238462643383279502884197;
     vec3_t ax[3];
     ax[0] = vec3(1.0,0.0,0.0);
     ax[1] = vec3(0.0,1.0,0.0);
     ax[2] = vec3(0.0,0.0,1.0);
-    qr = axis_to_quat (ax[0], alpha*pi/90.0);
+    qr = axis_to_quat (ax[0], alpha*M_PI/90.0);
     rot = m4_mul (rot, m4_quat_rotation (qr));
-    qr = axis_to_quat (ax[1], beta*pi/90.0);
+    qr = axis_to_quat (ax[1], beta*M_PI/90.0);
     rot = m4_mul (rot, m4_quat_rotation (qr));
-    qr = axis_to_quat (ax[2], gamma*pi/90.0);
+    qr = axis_to_quat (ax[2], gamma*M_PI/90.0);
     rot = m4_mul (rot, m4_quat_rotation (qr));
 	return rot;
 }

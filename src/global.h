@@ -103,6 +103,10 @@ Copyright (C) 2022-2026 by CNRS and University of Strasbourg */
 
 #define MY_ENCODING "UTF-8"
 
+#ifndef M_PI
+  #define M_PI 3.1415926535897932384626433832795029884197
+#endif
+
 #include "math_3d.h"
 
 // dint, tint and qint structures are used for pointer purposes.
@@ -467,7 +471,6 @@ extern struct timespec start_time;
 extern struct timespec stop_time;
 
 extern double opac;
-extern double pi;
 
 extern GtkApplication * atomes_app;
 extern GtkWidget * atomes_main_window;

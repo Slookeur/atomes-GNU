@@ -220,13 +220,13 @@ void compute_lattice_properties (cell_info * cell, int box_id)
     {
       if (box -> param[1][i] == 90.0)
       {
-        angle[i] = pi/2.0;
+        angle[i] = M_PI/2.0;
         sangle[i] = 1.0;
         cangle[i] = 0.0;
       }
       else
       {
-        angle[i] = box -> param[1][i]*pi/180.0;
+        angle[i] = box -> param[1][i]*M_PI/180.0;
         sangle[i] = sin(angle[i]);
         cangle[i] = cos(angle[i]);
       }
@@ -264,7 +264,7 @@ void compute_lattice_properties (cell_info * cell, int box_id)
         angle[i] = acos(box -> param[1][i]);
         sangle[i] = sin(angle[i]);
         cangle[i] = cos(angle[i]);
-        box -> param[1][i] = angle[i]*180.0/pi;
+        box -> param[1][i] = angle[i]*180.0/M_PI;
       }
     }
   }

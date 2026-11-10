@@ -191,7 +191,8 @@ am__atomes_SOURCES_DIST = $(for)parameters.F90 $(for)mendeleiev.F90 \
 	$(gledit)cell_cut.c $(gledit)cell_density.c \
 	$(gledit)cell_edit.c $(gledit)cell_extra.c \
 	$(gledit)cell_pixel.c $(gledit)cell_shift.c \
-	$(gledit)cell_super.c $(ogl)arcball.c $(ogl)glview.c \
+	$(gledit)cell_super.c $(gledit)optim_edit.c \
+	$(gledit)optim_action.c $(ogl)arcball.c $(ogl)glview.c \
 	$(ogl)ogl_draw.c $(ogl)ogl_shaders.c $(ogl)ogl_shading.c \
 	$(ogl)ogl_utils.c $(ogl)selection.c
 am__objects_1 = $(for)parameters.$(OBJEXT) $(for)mendeleiev.$(OBJEXT)
@@ -317,7 +318,8 @@ am__objects_19 = $(gledit)atom_action.$(OBJEXT) \
 	$(gledit)cbuild_sg.$(OBJEXT) $(gledit)cell_cut.$(OBJEXT) \
 	$(gledit)cell_density.$(OBJEXT) $(gledit)cell_edit.$(OBJEXT) \
 	$(gledit)cell_extra.$(OBJEXT) $(gledit)cell_pixel.$(OBJEXT) \
-	$(gledit)cell_shift.$(OBJEXT) $(gledit)cell_super.$(OBJEXT)
+	$(gledit)cell_shift.$(OBJEXT) $(gledit)cell_super.$(OBJEXT) \
+	$(gledit)optim_edit.$(OBJEXT) $(gledit)optim_action.$(OBJEXT)
 am__objects_20 = $(am__objects_17) $(am__objects_18) $(am__objects_19) \
 	$(ogl)arcball.$(OBJEXT) $(ogl)glview.$(OBJEXT) \
 	$(ogl)ogl_draw.$(OBJEXT) $(ogl)ogl_shaders.$(OBJEXT) \
@@ -415,6 +417,8 @@ am__depfiles_remade = ./$(DEPDIR)/$(calc)calc.Po \
 	./$(DEPDIR)/$(gledit)cell_pixel.Po \
 	./$(DEPDIR)/$(gledit)cell_shift.Po \
 	./$(DEPDIR)/$(gledit)cell_super.Po \
+	./$(DEPDIR)/$(gledit)optim_action.Po \
+	./$(DEPDIR)/$(gledit)optim_edit.Po \
 	./$(DEPDIR)/$(glwin)color_box.Po \
 	./$(DEPDIR)/$(glwin)glwindow.Po \
 	./$(DEPDIR)/$(glwin)initchain.Po \
@@ -997,7 +1001,9 @@ atomes_gledit = $(gledit)atom_action.c \
 		$(gledit)cell_extra.c \
 		$(gledit)cell_pixel.c \
 		$(gledit)cell_shift.c \
-		$(gledit)cell_super.c
+		$(gledit)cell_super.c \
+		$(gledit)optim_edit.c \
+		$(gledit)optim_action.c 
 
 atomes_opengl = $(atomes_glwin) \
 		$(atomes_gldraw) \
@@ -1228,6 +1234,8 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/$(gledit)cell_pixel.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/$(gledit)cell_shift.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/$(gledit)cell_super.Po@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/$(gledit)optim_action.Po@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/$(gledit)optim_edit.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/$(glwin)color_box.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/$(glwin)glwindow.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/$(glwin)initchain.Po@am__quote@ # am--include-marker
@@ -1642,6 +1650,8 @@ distclean: distclean-recursive
 	-rm -f ./$(DEPDIR)/$(gledit)cell_pixel.Po
 	-rm -f ./$(DEPDIR)/$(gledit)cell_shift.Po
 	-rm -f ./$(DEPDIR)/$(gledit)cell_super.Po
+	-rm -f ./$(DEPDIR)/$(gledit)optim_action.Po
+	-rm -f ./$(DEPDIR)/$(gledit)optim_edit.Po
 	-rm -f ./$(DEPDIR)/$(glwin)color_box.Po
 	-rm -f ./$(DEPDIR)/$(glwin)glwindow.Po
 	-rm -f ./$(DEPDIR)/$(glwin)initchain.Po
@@ -1876,6 +1886,8 @@ maintainer-clean: maintainer-clean-recursive
 	-rm -f ./$(DEPDIR)/$(gledit)cell_pixel.Po
 	-rm -f ./$(DEPDIR)/$(gledit)cell_shift.Po
 	-rm -f ./$(DEPDIR)/$(gledit)cell_super.Po
+	-rm -f ./$(DEPDIR)/$(gledit)optim_action.Po
+	-rm -f ./$(DEPDIR)/$(gledit)optim_edit.Po
 	-rm -f ./$(DEPDIR)/$(glwin)color_box.Po
 	-rm -f ./$(DEPDIR)/$(glwin)glwindow.Po
 	-rm -f ./$(DEPDIR)/$(glwin)initchain.Po

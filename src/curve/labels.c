@@ -89,7 +89,7 @@ void label_curve (cairo_t * cr, double val, int axe, int p, Curve * this_curve)
     if (axe == 0)
     {
       u = sin (this_curve -> labels_angle[axe]) * (double)i;
-      v = sin (pi / 2.0 - this_curve -> labels_angle[axe]) * (double)j;
+      v = sin (M_PI / 2.0 - this_curve -> labels_angle[axe]) * (double)j;
       ay = ay - (u + v)/PANGO_SCALE;
     }
     else

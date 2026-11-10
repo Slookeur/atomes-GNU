@@ -50,9 +50,11 @@ Copyright (C) 2022-2026 by CNRS and University of Strasbourg */
 #ifdef GTK4
 extern G_MODULE_EXPORT void crystal_window (GSimpleAction * action, GVariant * parameter, gpointer data);
 extern G_MODULE_EXPORT void turn_rebuild (GSimpleAction * action, GVariant * parameter, gpointer data);
+G_MODULE_EXPORT void optimize_window (GSimpleAction * action, GVariant * parameter, gpointer data);
 #else
 extern G_MODULE_EXPORT void crystal_window (GtkWidget * widg, gpointer data);
 extern G_MODULE_EXPORT void turn_rebuild (GtkWidget * widg, gpointer data);
+extern G_MODULE_EXPORT void optimize_window (GtkWidget * widg, gpointer data);
 #endif
 
 #ifdef GTK4
@@ -208,6 +210,21 @@ GtkWidget * menu_edit (glwin * view, int id)
     widget_set_sensitive (widg, (i == 3) ? j : (this_proj -> natomes) ? j : 0);
   }
 
+  widg = create_menu_item (FALSE, _("Geometry Optimisation"));
+  g_signal_connect (G_OBJECT (widg), "activate", G_CALLBACK(optimize_window), & view -> colorp[0][0]);
+  gtk_menu_shell_append ((GtkMenuShell *)menu, widg);
+
+  j = (this_proj -> cell.ltype && this_proj -> steps == 1) ? 1 : 0;
+  if (id == 0)
+  {
+    view -> ogl_box[1] = menu_item_new_with_submenu (_("Cell"), (this_proj -> natomes) ? this_proj -> cell.ltype : 0, menu_cell_edit(view, id, j));
+    gtk_menu_shell_append ((GtkMenuShell *)menu, view -> ogl_box[1]);
+  }
+  else
+  {
+    gtk_menu_shell_append ((GtkMenuShell *)menu, menu_item_new_with_submenu (_("Cell"), (this_proj -> natomes) ? this_proj -> cell.ltype : 0, menu_cell_edit(view, id, j)));
+  }
+
   if (id == 0)
   {
     gchar * rtext[2] = {i18n("Extract/Rebuild on Motion"), i18n("Extract/Rebuild on Copy")};
@@ -358,6 +375,8 @@ GMenu * menu_edit (glwin * view, int popm)
   append_opengl_item (view, menu, _("Crystal Builder"), "cbuilder", popm, popm, NULL, IMG_NONE, NULL, FALSE, G_CALLBACK(crystal_window), & view -> colorp[0][0], FALSE, FALSE, FALSE, TRUE);
   append_submenu (menu, _("Cell"), menu_cell_edit(view, popm, (this_proj -> cell.ltype && this_proj -> steps == 1) ? 1 : 0));
   append_submenu (menu, _("Atom(s)"), menu_atom_edit(view, popm));
+  append_opengl_item (view, menu, _("Geometry Optimisation"), "optimize", popm, popm, NULL, IMG_NONE, NULL, FALSE, G_CALLBACK(optimize_window), & view -> colorp[0][0], FALSE, FALSE, FALSE, TRUE);
+
   if (! popm) g_menu_append_section (menu, NULL, (GMenuModel*)extract_section(view, popm));
   return menu;
 }

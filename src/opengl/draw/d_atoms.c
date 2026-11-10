@@ -214,12 +214,12 @@ object_3d * draw_sphere (int quality)
   x = 0;
   for (stack=0; stack <= quality-1; stack++)
   {
-    phi = pi * stack / (quality-1);
+    phi = M_PI * stack / (quality-1);
     cos_phi = cos(phi);
     sin_phi = sin(phi);
     for (slice=0; slice <= quality-1; slice++)
     {
-      theta = 2.0 * pi * slice / (quality-1);
+      theta = 2.0 * M_PI * slice / (quality-1);
       xPos = cos(theta) * sin_phi;
       yPos = cos_phi;
       zPos = sin(theta) * sin_phi;

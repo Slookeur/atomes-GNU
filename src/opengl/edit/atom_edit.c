@@ -462,54 +462,60 @@ void prepare_atom_edition (gpointer data, gboolean visible)
   tint * id = (tint *) data;
   project * this_proj = get_project_by_id(id -> a);
   int i;
-  if (this_proj -> modelgl -> atom_win == NULL)
+  if (this_proj -> modelgl -> optim_win == NULL)
   {
-    this_proj -> modelgl -> atom_win = g_malloc0(sizeof*this_proj -> modelgl -> atom_win);
-    for (i=0; i<2; i++) this_proj -> modelgl -> atom_win -> adv_bonding[i] = this_proj -> modelgl -> adv_bonding[i];
-    if (this_proj -> modelgl -> anim)
+    if (this_proj -> modelgl -> atom_win == NULL)
     {
-      this_proj -> modelgl -> atom_win -> old_axis = this_proj -> modelgl -> anim -> last -> img -> xyz -> axis;
-    }
-    for (i=0; i<2; i++)
-    {
-      init_coordinates (this_proj, i, visible, TRUE);
-    }
-    this_proj -> modelgl -> atom_win -> msd = allocfloat (this_proj -> natomes);
-    this_proj -> modelgl -> atom_win -> msd_all = allocfloat (this_proj -> nspec);
-    this_proj -> modelgl -> atom_win -> repeat_move = 1;
-  }
-  this_proj -> modelgl -> atom_win -> visible = visible;
-  if (visible)
-  {
-    this_proj -> modelgl -> atom_win -> win = create_edition_window (this_proj);
-    show_the_widgets (this_proj -> modelgl -> atom_win -> win);
-    gtk_notebook_set_current_page (GTK_NOTEBOOK (this_proj -> modelgl -> atom_win -> notebook), id -> b);
-    for (i=0; i<5; i++)
-    {
-      if (i != 3)
+      this_proj -> modelgl -> atom_win = g_malloc0(sizeof*this_proj -> modelgl -> atom_win);
+      for (i=0; i<2; i++) this_proj -> modelgl -> atom_win -> adv_bonding[i] = this_proj -> modelgl -> adv_bonding[i];
+      if (this_proj -> modelgl -> anim)
       {
-        if (this_proj -> modelgl -> search_widg[i+2] -> todo_size < GTK_LIMIT)
-        {
-          hide_the_widgets (this_proj -> modelgl -> search_widg[i+2] -> info[1]);
-        }
-        else
-        {
-          hide_the_widgets (this_proj -> modelgl -> search_widg[i+2] -> id_box);
-        }
+        this_proj -> modelgl -> atom_win -> old_axis = this_proj -> modelgl -> anim -> last -> img -> xyz -> axis;
       }
-      widget_set_sensitive (gtk_notebook_get_nth_page(GTK_NOTEBOOK (this_proj -> modelgl -> atom_win -> notebook), i), this_proj -> natomes);
+      for (i=0; i<2; i++)
+      {
+        init_coordinates (this_proj, i, visible, TRUE);
+      }
+      this_proj -> modelgl -> atom_win -> msd = allocfloat (this_proj -> natomes);
+      this_proj -> modelgl -> atom_win -> msd_all = allocfloat (this_proj -> nspec);
+      this_proj -> modelgl -> atom_win -> repeat_move = 1;
     }
-    widget_set_sensitive (gtk_notebook_get_nth_page(GTK_NOTEBOOK (this_proj -> modelgl -> atom_win -> notebook), 3), 1);
-    if (this_proj -> modelgl -> mode == EDITION)
+    this_proj -> modelgl -> atom_win -> visible = visible;
+    if (visible)
     {
+      this_proj -> modelgl -> atom_win -> win = create_edition_window (this_proj);
+      show_the_widgets (this_proj -> modelgl -> atom_win -> win);
+      for (i=0; i<5; i++)
+      {
+        if (i != 3)
+        {
+          if (this_proj -> modelgl -> search_widg[i+2] -> todo_size < GTK_LIMIT)
+          {
+            hide_the_widgets (this_proj -> modelgl -> search_widg[i+2] -> info[1]);
+          }
+          else
+          {
+            hide_the_widgets (this_proj -> modelgl -> search_widg[i+2] -> id_box);
+          }
+        }
+        widget_set_sensitive (gtk_notebook_get_nth_page(GTK_NOTEBOOK (this_proj -> modelgl -> atom_win -> notebook), i), this_proj -> natomes);
+      }
+      widget_set_sensitive (gtk_notebook_get_nth_page(GTK_NOTEBOOK (this_proj -> modelgl -> atom_win -> notebook), 3), 1);
+      if (this_proj -> modelgl -> mode == EDITION)
+      {
 #ifdef GTK4
-      set_mode (NULL, & this_proj -> modelgl -> colorp[0][0]);
+        set_mode (NULL, & this_proj -> modelgl -> colorp[0][0]);
 #else
-      // GTK3 Menu Action To Check
-      gtk_check_menu_item_set_active ((GtkCheckMenuItem *)this_proj -> modelgl -> ogl_mode[0], TRUE);
-      set_mode (this_proj -> modelgl -> ogl_mode[0], & this_proj -> modelgl -> colorp[0][0]);
+        // GTK3 Menu Action To Check
+        gtk_check_menu_item_set_active ((GtkCheckMenuItem *)this_proj -> modelgl -> ogl_mode[0], TRUE);
+        set_mode (this_proj -> modelgl -> ogl_mode[0], & this_proj -> modelgl -> colorp[0][0]);
 #endif
+      }
     }
+  }
+  else
+  {
+    show_warning ("You need to close the \"Geometry Optimization\" window first !", this_proj -> modelgl -> win);
   }
 }
 

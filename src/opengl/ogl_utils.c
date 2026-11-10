@@ -132,15 +132,15 @@ double arc_cos (double val)
 {
   if (val < -1.0)
   {
-    return acos(-2.0 - val) * 180.0 / pi;
+    return acos(-2.0 - val) * 180.0 / M_PI;
   }
   else if (val > 1.0)
   {
-    return acos(2.0 - val) * 180.0 / pi;
+    return acos(2.0 - val) * 180.0 / M_PI;
   }
   else
   {
-    return acos(val) * 180.0 / pi;
+    return acos(val) * 180.0 / M_PI;
   }
 }
 

@@ -313,7 +313,7 @@ void rotate (project * this_proj, int status, int axis, int raxis, float param)
   ax[0] = vec3(1.0,0.0,0.0);
   ax[1] = vec3(0.0,1.0,0.0);
   ax[2] = vec3(0.0,0.0,1.0);
-  qr = axis_to_quat(ax[raxis-3], param*pi/90.0);
+  qr = axis_to_quat(ax[raxis-3], param*M_PI/90.0);
   rotate_quat (this_proj, qr, status, axis);
 }
 
@@ -386,7 +386,7 @@ void random_rotate_this_object (project * this_proj, atomic_object * object, dou
     k *= k;
     l = (prob <= 0.5) ? 1 : -1;
     prob = random3_(& k);
-    qr = axis_to_quat(ax[j], l*prob*sqrt(ratio*msd/3.0)*pi/90.0);
+    qr = axis_to_quat(ax[j], l*prob*sqrt(ratio*msd/3.0)*M_PI/90.0);
     rot = m4_quat_rotation (qr);
     for (m=0; m<object -> atoms; m++)
     {
@@ -792,7 +792,7 @@ void rotate_this_object (project * this_proj, atomic_object * object, int axis, 
   ax[2] = vec3(0.0,0.0,1.0);
   vec4_t qr;
   mat4_t rot;
-  qr = axis_to_quat(ax[rax], ang*pi/180.0);
+  qr = axis_to_quat(ax[rax], ang*M_PI/180.0);
   rot = m4_quat_rotation (qr);
   for (i=0; i<object -> atoms; i++)
   {
