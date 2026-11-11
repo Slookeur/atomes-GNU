@@ -886,8 +886,8 @@ void vitesses_maxwell_boltzmann (double Temp, int Nats, double Mass, coords * v0
 */
 G_MODULE_EXPORT void optimize_geometry (GtkButton * but, gpointer data)
 {
-  tint * id = (tint *) data;
-  project * this_proj = get_project_by_id(id -> a);
+  int pid = GPOINTER_TO_INT(data);
+  project * this_proj = get_project_by_id (pid);
 
   int    Nitermax    = this_proj -> modelgl -> optim_win -> Nitermax;    /* Maximum number of iterations   */
   double Ftol        = this_proj -> modelgl -> optim_win -> Ftol;        /* Force tolerance for stop test  */

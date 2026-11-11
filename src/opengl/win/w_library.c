@@ -1229,7 +1229,7 @@ int insert_this_project_from_lib (int id, gboolean visible, project * this_proj,
 {
   sml_file_name = mol_name = NULL;
   int family[6] = {0, 3, 9, 9, 15, 17};
-  int molec[6] = {0, 8, 36, 21, 11, 0};
+  int molec[6] = {1, 8, 36, 21, 11, 0};
   int active = activep;
   int nats = this_proj -> natomes;
   the_family = family[id];
