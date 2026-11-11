@@ -325,7 +325,9 @@ atomes_gledit = $(gledit)atom_action.c \
 		$(gledit)cell_extra.c \
 		$(gledit)cell_pixel.c \
 		$(gledit)cell_shift.c \
-		$(gledit)cell_super.c
+		$(gledit)cell_super.c \
+		$(gledit)optim_edit.c \
+		$(gledit)optim_action.c 
 
 atomes_opengl = $(atomes_glwin) \
 		$(atomes_gldraw) \

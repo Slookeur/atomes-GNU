@@ -1,0 +1,956 @@
+/* This file is part of the 'atomes' software
+
+'atomes' is free software: you can redistribute it and/or modify it under the terms
+of the GNU Affero General Public License as published by the Free Software Foundation,
+either version 3 of the License, or (at your option) any later version.
+
+'atomes' is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+See the GNU General Public License for more details.
+
+You should have received a copy of the GNU Affero General Public License along with 'atomes'.
+If not, see <https://www.gnu.org/licenses/>
+
+Copyright (C) 2022-2026 by CNRS and University of Strasbourg */
+
+/*!
+* @file optim_action.c
+* @short Geometry optimization
+* @author Fabrice Maingot De La Grassière <fabrice.maingot@ipcms.unistra.fr>
+* @author Sébastien Le Roux <sebastien.leroux@ipcms.unistra.fr>
+*/
+
+/*
+* This file: 'optim_action.c'
+*
+* Contains:
+*
+
+ - Geometry optimization
+
+
+* List of functions:
+
+*/
+
+/*
+ * Voici quelques remarques générales
+ 
+  1) Commentaires Doxygen
+  je commente le code sources d'atomes en utilisant une synthaxe pour Doxygen (https://www.doxygen.nl/index.html)
+  cela me permet d'automatiser en une instruction la création d'un site dédié à la documentation du code: 
+  
+  https://slookeur.github.io/atomes-doxygen/index.html
+
+  Tu peut identifier les commentaires Doxygen entre / *! * /  (sans les espaces)
+  Je t'invite à t'inspirer dès maintenant de cette façon de renseigner les commentaires pour: 
+    - Décrire une fonction / routine (il y a plein d'exemples dans ce que tu liras plus bas et dans les autres fichiers)
+    - Déclarer une structure de donnée (voir le fichier 'src/global.h')
+  
+  2) struct
+
+  je remarque que tu utilises des 'struct', tu peut aller plus loin
+  en définissant le nouveau type pour te passer du mot clef 'struct' 
+  à chaque appel, par exemple un 'struct Tsite' devient un 'Tsite'
+  voici comment faire: 
+
+  typedef struct coords coords;
+  struct coords
+  {
+    double x;
+    double y;
+    double z;
+  }
+
+  typedef struct Tsite Tsite;
+  struct Tsite
+  {
+   coords r[3];          / * position at OLD, CUR & NEW state * /
+   coords v;             / * velocity at OLD state * /
+   double        m;      / * mass     * /
+   double        q;      / * charge   * /
+   double        sigma;  / * distance for null potential (LJ)  * /
+   double        E0;     / * mimimum well depth (LJ)  * /
+  };
+
+  L'appel à Tsite deviendrait alors simplement:
+
+  Tsite * S;
+  
+  Et l'appel: 
+
+  int Weight_FF  (int i, int N, struct Tsite *S, struct coords *F, double *Ep);
+
+  Deviendrait: 
+
+  int Weight_FF  (int i, int N, Tsite *S, coords *F, double *Ep);
+
+  J'utilise beaucoup cette construction dans le code d'atomes, 
+  je trouve que cela simplifie la lecture du code.
+  J'ai du faire évoluer un peu ton code sur ce point, le compilateur était mécontent, 
+  j'espère que tu pourras te relire ;-)
+
+  3) appelation des variables: attention en dehors des indices de boucles (nous faisons les choses de façon similaire)
+  il va falloir que tu choisisses des noms de variables plus complexes, idéalement qui permettent de comprendre 
+  ce que designe la variable en question, min 3 lettres, en effet atomes c'est > 200 000 lignes de codes avec 
+  des tas de variables globales, des tas de noms, dis toi que les plus simples sont tous déjà pris, et qu'il faut éviter
+  une superposition de nom qui provoquerai des erreurs, tout tes S, F, N, i (en argument comme pour Weight_FF) ou 
+  autre doivent changer de nom, je te laisse le champ libre pour les choix à faire :-)
+  Cela peut fonctionner en l'état mais d'expérience c'est une règle d'organisation à ne pas négliger.
+
+  4) Numérotation des boucles: tu fais quelque chose de risqué, tu numérotes tes boucles à partir de 1,
+  et tu vas jusqu'à =< Nelem, et tu alloues logiquement des structures de taille Nelem+1,
+  c'est dangereux le C c'est à partir de 0 et < Nelem, cela implique tu sois très rigoureux quand tu prépares le transfert
+  des résultats, tu vas par exemple devoir copier S.r[?].x/y/z dans this_proj -> atomes[0][?-1].x/y/z pour mettre
+  à jour l'affichage, tu alloues plus de mémoire que nécessaire, je te laisse voir si c'est possible de changer, 
+  vérifie également que je ne dit pas de bétises par rapport à ce que je comprends de ton code ;-)
+
+ */
+
+#include "global.h"
+#include "glview.h"
+
+#define Epsilon0 8.85418782E-12
+#define Kc       (1./(4*M_PI*Epsilon0))
+
+#define OLD 0
+#define CUR 1
+#define new 2
+
+typedef struct coords coords;
+struct coords
+{
+  double x;
+  double y;
+  double z;
+};
+
+typedef struct Tsite Tsite;
+struct Tsite
+{
+  coords r[3];          /* position at OLD, CUR & NEW state */
+  coords v;             /* velocity at OLD state */
+  double        m;      /* mass     */
+  double        q;      /* charge   */
+  double        sigma;  /* distance for null potential (LJ) */
+  double        E0;     /* mimimum well depth (LJ) */
+ };
+
+/*
+int Weight_FF  (int i, int N, Tsite *S, coords *F, double *Ep);
+int Coulomb_FF (int i, int N, Tsite *S, coords *F, double *Ep);
+int Lennard_Jones_FF (int i, int N, Tsite *S, coords *F, double *Ep);
+
+int Minimization (int N, Tsite *S, 
+                  int (*force_field) (int, int, Tsite *, coords *, double *), 
+                  double startlength, int Nitermax, double Ftol, double Etol); 
+
+int Verlet (int N, Tsite *S, 
+            int (*force_field) (int, int, Tsite *, coords *, double *), double Dt);
+*/
+
+/*********************************************************
+ *                                                       *
+ * Weight force field                                    *
+ *                                                       *
+ * Input                                                 *
+ *                                                       *
+ *    i        Site index                                *
+ *    N        System size (number of sites)             *
+ *    S        System sites                              *
+ *                                                       *
+ * Output                                                *
+ *                                                       *
+ *    F        Resulting weight force on site i          *
+ *    Ep       Potential energy on site i                *
+ *                                                       *
+ *********************************************************/
+int Weight_FF (int i, int N, Tsite *S, coords *F, double *Ep)
+{
+   /* test : force (donc acceleration) constante sur Oy pour site 1 */
+   F->x = 0.;
+   if (i ==1) F->y = -9.81; /* force de pesanteur */
+   F->z = 0.;
+
+   /* Energie potentielle Ep = -m vect(g).vect(r) */
+   
+   *Ep = -S[i].m * (-9.81) * S[i].r[CUR].y;
+
+   printf("Total force for site %i : Fx %e  Fy %e  Fz %e\n", i, F->x, F->y, F->z);
+   printf("Potential energy for site %i : Ep %e\n", i, *Ep);
+
+return 0;
+}
+
+/*********************************************************
+ *                                                       *
+ * Coulomb force field                                   *
+ *                                                       *
+ * Input                                                 *
+ *                                                       *
+ *    i        Site index                                *
+ *    N        System size (number of sites)             *
+ *    S        System sites                              *
+ *                                                       *
+ * Output                                                *
+ *                                                       *
+ *    F        Resulting Coulomb force on site i         *
+ *    Ep       Potential energy on site i                *
+ *                                                       *
+ *********************************************************/
+ int Coulomb_FF (int i, int N, Tsite *S, coords *F, double *Ep)
+{
+   int    j;
+   double dx, dy, dz, d, d3;
+
+
+   F->x = 0.;
+   F->y = 0;
+   F->z = 0.;
+
+   *Ep = 0.;
+
+   printf("Coulomb computed for site %i\n", i);
+   for (j=1;j<=N;j++)
+   /* for (j=i;j<=N;j++) */
+   {
+     if (j != i)
+     {
+        printf("   Coulomb interaction with site %i\n", j);
+        dx  = (S[i].r[CUR].x-S[j].r[CUR].x); /* x_ji */
+        dy  = (S[i].r[CUR].y-S[j].r[CUR].y); /* y_ji */
+        dz  = (S[i].r[CUR].z-S[j].r[CUR].z); /* z_ji */
+        d = sqrt(dx*dx+dy*dy+dz*dz);
+        printf("   dx %e  dy %e  dz %e     d %e\n", dx, dy, dz, d);
+        d3 = d*d*d;
+
+        /* 
+        printf("DBG :    Fx(%i) = %e\n", j, S[j].q*dx/d3);
+        printf("DBG :    Fy(%i) = %e\n", j, S[j].q*dy/d3);
+        printf("DBG :    Fz(%i) = %e\n", j, S[j].q*dz/d3);
+        */
+        F->x += S[j].q*dx/d3;
+        F->y += S[j].q*dy/d3;
+        F->z += S[j].q*dz/d3;
+
+        *Ep += S[j].q/d;
+     }
+   }
+   /* Rq : +Kc au lieu de -Kc, car dx, dy, dz deja calcules en sens j->i (r_ji) au lieu de i->j (r_ij)) */
+   F->x *= Kc * S[i].q;
+   F->y *= Kc * S[i].q;
+   F->z *= Kc * S[i].q;
+
+   *Ep *= Kc * S[i].q;
+   *Ep /= 2.;  /* Correction double comptage */
+
+   printf("Total force for site %i : Fx %e  Fy %e  Fz %e\n", i, F->x, F->y, F->z);
+   printf("Potential energy for site %i : Ep %e\n", i, *Ep);
+
+return 0;
+}
+
+/*********************************************************
+ *                                                       *
+ * Lennard-Jones force field                             *
+ *                                                       *
+ * Input                                                 *
+ *                                                       *
+ *    i        Site index                                *
+ *    N        System size (number of sites)             *
+ *    S        System sites                              *
+ *                                                       *
+ * Output                                                *
+ *                                                       *
+ *    F        Resulting Lennard-Jones force on site i   *
+ *    Ep       Potential energy on site i                *
+ *                                                       *
+ *********************************************************/
+int Lennard_Jones_FF (int i, int N, Tsite *S, coords *F, double *Ep)
+{
+   int    j;
+   double rx, ry, rz, r2;
+
+   double E0_i, E0;       /* potential well depths */
+   double sigma_i, sigma; /* distances for null potential */
+
+   double sd2, sd6, sd12, C;
+
+
+   /*
+   printf("\n");
+   printf("Lennard-Jones computed for site %i\n", i);
+   */
+
+   E0_i = S[i].E0;
+   sigma_i = S[i].sigma;
+   /* printf("DBG :    sigma_i(%i) = %e\n", i, sigma_i); */
+
+   F->x = 0.;
+   F->y = 0.;
+   F->z = 0.;
+
+   *Ep = 0.;
+
+   for (j=1;j<=N;j++)
+   /* for (j=i;j<=N;j++) */
+   {
+     if (j != i)
+     {
+        /* printf("   Lennard-Jones interaction with site %i\n", j); */
+        rx  = (S[i].r[CUR].x-S[j].r[CUR].x);
+        ry  = (S[i].r[CUR].y-S[j].r[CUR].y);
+        rz  = (S[i].r[CUR].z-S[j].r[CUR].z);
+        r2 = rx*rx+ry*ry+rz*rz;
+        /* printf("   rx %e  ry %e  rz %e     r %e\n", rx, ry, rz, sqrt(r2)); */
+
+        /* distance for null potential for site i */
+        sigma = sigma_i;
+        /* average distance for null potential for sites i and j */
+        if (fabs(S[j].sigma-sigma_i) > 1.e-12) sigma = (sigma_i + S[j].sigma)/2.;
+
+        /*
+        printf("DBG :    sigma(%i) = %e\n", j, sigma);
+        printf("DBG :    r2(%i) = %e\n", j, r2);
+        */
+        sd2  = sigma*sigma/r2;
+        sd6  = sd2*sd2*sd2;
+        sd12 = sd6*sd6;
+        /*
+        printf("DBG :    sd2(%i) = %e\n", j, sd2);
+        printf("DBG :    sd6(%i) = %e\n", j, sd6);
+        printf("DBG :    sd12(%i) = %e\n", j, sd12);
+        */
+
+        E0 = E0_i; /* potential well depth for site i */
+        /* average well depth potential for sites i and j */
+        if (fabs(S[j].E0-E0_i) > 1.e-12) E0 = sqrt(E0_i*S[j].E0);
+
+        /* Rq : C = +24*E0/r2 au lieu de -24*E0/r2, car dx, dy, dz deja calcules 
+                en sens j->i (r_ji) au lieu de i->j (r_ij)) */
+        C =  24*E0/r2 * (2*sd12-sd6);
+        /* printf("DBG :    C(%i) = %e\n", j, C); */
+       
+        /* 
+        printf("DBG :    Fx(%i) = %e\n", j, C*rx);
+        printf("DBG :    Fy(%i) = %e\n", j, C*ry);
+        printf("DBG :    Fz(%i) = %e\n", j, C*rz);
+        */
+        F->x += C*rx;
+        F->y += C*ry;
+        F->z += C*rz;
+
+        *Ep += 4*E0 * (sd12 - sd6);
+        *Ep /= 2.;  /* Correction double comptage */
+       
+     }
+   }
+
+   /*
+   printf("Total force for site %i : Fx %e  Fy %e  Fz %e\n", i, F->x, F->y, F->z);
+   printf("Potential energy for site %i : Ep %e\n", i, *Ep);
+   */
+
+
+return 0;
+}
+
+
+/*********************************************************
+ *                                                       *
+ * Minimization phase                                    *
+ *                                                       *
+ * Input                                                 *
+ *                                                       *
+ *    this_proj     atomes project data structure        *
+ *    force_field   Force field function                 *
+ *                                                       *
+ *          Gradient descent method :                    *
+ *    startlength Starting length (Angstrom)             *
+ *    Nitermax    Maximum number of iterations           *
+ *    Ftol        Force tolerance for stop test (N)      *
+ *    Etol        Energy tolerance for stop test (J)     *
+ *                TAF : passer en relatif (10⁻16 ?)      *
+ *                                                       *
+ * Input/Output                                          *
+ *                                                       *
+ *    S           System sites (space coordinates)       *
+ *                                                       *
+ *********************************************************/
+int Minimization (project * this_proj, Tsite *S, 
+                  int (*force_field) (int, int, Tsite *, coords *, double *), 
+                  double startlength, int Nitermax, double Ftol, double Etol)
+{
+
+   coords  Fi;                /* Force on site (N)                       */
+   double         Fi_n;       /* Force intensity on site (N)             */
+   double         Ep_i;       /* Potential energy on site (J)            */
+   double         Ep, Ep_old; /* Potential energy on structure (J)       */
+   double         Fmax;       /* Maximum force intensity on site (N)     */
+   double         dx, dy, dz; /* Variation on x,y, z coordinates         */
+   double         dr;         /* Maximum on x,y,z coordinates variations */
+   coords  dir[this_proj -> natomes+1];          /* Gradient direction of descent N)        */
+   double         stepsize;   /* Step size on descent (m/N)              */
+   int            iter;       /* Iteration index                         */
+
+   int     i;
+
+
+   iter = 1;
+
+   while (iter <= Nitermax)
+   {
+
+      printf("\n");
+      printf("-----------------------------\n");
+      printf("Minimization - iter %i\n", iter);
+      printf("-----------------------------\n");
+
+      /* 1. Setting gradient direction of descent */ 
+      /*    ------------------------------------- */
+
+      printf("\n");
+      printf("-> 1. Direction of descent\n");
+      printf("      --------------------\n");
+
+      /* 1.1 Scanning on structure */
+
+      Ep = 0.;
+      Fmax = 0.;
+      for (i=1;i<=this_proj -> natomes;i++) { dir[i].x = 0.; dir[i].y = 0.; dir[i].z = 0.; }
+
+      for (i=1;i<=this_proj -> natomes;i++) 
+      {
+         force_field (i, this_proj -> natomes, S, &Fi, &Ep_i);
+         Ep += Ep_i;
+         dir[i] = Fi;
+         Fi_n = sqrt(Fi.x*Fi.x + Fi.y*Fi.y + Fi.z*Fi.z);
+         Fmax = fmax(Fmax, Fi_n);
+      }
+
+      /* for (i=1;i<=this_proj -> natomes;i++)
+      printf("   dir(%i) : ||dir|| = %e N  ( x = %e   y = %e   z = %e )\n", i, 
+             sqrt(dir[i].x*dir[i].x + dir[i].y*dir[i].y + dir[i].z*dir[i].z),
+             dir[i].x, dir[i].y, dir[i].z);
+      printf("   Fmax                     : %e N\n", Fmax);
+      printf("   Ep for starting position : %e (%e eV)\n", Ep, Ep/1.602e-19); */
+
+      /* 1.2 Stop test on gradient direction intensity */
+
+      /*  DBG - bypass for stop test */
+      /*
+      if (Fmax < Ftol) 
+      {
+         printf("iter %i - Stop test succeded : Fmax (%e) < Ftol (%e)\n", iter, Fmax, Ftol);
+         goto fin;
+      }
+      */
+
+      /* 2. Finding step size for gradient direction of descent */
+      /*    --------------------------------------------------- */
+
+      /* printf("\n");
+      printf("-> 2. Step size on descent\n");
+      printf("      --------------------\n"); */
+
+      /* 2.1 Updating current structure */
+ 
+      /* Setting step size */
+      if (iter ==1) 
+         stepsize = startlength/Fmax; /* Angstrom/N */
+
+      /* Setting starting positions */
+      for (i=1;i<=this_proj -> natomes;i++)
+      {
+         S[i].r[OLD] = S[i].r[CUR]; /* saving current positions */
+         S[i].r[CUR].x = S[i].r[OLD].x + stepsize*dir[i].x;
+         S[i].r[CUR].y = S[i].r[OLD].y + stepsize*dir[i].y;
+         S[i].r[CUR].z = S[i].r[OLD].z + stepsize*dir[i].z;
+      }
+
+      /* 2.2 Computing potential energy for starting positions */
+
+      Ep_old = Ep;
+      Ep = 0.;
+      for (i=1;i<=this_proj -> natomes;i++)
+      {
+         force_field (i, this_proj -> natomes, S, &Fi, &Ep_i);
+         Ep += Ep_i;
+      }
+
+      /* 2.3 Adjusting step size by minimizing potential energy Ep  */
+
+      /* Displaying starting dr max value */
+      dr = 0.;
+      for (i=1;i<=this_proj -> natomes;i++)
+      {
+         dx =  fabs(stepsize*dir[i].x);
+         dy =  fabs(stepsize*dir[i].y);
+         dz =  fabs(stepsize*dir[i].z);
+         dr = fmax(dr, dx);
+         dr = fmax(dr, dy);
+         dr = fmax(dr, dz);
+
+         /* printf(" xx                             : dx = %e  dy = %e  dz = %e \n", dx, dy, dz); */
+      }
+      printf("                              : dr_max = %e\n", dr);
+
+      /* Displaying starting positions */
+      printf("\n");
+      for (i=1;i<=this_proj -> natomes;i++)
+         printf("S(%i)   x = %e   y = %e   z = %e\n", i, S[i].r[CUR].x, S[i].r[CUR].y, S[i].r[CUR].z);
+      printf("\n");
+
+      /* Displaying  iteration state before setting direction intensity */
+      printf("xx iter %i.1   Fmax %e   Ep = %e   dEp = %e (%.3f %%)   dr_max %e\n", 
+             iter, Fmax, Ep, (Ep-Ep_old), 100.*(Ep-Ep_old)/fabs(Ep_old), dr); 
+
+      /* Minimizing potential energy */
+      while (Ep > Ep_old)
+      {
+         /* Decreasing step size */
+         stepsize /= 2.;
+
+         /* Updating new positions */
+         for (i=1;i<=this_proj -> natomes;i++)
+         {
+            S[i].r[CUR].x = S[i].r[OLD].x + stepsize*dir[i].x;
+            S[i].r[CUR].y = S[i].r[OLD].y + stepsize*dir[i].y;
+            S[i].r[CUR].z = S[i].r[OLD].z + stepsize*dir[i].z;
+         }
+
+         /* Computing potential energy for new positions */
+         Ep = 0.;
+         Fmax = 0.;
+         for (i=1;i<=this_proj -> natomes;i++)
+         {
+            force_field (i, this_proj -> natomes, S, &Fi, &Ep_i);
+            Ep += Ep_i;
+            Fi_n = sqrt(Fi.x*Fi.x + Fi.y*Fi.y + Fi.z*Fi.z);
+            Fmax = fmax(Fmax, Fi_n);
+         }
+
+         printf("       decreasing : stepsize = %e   Ep = %e   Fmax = %e   Ep_old = %e   diff = %e (%e %%)\n", 
+                stepsize, Ep, Fmax, Ep_old, Ep-Ep_old, 100.*(Ep-Ep_old)/fabs(Ep_old));
+
+         /* Displaying dr maximum value */
+         dr = 0.;
+         for (i=1;i<=this_proj -> natomes;i++)
+         {
+            dx =  fabs(stepsize*dir[i].x);
+            dy =  fabs(stepsize*dir[i].y);
+            dz =  fabs(stepsize*dir[i].z);
+            dr = fmax(dr, dx);
+            dr = fmax(dr, dy);
+            dr = fmax(dr, dz);
+
+            /* printf(" xx                             : dx = %e  dy = %e  dz = %e \n", dx, dy, dz); */
+         }
+         printf("                  : dr_max = %e\n", dr);
+
+
+      }
+
+      /* Displaying  iteration state after setting intensity of descent */
+      printf("\n");
+      printf("xx iter %i.2   Fmax %e   Ep = %e   dEp = %e (%.3f %%)   dr_max %e\n", 
+             iter, Fmax, Ep, (Ep-Ep_old), 100.*(Ep-Ep_old)/fabs(Ep_old), dr); 
+      fflush(stdout); /* tip for total display flow */
+
+       /* 2.4 Stop test on potential energy */
+
+       /* Absolute tolerance */
+       /* if (fabs(Ep - Ep_old) <= Etol) goto fin; */
+
+       /* Relative tolerance */
+       if (fabs((Ep - Ep_old)/Ep_old) <= 1.e-15) goto fin;
+
+
+       /* 2.5 Refining step size */
+
+       stepsize *= 1.1;   /* 1.1, 1.2, 1.5, ... */
+
+       
+
+       iter++; /* Updating iteration */
+   }
+
+
+return 0;
+
+fin :
+   if (iter > Nitermax) 
+   {
+      printf("*** WRN : iter (%i) > Nitermax (%i) : gradient has not converged\n",
+                        iter, Nitermax);
+      return -1;
+   }
+
+
+}
+
+/*********************************************************
+ *                                                       *
+ * Verlet time steps                                     *
+ *                                                       *
+ * Input                                                 *
+ *                                                       *
+ *    this_proj   Target atomes project                  *
+ *    S           System sites                           *
+ *    force_field Force field function                   *
+ *    Dt          Time step (sec)                        *
+ *                                                       *
+ * Output                                                *
+ *                                                       *
+ *                                                       *
+ *********************************************************/
+int Verlet (project * this_proj, Tsite *S, 
+            int (*force_field)(int, int, Tsite *, coords *, double *), double Dt)
+{
+
+   int it;     /* time index */
+
+   coords a[this_proj -> natomes+1];  /* Acceleration on all sites */
+   coords F;       /* Force on current site */
+
+   double    vx, vy, vz;
+
+   double    Ep_i;        /* Potential energy on site i */
+   double    Ep;          /* Potential energy at (t-1) and (t) */
+   double    Ec;          /* Kinetic energy at (t-1) */
+
+   int i;
+
+   printf("Verlet\n");
+
+   /* Pour test REF */
+   double a0, v0, y0; /* a0y, v0x, r0y */
+   a0 = -9.81;
+   v0 = S[1].v.x;
+   y0 = S[1].r[CUR].y;
+
+   /* Computing starting values (t=0) for acceleration, Ec and Ep */
+   /* ----------------------------------------------------------- */
+   Ep = 0.;
+   Ec = 0.;
+   for (i=1;i<=this_proj -> natomes;i++)
+   {
+      force_field (i, this_proj -> natomes, S, &F, &Ep_i);
+      /* printf("          %i   Fx: %f  Fy: %f  Fz: %f\n", i, F.x, F.y, F.z); */
+      a[i].x = F.x/S[i].m;
+      a[i].y = F.y/S[i].m;
+      a[i].z = F.z/S[i].m;
+
+      Ep += Ep_i;
+
+      vx = S[i].v.x;
+      vy = S[i].v.y;
+      vz = S[i].v.z;
+      Ec += S[i].m/2. * (vx*vx + vy*vy + vz*vz);
+
+   }
+
+   printf("Potential energy Ep at (t=0) : %e J = %e eV\n", Ep, Ep/1.602e-19);
+   printf("Kinetic energy Ec at (t=0) : %e J = %e eV\n", Ec, Ec/1.602e-19);
+
+
+   /* --------------- */
+   /* First time step */
+   /* --------------- */
+
+   it = 1;
+
+
+   /* Updating positions */
+   /* ------------------ */
+
+   for (i=1;i<=this_proj -> natomes;i++)
+   {
+
+      /* r1 setting (r_NEW) : computing new position for time step (t) */
+      S[i].r[new].x = a[i].x/2 * Dt*Dt + S[i].v.x * Dt + S[i].r[CUR].x;
+      S[i].r[new].y = a[i].y/2 * Dt*Dt + S[i].v.y * Dt + S[i].r[CUR].y;
+      S[i].r[new].z = a[i].z/2 * Dt*Dt + S[i].v.z * Dt + S[i].r[CUR].z;
+
+      /* r_OLD <- r_CUR : previous position at time step (t-1) becoming old */
+      S[i].r[OLD].x  = S[i].r[CUR].x;
+      S[i].r[OLD].y  = S[i].r[CUR].y;
+      S[i].r[OLD].z  = S[i].r[CUR].z;
+
+      /* r_CUR <- r_NEW  : new position at time step (t) becoming current */
+      S[i].r[CUR].x  = S[i].r[new].x;
+      S[i].r[CUR].y  = S[i].r[new].y;
+      S[i].r[CUR].z  = S[i].r[new].z;
+
+
+   }
+
+   /* Displaying first position values */
+   /* for (i=1;i<=this_proj -> natomes;i++)
+   {
+      printf("t = %e sec.  (%i) i %i :  x: %e  y: %e  z: %e\n", 
+             Dt*it, it, i, S[i].r[CUR].x, S[i].r[CUR].y, S[i].r[CUR].z);
+   }
+   printf("\n"); */
+   // Mise à jour de l'affichage:
+   //
+   for (i=1;i<=this_proj -> natomes;i++)
+   {
+     this_proj -> atoms[0][i-1].x = S[i].r[CUR].x;
+     this_proj -> atoms[0][i-1].y = S[i].r[CUR].y;
+     this_proj -> atoms[0][i-1].z = S[i].r[CUR].z;
+   }
+   update (this_proj -> modelgl);
+
+   /* Updating accelerations */
+   /* ---------------------- */
+
+   /* a1 setting - computing Ep(t=1) */
+   Ep = 0.;
+   for (i=1;i<=this_proj -> natomes;i++)
+   {
+      force_field (i, this_proj -> natomes, S, &F, &Ep_i);
+      a[i].x = F.x/S[i].m;
+      a[i].y = F.y/S[i].m;
+      a[i].z = F.z/S[i].m;
+      Ep += Ep_i;
+   }
+   printf("Potential energy Ep at (t=1) : %e J = %e eV\n", Ep, Ep/1.602e-19);
+
+
+   /* ------------------ */
+   /* General time steps */
+   /* ------------------ */
+
+   it = 2;
+   /* while (it < 1000) */
+   // 
+   // Cette ecriture, boucle est risquée, à éviter
+   // Il faut ré-écrire une boucle qui s'arrête quand tu le souhaites
+   //
+   while (it > 0) /* forever */
+   {
+
+      printf("\n");
+      printf("-> Verlet : it = %i\n", it);
+      printf("   ------\n");
+
+      /* Updating positions & velocities */
+      /* ------------------------------- */
+
+      for (i=1;i<=this_proj -> natomes;i++)
+      {
+
+         /* r setting (r_NEW) : computing new position for time step (t) */
+         S[i].r[new].x =  2*S[i].r[CUR].x - S[i].r[OLD].x + a[i].x * Dt*Dt ;
+         S[i].r[new].y =  2*S[i].r[CUR].y - S[i].r[OLD].y + a[i].y * Dt*Dt ;
+         S[i].r[new].z =  2*S[i].r[CUR].z - S[i].r[OLD].z + a[i].z * Dt*Dt ;
+
+         /* v setting (for time step (t-1) */
+         S[i].v.x =  (S[i].r[new].x - S[i].r[OLD].x)/Dt/2;
+         S[i].v.y =  (S[i].r[new].y - S[i].r[OLD].y)/Dt/2;
+         S[i].v.z =  (S[i].r[new].z - S[i].r[OLD].z)/Dt/2;
+   
+         /* r_OLD <- r_CUR : previous position at time step (t-1) now becoming old */
+         S[i].r[OLD].x  = S[i].r[CUR].x;
+         S[i].r[OLD].y  = S[i].r[CUR].y;
+         S[i].r[OLD].z  = S[i].r[CUR].z;
+
+         /* r_CUR <- r_NEW : new position at time step (t) becoming current */
+         S[i].r[CUR].x  = S[i].r[new].x;
+         S[i].r[CUR].y  = S[i].r[new].y;
+         S[i].r[CUR].z  = S[i].r[new].z;
+
+      }
+
+      /* Displaying current position values */
+      /*
+       * for (i=1;i<=this_proj -> natomes;i++)
+      {
+         printf("t = %e sec.  (%i) i %i : rx: %e  ry: %e  rz: %e | vx: %e  vy: %e  vz: %e\n", 
+                 Dt*it, it, i, 
+                 S[i].r[CUR].x, S[i].r[CUR].y, S[i].r[CUR].z, S[i].v.x, S[i].v.y, S[i].v.z);
+         printf("REF : rx : %e  ry : %e  vy: %e\n", v0*Dt*it, a0/2.*Dt*Dt*it*it+y0, a0*Dt*it);
+                                  
+      }
+      */
+      /* if (S[1].r[CUR].y < 0) return -1; */ /* TEST */
+
+      /* Computing energy balance for time step (t-1) */
+      /* -------------------------------------------- */
+      
+      printf("\n");
+      printf("Energy balance (it = %i)\n", it-1);
+
+      /* Computing kinetic energy at time step (t-1) */
+      Ec = 0.;
+      for (i=1;i<=this_proj -> natomes;i++)
+      {
+         vx = S[i].v.x;
+         vy = S[i].v.y;
+         vz = S[i].v.z;
+         printf("Kinetic energy with vy = %e\n", vy);
+
+         Ec += S[i].m * (vx*vx + vy*vy + vz*vz);
+      }
+      Ec /= 2.;
+      Ec /= 1.602e-19; /* J -> eV */
+      printf("Ec =%e eV\n", Ec); 
+
+      printf("Potential energy with Ep = %e\n", Ep);
+       
+      /* Energy balance */
+      /* NB : set Dt with a proper value */
+
+      Ep /= 1.602e-19; /* J -> eV */
+      printf("Ep =%e eV\n", Ep); 
+      printf("iter = %i  Em = %e eV  %e J\n", it, Ec+Ep, (Ec+Ep)*1.602e-19); 
+
+
+      printf("\n");
+
+
+      /* Updating accelerations and potential energy at time step (t) */
+      /* ------------------------------------------------------------ */
+
+      Ep = 0.;
+      for (i=1;i<=this_proj -> natomes;i++)
+      {
+         force_field (i, this_proj -> natomes, S, &F, &Ep_i);
+         a[i].x = F.x/S[i].m;
+         a[i].y = F.y/S[i].m;
+         a[i].z = F.z/S[i].m;
+         Ep += Ep_i;
+      }
+
+
+     // Cela est t'il vraiment utile: 
+     /* Time delay for synchronization */
+     /* ------------------------------ */
+     /* usleep(100000); */
+     usleep(10000);
+
+     /* Next time step */
+     /* -------------- */
+     it++;
+
+
+   } /* while */
+
+
+   return 0;
+}
+
+#define KB 1.380649e-23   /* constante de Boltzmann, J/K */
+
+/*!
+  \fn static double gauss ()
+
+  \brief Gaussian draw (Box-Muller) 
+*/ 
+static double gauss ()
+{
+  double u1 = ( + 1.0) / (RAND_MAX + 2.0);
+  double u2 = (double)rand() / (double)RAND_MAX;
+  return sqrt(-2.0 * log(u1)) * cos(2.0 * M_PI * u2);
+}
+
+/*!
+  \fn void vitesses_maxwell_boltzmann (double Temp,  int Nats, double Mass, coords * v0)
+
+  \brief
+
+  \param Temp target temperature
+  \param Nats number of atoms
+  \param m total mass of the syt
+/* Remplit V[N][3] avec des vitesses Maxwell-Boltzmann à la température T (en K),
+   pour des atomes de masse m (en kg). */
+void vitesses_maxwell_boltzmann (double Temp, int Nats, double Mass, coords * v0)
+{
+  double sigma = sqrt(KB * Temp / Mass);   /* écart-type d'une composante */
+  for (int i = 0; i < Nats; i++)
+  {
+    v0[i].x = sigma * gauss();
+    v0[i].y = sigma * gauss();
+    v0[i].z = sigma * gauss();
+  }
+}
+
+/*!
+  \fn G_MODULE_EXPORT void optimize_geometry (GtkButton * but, gpointer data)
+
+  \brief start geometry optimization callback
+
+  \param but the GtkButton sending the signal
+  \param data the associated data pointer
+*/
+G_MODULE_EXPORT void optimize_geometry (GtkButton * but, gpointer data)
+{
+  tint * id = (tint *) data;
+  project * this_proj = get_project_by_id(id -> a);
+
+  int    Nitermax    = this_proj -> modelgl -> optim_win -> Nitermax;    /* Maximum number of iterations   */
+  double Ftol        = this_proj -> modelgl -> optim_win -> Ftol;        /* Force tolerance for stop test  */
+  double Etol        = this_proj -> modelgl -> optim_win -> Etol;        /* Energy tolerance for stop test */
+  double startlength = this_proj -> modelgl -> optim_win -> startlength; /* Starting step size Ang.        */
+
+  // Pour un atome i, obtient l'espèce chimique: 
+  //   int at_spec = this_proj -> atoms[0][i].sp;
+  // Plusieurs propriétés chimiques sont regroupées dans une structure de donnée
+  // 'chemical_data' (voir global.h, lignes 927-947) 
+  // la masse atomique est repertoriée dans le tableau chem_prop, avec l'indice CHEM_M (global.h, lignes 314-322)
+  //   int at_mass = this_proj -> chemistry -> chem_prop[CHEM_M][at_spec];
+  //
+  // La charge c'est une nouvelle donnée à rajouter liée à la structure atome, peut-être, 
+  // et non à son espèce chimique comme cela semble être le cas
+  // je te propose d'utiliser un tableau temporaire pour le moment
+  // Pour le moment j'alloue une tableau M similaire au tiens, je te laisse ajuster par ce que je viens 
+  // d'écrire si cela te semble pertinent.
+  // Il y a tout un tas de fonctions d'allocation dynamique dans atomes (global.c, lignes 233-522)
+  // Allocation qui dynamique va être obligatoire car différents modèles implique des nombres d'atomes différents.
+  // Dans ce qui suit j'ai remplacé tes variables M, Q, E0, sigma, r0, v0
+  // e j'alloue, rempli, et utilise directement ta structure Tsite pour minimiser la consomation de mémoire
+  // attention j'ai renomé S, trop générique et risqué par rapport à d'autre utilisation dans atomes, en OptimS
+  
+  Tsite * OptimS = g_malloc0(this_proj -> natomes*sizeof*OptimS); 
+  double AVOGADRO = 6.02214179e23;
+  // Pour te simplifier la lecture du code je laisse tes variables, mais tu constateras
+  // que tout peut être facilement ré-écris en utilisant la variables existant dans atomes
+  int at_spec;
+  int i;
+  double m_tot = 0.0;
+  for (i=0; i<this_proj -> natomes; i++)
+  {
+    at_spec = this_proj -> atoms[0][i].sp;
+    OptimS[i].m = this_proj -> chemistry -> chem_prop[CHEM_M][at_spec] / AVOGADRO;
+    m_tot += OptimS[i].m;
+    // Il faut réfléchir à la manière de définir et ajuster la valeur des autres champs Q, E0 et sigma
+    // Pour le moment je vais mettre des boites d'entrée de paramètres dans la fenêtre du GUI pour l'optimisation
+    // Cela permettra de définir des valeurs génériques, mais donc similaires pour chaque atome, 
+    // à mon sens cela n'est pas physiquement réaliste et nécessite donc un travail supplémentaire, 
+    // pas mal à lié à l'interface graphique, car il faut laisser l'utilisateur le choix de ces paramètres
+    OptimS[i].q = this_proj -> modelgl -> optim_win -> Q;
+    OptimS[i].E0 = this_proj -> modelgl -> optim_win -> E0;
+    OptimS[i].r[0].x = this_proj -> atoms[0][i].x;
+    OptimS[i].r[0].y = this_proj -> atoms[0][i].y;
+    OptimS[i].r[0].z = this_proj -> atoms[0][i].z;
+  }
+  // Distribution de Maxwell-Boltzman
+  double Temp = 1.0; // Target temperature K
+  double sigma = sqrt(KB * Temp / m_tot);
+  for (i=0; i<this_proj -> natomes; i++)
+  {
+    OptimS[i].v.x = sigma * gauss();
+    OptimS[i].v.y = sigma * gauss();
+    OptimS[i].v.z = sigma * gauss();
+  }
+  
+  Minimization (this_proj, OptimS, Lennard_Jones_FF, 
+                this_proj -> modelgl -> optim_win -> startlength, 
+                this_proj -> modelgl -> optim_win -> Nitermax, 
+                this_proj -> modelgl -> optim_win -> Ftol, 
+                this_proj -> modelgl -> optim_win -> Etol);
+
+  Verlet (this_proj, OptimS, Lennard_Jones_FF, this_proj -> modelgl -> optim_win -> Dt);
+  this_proj -> modelgl -> was_optimized = TRUE;
+}

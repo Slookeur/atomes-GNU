@@ -784,6 +784,26 @@ struct atom_edition
   double * new_z;
 };
 
+typedef struct geom_opti geom_opti;
+struct geom_opti
+{
+  GtkWidget * win;
+  GtkWidget * vbox;
+  GtkWidget * reset_but;
+  gboolean visible;
+  double Q;           /* Charge                       - temporary     */
+  double E0;          /* Minimum well depth potential - temporary     */
+  double sigma;       /* Distance for null potential  - temporary     */
+  // Minimisation parameters:
+  double Dt;          /* Verlet integration time step                 */
+  // For Dt unit seems to be required
+  int Dt_unit;        /* Unit for Dt, in untime (global.h, l 153-157) */
+  int Nitermax;       /* Maximum number of iterations                 */
+  double Ftol;        /* Force tolerance for stop test                */
+  double Etol;        /* Energy tolerance for stop test               */
+  double startlength; /* Starting step size                           */
+};
+
 typedef struct cell_edition cell_edition;
 struct cell_edition
 {
@@ -1000,6 +1020,7 @@ struct glwin
 #endif
   GtkWidget * rbuild[2];
   GtkWidget * cbuilder;
+  GtkWidget * goptim;
 
   // Matrices et OpenGL
   vec3_t model_position;
@@ -1085,6 +1106,7 @@ struct glwin
   // 1 = Translation / Rotation
   // 3 = x_t, y_t, z_t, x_r, y_r, z_r
   float edition_param[3][2][6]; // 0-2 translation, 3-5 rotation
+  geom_opti * optim_win;
 
   // Color pointers, these are used to deal with the
   // Callbacks for the OpenGL window menus, and are used
@@ -1106,6 +1128,7 @@ struct glwin
 
   gboolean prepare_motion;
   gboolean was_moved;
+  gboolean was_optimized;
   // Rebuild trigger switch on edition
   // [0] = on move:
   //    [0] atom_win active: 0/1 to turn off/on
