@@ -981,4 +981,5 @@ G_MODULE_EXPORT void optimize_geometry (GtkButton * but, gpointer data)
 
   Verlet (this_proj, OptimS, Lennard_Jones_FF, this_proj -> modelgl -> optim_win -> Dt);
   this_proj -> modelgl -> was_optimized = TRUE;
+  widget_set_sensitive (this_proj -> modelgl -> optim_win -> reset_but, TRUE);
 }

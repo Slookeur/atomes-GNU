@@ -223,6 +223,7 @@ G_MODULE_EXPORT void reset_optimization (GtkToggleButton * but, gpointer data)
     }
     init_default_shaders (this_proj -> modelgl);
     update (this_proj -> modelgl);
+    widget_set_sensitive (this_proj -> modelgl -> optim_win -> reset_but, FALSE);
   }
 }
 
