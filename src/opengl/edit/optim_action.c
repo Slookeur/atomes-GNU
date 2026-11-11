@@ -939,16 +939,25 @@ G_MODULE_EXPORT void optimize_geometry (GtkButton * but, gpointer data)
   
   Tsite * OptimS = g_malloc0(this_proj -> natomes*sizeof*OptimS); 
   double AVOGADRO = 6.02214179e23;
-  // Pour te simplifier la lecture du code je laisse tes variables, mais tu constateras
+  // Pour te simplifier la lecture du code j'ai fait mon possible pour laisser tes variables, mais tu constateras
   // que tout peut être facilement ré-écris en utilisant la variables existant dans atomes
+  //
+  
+  // Pour initialisé les vitesses j'ai rajouté un bout de code qui fait une distribution de Maxwell-Boltzman
+  // Pour le moment la T cible, si c'est ce type de paramètre qui t'intéresse, 
+  // n'est pas dans l'interface utilisateur, ce n'est pas compliqué, 
+  // tu peut essayer de reproduire ce que j'ai fait pour les autres grandeurs
+  double Temp = 1.0; // Target temperature K
   int at_spec;
   int i;
-  double m_tot = 0.0;
   for (i=0; i<this_proj -> natomes; i++)
   {
     at_spec = this_proj -> atoms[0][i].sp;
     OptimS[i].m = this_proj -> chemistry -> chem_prop[CHEM_M][at_spec] / AVOGADRO;
-    m_tot += OptimS[i].m;
+    sigma = sqrt(KB * Temp / (0.001*OptimS[i].m));
+    OptimS[i].v.x = sigma * gauss();
+    OptimS[i].v.y = sigma * gauss();
+    OptimS[i].v.z = sigma * gauss();
     // Il faut réfléchir à la manière de définir et ajuster la valeur des autres champs Q, E0 et sigma
     // Pour le moment je vais mettre des boites d'entrée de paramètres dans la fenêtre du GUI pour l'optimisation
     // Cela permettra de définir des valeurs génériques, mais donc similaires pour chaque atome, 
@@ -960,22 +969,7 @@ G_MODULE_EXPORT void optimize_geometry (GtkButton * but, gpointer data)
     OptimS[i].r[0].y = this_proj -> atoms[0][i].y;
     OptimS[i].r[0].z = this_proj -> atoms[0][i].z;
   }
-  // m_tot est en g conversion en Kg
-  m_tot *= 0.001;
-  // Distribution de Maxwell-Boltzman
-  // Pour le moment la T cible, si c'est ce type de paramètre qui t'intéresse, 
-  // n'est pas dans l'interface utilisateur, ce n'est pas compliqué, 
-  // tu peut essayer de reproduire ce que j'ai fait pour les autres grandeurs
-  double Temp = 1.0; // Target temperature K
 
-  double sigma = sqrt(KB * Temp / m_tot);
-  for (i=0; i<this_proj -> natomes; i++)
-  {
-    OptimS[i].v.x = sigma * gauss();
-    OptimS[i].v.y = sigma * gauss();
-    OptimS[i].v.z = sigma * gauss();
-  }
-  
   // J'ai du rajouter le projet en argument pour mettre à jour l'affichage, 
   // et transmettre le nombre d'atomes qui est celui du projet
   Minimization (this_proj, OptimS, Lennard_Jones_FF, 
