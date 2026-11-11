@@ -94,6 +94,7 @@ extern G_MODULE_EXPORT void optimize_geometry (GtkButton * but, gpointer data);
 #define DEFAULT_FT 5.0
 #define DEFAULT_ET 5.0
 #define DEFAULT_SL 10.0
+#define DEFAULT_NI 1000
 
 /*!
   \fn gboolean is_optim_win_active (glwin * view)
