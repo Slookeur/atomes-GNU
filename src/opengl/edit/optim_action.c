@@ -948,16 +948,17 @@ G_MODULE_EXPORT void optimize_geometry (GtkButton * but, gpointer data)
   // n'est pas dans l'interface utilisateur, ce n'est pas compliqué, 
   // tu peut essayer de reproduire ce que j'ai fait pour les autres grandeurs
   double Temp = 1.0; // Target temperature K
+  double mb_sigma;
   int at_spec;
   int i;
   for (i=0; i<this_proj -> natomes; i++)
   {
     at_spec = this_proj -> atoms[0][i].sp;
     OptimS[i].m = this_proj -> chemistry -> chem_prop[CHEM_M][at_spec] / AVOGADRO;
-    sigma = sqrt(KB * Temp / (0.001*OptimS[i].m));
-    OptimS[i].v.x = sigma * gauss();
-    OptimS[i].v.y = sigma * gauss();
-    OptimS[i].v.z = sigma * gauss();
+    mb_sigma = sqrt(KB * Temp / (0.001*OptimS[i].m));
+    OptimS[i].v.x = mb_sigma * gauss();
+    OptimS[i].v.y = mb_sigma * gauss();
+    OptimS[i].v.z = mb_sigma * gauss();
     // Il faut réfléchir à la manière de définir et ajuster la valeur des autres champs Q, E0 et sigma
     // Pour le moment je vais mettre des boites d'entrée de paramètres dans la fenêtre du GUI pour l'optimisation
     // Cela permettra de définir des valeurs génériques, mais donc similaires pour chaque atome, 
