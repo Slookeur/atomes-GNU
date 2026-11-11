@@ -43,6 +43,10 @@ Copyright (C) 2022-2026 by CNRS and University of Strasbourg */
   https://slookeur.github.io/atomes-doxygen/index.html
 
   Tu peut identifier les commentaires Doxygen entre / *! * /  (sans les espaces)
+  Voir ici pour plus d'info avec exemples: 
+  
+  https://github.com/Slookeur/atomes-GNU/tree/optim/Contributing-tutorials/New-C-code-routine
+  
   Je t'invite à t'inspirer dès maintenant de cette façon de renseigner les commentaires pour: 
     - Décrire une fonction / routine (il y a plein d'exemples dans ce que tu liras plus bas et dans les autres fichiers)
     - Déclarer une structure de donnée (voir le fichier 'src/global.h')
@@ -73,6 +77,7 @@ Copyright (C) 2022-2026 by CNRS and University of Strasbourg */
    double        E0;     / * mimimum well depth (LJ)  * /
   };
 
+  Tu peut déjà remarquer que les struct on disparu dans Tsite.
   L'appel à Tsite deviendrait alors simplement:
 
   Tsite * S;
@@ -87,7 +92,8 @@ Copyright (C) 2022-2026 by CNRS and University of Strasbourg */
 
   J'utilise beaucoup cette construction dans le code d'atomes, 
   je trouve que cela simplifie la lecture du code.
-  J'ai du faire évoluer un peu ton code sur ce point, le compilateur était mécontent, 
+  J'ai du faire évoluer un peu ton code sur ce point, le compilateur était mécontent avec ta construction, 
+  et je n'avais pas le temps de chercher quelle option du compilateur ajuster pour le calmer, 
   j'espère que tu pourras te relire ;-)
 
   3) appelation des variables: attention en dehors des indices de boucles (nous faisons les choses de façon similaire)
@@ -102,8 +108,24 @@ Copyright (C) 2022-2026 by CNRS and University of Strasbourg */
   et tu vas jusqu'à =< Nelem, et tu alloues logiquement des structures de taille Nelem+1,
   c'est dangereux le C c'est à partir de 0 et < Nelem, cela implique tu sois très rigoureux quand tu prépares le transfert
   des résultats, tu vas par exemple devoir copier S.r[?].x/y/z dans this_proj -> atomes[0][?-1].x/y/z pour mettre
-  à jour l'affichage, tu alloues plus de mémoire que nécessaire, je te laisse voir si c'est possible de changer, 
+  à jour l'affichage, et tu alloues plus de mémoire que nécessaire, je te laisse voir si c'est possible de changer, 
+  perso j'ai peur de foutre le basard dans ce que tu as écris,
   vérifie également que je ne dit pas de bétises par rapport à ce que je comprends de ton code ;-)
+
+  5) Il faut que ton code soit généraliste
+
+  J'ai retiré un certain nombre de ligne de ton code qui remplissaient des champs de positions et/ou vitesse pour tes tests,
+  rien de problématique, mais il faut penser que tu ne sais pas ce que l'utilisateur d'atomes va décider d'étudier, 
+  il faut que tu proposes une interface qu'il lui permette de commencer malgré tout. Et il faut que tout puisse être
+  adapté depuis l'interface graphique, prends le temps de bien poser ces questions, qui est en lien avec mon point suivant.
+
+
+  6) Développements à prendre en compte du point de vue de l'utilisateur: 
+
+  Il va te falloir déterminer ce qu'il faut sauvegarder pour permettre de continuer un travail commencer, 
+  imagine que je commence à travailler, puis je dois arrêter pour rentrer chez moi, le lendemain je veux
+  pouvoir reprendre où j'en étais, comment faire ? 
+  Quelles sont les informations à sauvegarder ? 
 
  */
 
@@ -389,7 +411,7 @@ int Minimization (project * this_proj, Tsite *S,
    double         Fmax;       /* Maximum force intensity on site (N)     */
    double         dx, dy, dz; /* Variation on x,y, z coordinates         */
    double         dr;         /* Maximum on x,y,z coordinates variations */
-   coords  dir[this_proj -> natomes+1];          /* Gradient direction of descent N)        */
+   coords * dir = g_malloc0((this_proj -> natomes+1)*sizeof*dir); /* Gradient direction of descent N)        */
    double         stepsize;   /* Step size on descent (m/N)              */
    int            iter;       /* Iteration index                         */
 
@@ -579,6 +601,7 @@ int Minimization (project * this_proj, Tsite *S,
 return 0;
 
 fin :
+   if (dir) g_free (dir);
    if (iter > Nitermax) 
    {
       printf("*** WRN : iter (%i) > Nitermax (%i) : gradient has not converged\n",
@@ -692,8 +715,10 @@ int Verlet (project * this_proj, Tsite *S,
              Dt*it, it, i, S[i].r[CUR].x, S[i].r[CUR].y, S[i].r[CUR].z);
    }
    printf("\n"); */
-   // Mise à jour de l'affichage:
-   //
+
+   /*
+   * Mise à jour de l'affichage:
+   */
    for (i=1;i<=this_proj -> natomes;i++)
    {
      this_proj -> atoms[0][i-1].x = S[i].r[CUR].x;
@@ -858,7 +883,7 @@ static double gauss ()
 /*!
   \fn void vitesses_maxwell_boltzmann (double Temp,  int Nats, double Mass, coords * v0)
 
-  \brief
+  \brief Vitesses Maxwell-Boltzmann à la température T (en K), pour des atomes de masse m (en Kg)
 
   \param Temp target temperature
   \param Nats number of atoms
@@ -935,8 +960,14 @@ G_MODULE_EXPORT void optimize_geometry (GtkButton * but, gpointer data)
     OptimS[i].r[0].y = this_proj -> atoms[0][i].y;
     OptimS[i].r[0].z = this_proj -> atoms[0][i].z;
   }
+  // m_tot est en g conversion en Kg
+  m_tot *= 0.001;
   // Distribution de Maxwell-Boltzman
+  // Pour le moment la T cible, si c'est ce type de paramètre qui t'intéresse, 
+  // n'est pas dans l'interface utilisateur, ce n'est pas compliqué, 
+  // tu peut essayer de reproduire ce que j'ai fait pour les autres grandeurs
   double Temp = 1.0; // Target temperature K
+
   double sigma = sqrt(KB * Temp / m_tot);
   for (i=0; i<this_proj -> natomes; i++)
   {
@@ -945,6 +976,8 @@ G_MODULE_EXPORT void optimize_geometry (GtkButton * but, gpointer data)
     OptimS[i].v.z = sigma * gauss();
   }
   
+  // J'ai du rajouter le projet en argument pour mettre à jour l'affichage, 
+  // et transmettre le nombre d'atomes qui est celui du projet
   Minimization (this_proj, OptimS, Lennard_Jones_FF, 
                 this_proj -> modelgl -> optim_win -> startlength, 
                 this_proj -> modelgl -> optim_win -> Nitermax, 

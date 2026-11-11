@@ -55,6 +55,17 @@ Copyright (C) 2022-2026 by CNRS and University of Strasbourg */
 
 extern G_MODULE_EXPORT void optimize_geometry (GtkButton * but, gpointer data);
 
+/* 
+ * 
+ * Si j'ai bien compris ton code Q, E, S sont temporaire (et identique pour tous les atomes)
+ * Dans un premier temps j'ai adapté l'Interface Utilisateur d'atomes pour te permettre 
+ * d'ajuster ces valeurs, attention de spécifier des valeurs limites pour ces paramètres MIN_ et MAX_
+ * pour éviter les calculs impossibles, à toi de voir quoi faire
+ * Idem pour les paramètres généraux concernant la minimisation, il est nécessaire de prévoir
+ * quelles gammes de valeurs sont physiquement réalistes, et de ne pas laisser l'utilisateur 
+ * rentrer quelque chose d'abhérent, adapter les lignes suivantes pour faire cela:
+ *
+ * */
 // min, max for default atomic parameters
 #define MIN_Q -5.0
 #define MAX_Q  5.0
@@ -67,7 +78,22 @@ extern G_MODULE_EXPORT void optimize_geometry (GtkButton * but, gpointer data);
 #define MAX_Ft  100000
 #define MIN_Et -100000
 #define MAX_Et  100000
-#define MAX_Dnp 100000
+#define MAX_Sl  100000
+
+/*
+ * J'ai fait en sorte de laisser la liberté de modifier les valeurs par défaut, 
+ * qu'ils faut prévoir de toute façon (est-ce fonction du système ?, d'autre chose ?
+ * faut il faire quelque chose pour les déterminer ?
+ * En attendant tu peut ajuser les champs suivants pour définir ces valeurs par défaut:
+ */
+// Default values
+#define DEFAULT_Q 1.0
+#define DEFAULT_E 1.0
+#define DEFAULT_S 1.0
+#define DEFAULT_DT 1.5
+#define DEFAULT_FT 5.0
+#define DEFAULT_ET 5.0
+#define DEFAULT_SL 10.0
 
 /*!
   \fn gboolean is_optim_win_active (glwin * view)
@@ -297,6 +323,7 @@ G_MODULE_EXPORT void update_minim_param (GtkEntry * entry, gpointer data)
   // Il faut éviter de laisser l'utilisateur faire n'importe quoi avant de lancer l'optimisation
   // - Ftol: gamme de valeur [MIN_Ft, MAX_Ft]
   // - Etol: gamme de valeur [MIN_Et, MAX_Et]
+  // - Idem pour les autres valeurs définies
   switch (id -> b)
   {
     case 0:
@@ -328,7 +355,7 @@ G_MODULE_EXPORT void update_minim_param (GtkEntry * entry, gpointer data)
       update_entry_double (entry, this_proj -> modelgl -> optim_win -> Etol);
       break;
     case 4:
-      if (v >= 0.0 && v <= MAX_Dnp)
+      if (v >= 0.0 && v <= MAX_Sl)
       {
         this_proj -> modelgl -> optim_win -> startlength = v;
       }
@@ -380,18 +407,23 @@ GtkWidget * create_optimize_window (project * this_proj)
                          i18n("Target force tolerance"),
                          i18n("Target energy tolerance"),
                          i18n("Max Length ?")};
-  gchar * m_unit_lab[4]={i18n(" "), 
-                         i18n(" N (Kg.m.s<sup>-2</sup>)"), 
+  gchar * m_unit_lab[4]={" ", 
+                         " N (Kg.m.s<sup>-2</sup>)", 
                          i18n(" Unit ?"),
-                         i18n(" &#xC5;")};
+                         " &#xC5;"};
   
-  // Paramètres temporaires (par défaut) pour les atomes
-  optim_win -> Dt = 1.0;
+  /*
+   * Paramètres temporaires, pour le moment ces valeurs seront réinitialiser chaque fois
+   * que ouvrira/fermera la fenêtre 'Optimisation de Géométrie', dans le futur je ferais 
+   * en sorte que les informations soient prévervées, mais pour me lancer là dedans 
+   * il faut que je sois certain de quoi garder ou pas 
+  */
+  optim_win -> Dt = DEFAULT_DT;
   optim_win -> Dt_unit = 0;
-  optim_win -> Nitermax = 100000;
-  optim_win -> Ftol = 1.0;
-  optim_win -> Etol = 0.0;
-  optim_win -> startlength = 5.0;
+  optim_win -> Nitermax = DEFAULT_NI;
+  optim_win -> Ftol = DEFAULT_FT;
+  optim_win -> Etol = DEFAULT_ET;
+  optim_win -> startlength = DEFAULT_SL;
   for (i=0; i<5; i++)
   {
     hbox = create_hbox (BSEP);
@@ -427,7 +459,7 @@ GtkWidget * create_optimize_window (project * this_proj)
   
   abox (optim_win -> vbox, _("<b>Temporary atomic default parameters</b>"), 0);
   // Récupération des paramètres Q, E0 et sigma par défaut:
-  // Faut il préserver ces champs sur le long terme, ou 
+  // Faut il préserver ces champs sur le long terme, ou pas ?
   gchar * p_name_lab[3]={i18n("Charge"), i18n("Minimum well depth potential"), i18n("Distance for null potential")};
   gchar * p_unit_lab[3]={i18n(" Unit ?"), i18n(" Unit ?"), i18n(" &#xC5;")};
   for (i=0; i<3; i++)
